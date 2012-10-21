@@ -16,4 +16,6 @@ if [ -e ~/.id_rsa.pub ]; then mv ~/.ssh/id_rsa.pub ~/.ssh/id_rsa.pub.bak; fi
 ln -s `pwd`/id_rsa.pub ~/.ssh/id_rsa.pub
 cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 
+if [ -e `which gpg 2>/dev/null` ]; then gpg --import 91E1DB70.gpg.sec; fi
+
 echo "source `pwd`/bashrc" >> ~/.bashrc
