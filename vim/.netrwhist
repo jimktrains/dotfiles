@@ -1,8 +1,11 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =6
+let g:netrw_dirhist_cnt =9
 let g:netrw_dirhist_1='/home/jim/projects/ga4php/example/login'
 let g:netrw_dirhist_2='/home/jim/projects/ga4php/example/simple'
 let g:netrw_dirhist_3='/home/jim/.zsh'
 let g:netrw_dirhist_4='/var/www'
 let g:netrw_dirhist_5='/var/www/illup'
 let g:netrw_dirhist_6='/var/www'
+let g:netrw_dirhist_7='/home/jim/projects/jimkeener.com/pages/posts'
+let g:netrw_dirhist_8='/home/jim/projects/jimkeener.com/pages/top-level/oak-island'
+let g:netrw_dirhist_9='/home/jim/projects/gus/site'
