@@ -2,7 +2,7 @@
 if [ -e ~/.vimrc ]; then mv ~/.vimrc ~/.vimrc.bak; fi
 ln -s `pwd`/vimrc ~/.vimrc
 
-if [ -e ~/.vimrc ]; then mv ~/.vim ~/.vim.bak; fi
+if [ -e ~/.vim ]; then mv ~/.vim ~/.vim.bak; fi
 ln -s `pwd`/vim ~/.vim
 
 if [ -e ~/.zshrc ]; then mv ~/.zshrc ~/.zshrc.bak; fi
