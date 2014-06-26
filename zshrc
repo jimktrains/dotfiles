@@ -9,6 +9,7 @@ fi
 function precmd {
 	last_resp=$?
     branch=`git branch 2>/dev/null|grep -e '^*' | tr -d \*\ `
+	 short=`git rev-parse --short HEAD 2>/dev/null`
     stash_cnt=`git stash list 2>/dev/null | wc -l`
     short=`git rev-parse --short HEAD 2>/dev/null`
     bat_per=`acpi -b 2>&1 | grep -v found | sed 's/.*\([0-9]\{2\}%\).*/\1/'`
@@ -16,10 +17,11 @@ function precmd {
     bat_charge=`acpi -a 2>&1| grep -v found | sed 's/.*on-line*/+/' | sed 's/.*off-line.*/-/'`
     [ ! -z $branch ] && branch="($branch){$short}[$stash_cnt] "
 	[ ! -z $bat_charge ] && bat="{$bat_charge$bat_per $bat_temp} "
-	d=`date "+%a %F %T"`
+	d=`date "+<%a %F %T>"`
 	wd=`pwd`
 	uah="`whoami`@`hostname`"
-	echo "$uah $branch$bat$d $last_resp\n$wd"
+	echo "$uah $wd"
+	echo "$branch$bat$d $last_resp"
 	export PS1="%# "
 }
 autoload -U compinit promptinit

@@ -1,3 +1,5 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =1
+let g:netrw_dirhist_cnt =3
 let g:netrw_dirhist_1='/home/jim/projects/gus/site'
+let g:netrw_dirhist_2='/home/jim/projects/pow/POW/Permission'
+let g:netrw_dirhist_3='/home/jim/projects/pow/POW'
