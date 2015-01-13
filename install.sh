@@ -1,18 +1,17 @@
 #!/bin/sh
-if [ -e ~/.vimrc ]; then mv ~/.vimrc ~/.vimrc.bak; fi
-ln -s `pwd`/vimrc ~/.vimrc
 
-if [ -e ~/.vim ]; then mv ~/.vim ~/.vim.bak; fi
-ln -s `pwd`/vim ~/.vim
+backup_and_install () {
+  if [ -e ~/.$1 ]; then mv ~/.$1 ~/.$1.bak; fi
+  ln -s `pwd`/$1 ~/.$1
+}
 
-if [ -e ~/.zshrc ]; then mv ~/.zshrc ~/.zshrc.bak; fi
-ln -s `pwd`/zshrc ~/.zshrc
-
-if [ -e ~/.gitconfig ]; then mv ~/.gitconfig ~/.gitconfig.bak; fi
-ln -s `pwd`/gitconfig ~/.gitconfig
-
-if [ -e ~/.screenrc ]; then mv ~/.screenrc ~/.screenrc.bak; fi
-ln -s `pwd`/screenrc ~/.screenrc
+backup_and_install vimrc
+backup_and_install vim
+backup_and_install zshrc
+backup_and_install gitconfig
+backup_and_install screenrc
+backup_and_install Xmodmap
+backup_and_install XCompose
 
 
 echo "source `pwd`/bashrc" >> ~/.bashrc
