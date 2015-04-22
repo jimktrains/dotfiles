@@ -5,6 +5,7 @@
 
 [alias]
 	lg="log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
+	lgnc="log --graph --pretty=format:'%h\t%ci\t<%an>' --abbrev-commit --date=iso"
 	co=checkout
 	st=status
 	icommit="!git add -p && git commit -e -v"

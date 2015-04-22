@@ -16,4 +16,6 @@ execute pathogen#infect()
 
 highlight OverLength ctermbg=red ctermfg=white guibg=#592929
 match OverLength /\%110v.\+/
+
 set colorcolumn=76,110
+highlight ColorColumn ctermbg=red ctermfg=white
