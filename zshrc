@@ -36,7 +36,9 @@ HISTFILE=$HOME/.zsh/history
 setopt append_history
 setopt inc_append_history
 setopt extended_history
-setopt histreduceblanks
+# Causes issues with mangled lines
+# http://www.zsh.org/mla/users/2013/msg00457.html
+#setopt histreduceblanks
 setopt histignorespace
 setopt histfindnodups
 
