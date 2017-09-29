@@ -1,5 +1,17 @@
-remove Lock = Caps_Lock
-remove Control = Control_L
-keysym Caps_Lock = Control_L
-add Lock = Caps_Lock
-add Control = Control_L
+! Caps lock key as control
+! The way God intended
+ keycode 66 = Caps_Lock
+ remove Lock = Caps_Lock
+ remove Control = Control_L
+ keysym Caps_Lock = Control_L
+ add Lock = Caps_Lock
+ add Control = Control_L
+
+!clear Lock
+!keysym Caps_Lock = Control_L
+
+!Context menu key
+keycode 135 = Multi_key
+
+!Alt_R
+keycode 108 = Multi_key

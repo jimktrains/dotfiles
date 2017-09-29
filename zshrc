@@ -15,8 +15,8 @@ function precmd {
     branch=`git branch 2>/dev/null|grep -e '^*' | tr -d \*\ `
     stash_cnt=`git stash list 2>/dev/null | wc -l`
     short=`git rev-parse --short HEAD 2>/dev/null`
-    bat_per=`acpi -b 2>&1 | grep -v found | sed 's/.*\([0-9]\{2\}%\).*/\1/'`
-    bat_temp=`acpi -t 2>&1 | grep -v found | sed 's/.*\([0-9][0-9]\).*/\1C/'`
+    bat_per=`acpi -b 2>&1 | grep -v found | sed 's/.*\([0-9]\{2\}%\).*/\1/' | xargs echo`
+    bat_temp=`acpi -t 2>&1 | grep -v found | sed 's/.*\([0-9][0-9]\).*/\1C/' | xargs echo`
     bat_charge=`acpi -a 2>&1| grep -v found | sed 's/.*on-line*/+/' | sed 's/.*off-line.*/-/'`
     [ ! -z $branch ] && branch="($branch){$short}[$stash_cnt] "
 	[ ! -z $bat_charge ] && bat="{$bat_charge$bat_per $bat_temp} "
@@ -67,3 +67,19 @@ export PATH=~/.composer/vendor/bin:$PATH
 bindkey -e
 
 alias emacs='emacs -nw'
+
+#source ~/.rvm/scripts/rvm
+source ~/.cargo/env
+
+ssh-add -l &>/dev/null
+if [ "$?" -eq 2 ]; then
+  test -r ~/.ssh-agent && \
+    eval "$(<~/.ssh-agent)" >/dev/null
+
+  ssh-add -l &>/dev/null
+  if [ "$?" -eq 2 ]; then
+    (umask 066; ssh-agent > ~/.ssh-agent)
+    eval "$(<~/.ssh-agent)" >/dev/null
+    ssh-add
+  fi
+fi

@@ -1,5 +1,8 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =3
+let g:netrw_dirhist_cnt =6
 let g:netrw_dirhist_1='/home/jim/projects/gus/site'
 let g:netrw_dirhist_2='/home/jim/projects/pow/POW/Permission'
 let g:netrw_dirhist_3='/home/jim/projects/pow/POW'
+let g:netrw_dirhist_4='/home/jim/MSQC/code/L5/app/Http/Controllers/Backend'
+let g:netrw_dirhist_5='/home/jim/.zsh'
+let g:netrw_dirhist_6='/home/jim/MSQC/code/L5/app/Services/Paymaster'
