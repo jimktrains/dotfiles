@@ -10,6 +10,9 @@ include "%L"
 # for num, word in zip(range(1, 21), words):
 #     emit(' '.join("<%s>" % char for char in str(num)), 0x245f + num, word)
 
+<Multi_key> <%> <0> : "‰" # PER MIL
+<Multi_key> <%> <0> <0> : "‱" # PER 10 000 / BASIS POINT
+
 # Custom additions: Typography
 <Multi_key> <period> <period>		: "…"	U2026		# HORIZONTAL ELLIPSIS
 <Multi_key> <v> <period> <period>	: "⋮"	U22EE		# VERTICAL ELLIPSIS
@@ -1306,3 +1309,5 @@ include "%L"
 <Multi_key> <B> <minus> : "Ƀ" U0243 # ALTERNATIVE BITCOIN CURRENCY SIGN, LATIN CAPITAL LETTER B WITH STROKE
 <Multi_key> <minus> <b> : "ƀ" U0180 # ALTERNATIVE BIT CURRENCY SIGN, LATIN SMALL LETTER B WITH STROKE
 <Multi_key> <b> <minus> : "ƀ" U0180 # ALTERNATIVE BIT CURRENCY SIGN, LATIN SMALL LETTER B WITH STROKE
+
+<Multi_key> <+> <1> : "👍"#Thumbs up

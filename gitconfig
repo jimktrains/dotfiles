@@ -9,6 +9,8 @@
 	co=checkout
 	st=status
 	icommit="!git add -p && git commit -e -v"
+  ff="!git merge --ff-only `git rev-parse --abbrev-ref --symbolic-full-name @{u}`"
+  lb="!git reflog | grep checkout | sed 's/.*from \\([A-Za-z0-9_/-]\\+\\).*/\\1/g' | head"
 [core]
 	excludesfile = ~/.gitignore
 [commit]

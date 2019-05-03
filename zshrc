@@ -47,7 +47,7 @@ alias ducks="du -k | sort -n | tail -n 200 | perl -ne 'if ( /^(\\d+)\\s+(.*$)/){
 
 export EDITOR=vim
 export VISUAL=vim
-export BROWSER=w3m
+#export BROWSER=w3m
 export PAGER=less
 
 export PATH=$PATH:/usr/lib/firefox-3.6.15

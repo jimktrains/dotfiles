@@ -9,9 +9,6 @@ set number
 set showmatch
 filetype plugin on
 
-nnoremap <F2> :echomsg (!"phpm --short ".shellescape(expand("<cword>")))<CR>
-nnoremap <F3> :execute ("!phpm ".shellescape(expand("<cword>")))<CR>
-
 execute pathogen#infect()
 
 highlight OverLength ctermbg=red ctermfg=white guibg=#592929
@@ -52,14 +49,50 @@ Plugin 'git://github.com/godlygeek/tabular'
 Plugin 'git://github.com/scrooloose/nerdtree'
 Plugin 'git://github.com/ctrlpvim/ctrlp.vim'
 " Plugin 'git://github.com/swekaj/php-foldexpr.vim'
-" Plugin 'git://github.com/Valloric/YouCompleteMe'
-Bundle 'joonty/vim-phpqa.git'
+"Plugin 'git://github.com/Valloric/YouCompleteMe'
+" Plugin 'joonty/vim-phpqa.git'
 Plugin 'shawncplus/phpcomplete.vim'
 Plugin '2072/PHP-Indenting-for-VIm'
 Plugin 'jwalton512/vim-blade'
 Plugin 'gregsexton/MatchTag'
 Plugin 'vim-scripts/QuickFixCurrentNumber'
 Plugin 'inkarkat/vim-ingo-library'
+Plugin 'alvan/vim-php-manual'
+" Plugin 'joonty/vdebug'
+Plugin 'tpope/vim-speeddating'
+Plugin 'jceb/vim-orgmode'
+Plugin 'https://github.com/m-kat/aws-vim'
+Plugin 'utl.vim'
+
+Plugin 'MarcWeber/vim-addon-mw-utils'
+Plugin 'tomtom/tlib_vim'
+Plugin 'garbas/vim-snipmate'
+Plugin 'honza/vim-snippets'
+Plugin 'https://github.com/mattn/calendar-vim'
+Plugin 'https://github.com/inkarkat/vim-SyntaxRange'
+" Plugin 'https://github.com/Yggdroot/indentLine'
+let g:indentLine_setColors = 0
+"let g:indentLine_color_tty_light = 15 " (default: 4)
+"let g:indentLine_color_dark = 1 " (default: 2)
+let g:indentLine_char = '┆'
+
+Plugin 'https://github.com/vim-syntastic/syntastic'
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+let g:syntastic_php_checkers = ['php']
+autocmd BufNewFile,BufRead /home/jim/MSQC/code/**/l5/**/*.php let g:syntastic_php_checkers = ['php', 'phpcs']
+
+let g:syntastic_yaml_checkers = ['yamllint'] " -c /home/jim/.yamllint']
+let g:syntastic_yaml_yamllint_args = '-c /home/jim/.yamllint'
+
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -85,39 +118,33 @@ filetype plugin indent on    " required
 "autocmd FileType php Bundle 'Valloric/YouCompleteMe'
 
 let g:enable_ycm_at_startup = 0
-let g:loaded_youcompleteme = 1 
+let g:loaded_youcompleteme = 1
 
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
 
-let g:phpqa_messdetector_autorun = 0
-let g:phpqa_codesniffer_autorun = 1
+"let g:phpqa_messdetector_autorun = 0
+"let g:phpqa_codesniffer_autorun = 0
+"autocmd BufNewFile,BufRead /home/jim/MSQC/code/**/l5/*.php let g:phpqa_codesniffer_autorun = 1
+
+let g:phpcomplete_parse_docblock_comments = 1
+
+
 
 autocmd BufNewFile,BufRead *.blade.php set ft=html | set ft=phtml | set ft=blade " Fix blade auto-indent
 
 set wildmode=longest,list,full
 set wildmenu
 
-autocmd FileType c,cpp,java,php,h,hpp,py,rb autocmd BufWritePre <buffer> %s/\s\+$//e
+autocmd FileType c,cpp,java,php,h,hpp,py,rb,yml,yaml,org,xml,html,txt,md,textile autocmd BufWritePre * %s/\s\+$//e
+autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
 
-function! CheckLeftBuffers()
-  if tabpagenr('$') == 1
-    let i = 1
-    while i <= winnr('$')
-      if getbufvar(winbufnr(i), '&buftype') == 'help' ||
-          \ getbufvar(winbufnr(i), '&buftype') == 'quickfix' ||
-          \ exists('t:NERDTreeBufName') &&
-          \   bufname(winbufnr(i)) == t:NERDTreeBufName ||
-          \ bufname(winbufnr(i)) == '__Tag_List__'
-        let i += 1
-      else
-        break
-      endif
-    endwhile
-    if i == winnr('$') + 1
-      qall
-    endif
-    unlet i
-  endif
-endfunction
-autocmd BufEnter * call CheckLeftBuffers()
 
+set undofile
+set undodir=$HOME/.vim/undo
+set undolevels=1000
+set undoreload=10000
+
+let g:org_heading_shade_leading_stars=0
+let g:org_agenda_files=['/home/jim/Dropbox/org/*.org', '/home/jim/MSQC/code/jims-org-repo/*.org']
+let g:org_todo_keywords=['TODO', 'IN-PROGRESS', 'REVIEW', '|', 'DONE', 'DELEGATED']
+let g:org_indent = 1
