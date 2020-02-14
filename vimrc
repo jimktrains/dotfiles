@@ -9,7 +9,7 @@ set number
 set showmatch
 filetype plugin on
 
-execute pathogen#infect()
+" execute pathogen#infect()
 
 highlight OverLength ctermbg=red ctermfg=white guibg=#592929
 match OverLength /\%110v.\+/
@@ -45,32 +45,38 @@ Plugin 'VundleVim/Vundle.vim'
 "  - markdown
 "
 " Plugin 'git://git.wincent.com/command-t.git'
-Plugin 'git://github.com/godlygeek/tabular'
-Plugin 'git://github.com/scrooloose/nerdtree'
-Plugin 'git://github.com/ctrlpvim/ctrlp.vim'
-" Plugin 'git://github.com/swekaj/php-foldexpr.vim'
-"Plugin 'git://github.com/Valloric/YouCompleteMe'
-" Plugin 'joonty/vim-phpqa.git'
-Plugin 'shawncplus/phpcomplete.vim'
-Plugin '2072/PHP-Indenting-for-VIm'
-Plugin 'jwalton512/vim-blade'
-Plugin 'gregsexton/MatchTag'
-Plugin 'vim-scripts/QuickFixCurrentNumber'
-Plugin 'inkarkat/vim-ingo-library'
-Plugin 'alvan/vim-php-manual'
-" Plugin 'joonty/vdebug'
-Plugin 'tpope/vim-speeddating'
-Plugin 'jceb/vim-orgmode'
-Plugin 'https://github.com/m-kat/aws-vim'
-Plugin 'utl.vim'
-
+ Plugin 'git://github.com/godlygeek/tabular'
+" Plugin 'git://github.com/scrooloose/nerdtree'
+ Plugin 'git://github.com/ctrlpvim/ctrlp.vim'
+" " Plugin 'git://github.com/swekaj/php-foldexpr.vim'
+" "Plugin 'git://github.com/Valloric/YouCompleteMe'
+" " Plugin 'joonty/vim-phpqa.git'
+" Plugin 'shawncplus/phpcomplete.vim'
+" Plugin '2072/PHP-Indenting-for-VIm'
+ Plugin 'jwalton512/vim-blade'
+" Plugin 'gregsexton/MatchTag'
+" Plugin 'vim-scripts/QuickFixCurrentNumber'
+" Plugin 'inkarkat/vim-ingo-library'
+ Plugin 'alvan/vim-php-manual'
+" " Plugin 'joonty/vdebug'
+ Plugin 'tpope/vim-speeddating'
+ Plugin 'jceb/vim-orgmode'
+" Plugin 'https://github.com/m-kat/aws-vim'
+" Plugin 'utl.vim'
+"
 Plugin 'MarcWeber/vim-addon-mw-utils'
-Plugin 'tomtom/tlib_vim'
-Plugin 'garbas/vim-snipmate'
-Plugin 'honza/vim-snippets'
-Plugin 'https://github.com/mattn/calendar-vim'
-Plugin 'https://github.com/inkarkat/vim-SyntaxRange'
+" Plugin 'tomtom/tlib_vim'
+ Plugin 'garbas/vim-snipmate'
+ Plugin 'honza/vim-snippets'
+ Plugin 'SirVer/ultisnips'
+ Plugin 'dantleech/vim-phpnamespace'
+ Plugin 'arnaud-lb/vim-php-namespace'
+" Plugin 'craigemery/vim-autotag'
+" Plugin 'mattn/calendar-vim'
+" Plugin 'inkarkat/vim-SyntaxRange'
 " Plugin 'https://github.com/Yggdroot/indentLine'
+Plugin 'posva/vim-vue'
+Plugin 'terryma/vim-multiple-cursors'
 let g:indentLine_setColors = 0
 "let g:indentLine_color_tty_light = 15 " (default: 4)
 "let g:indentLine_color_dark = 1 " (default: 2)
@@ -136,7 +142,15 @@ set wildmode=longest,list,full
 set wildmenu
 
 autocmd FileType c,cpp,java,php,h,hpp,py,rb,yml,yaml,org,xml,html,txt,md,textile autocmd BufWritePre * %s/\s\+$//e
-autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
+"autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
+
+autocmd FileType php inoremap <Leader>e <C-O>:call PhpExpandClass()<CR>
+autocmd FileType php noremap <Leader>e :call PhpExpandClass()<CR>
+autocmd FileType php inoremap <Leader>u <C-O>:call PhpInsertUse()<CR>
+autocmd FileType php noremap <Leader>u :call PhpInsertUse()<CR>
+
+let g:autotagDisabled='off'
+autocmd FileType php let g:autotagDisabled=''
 
 
 set undofile
@@ -148,3 +162,6 @@ let g:org_heading_shade_leading_stars=0
 let g:org_agenda_files=['/home/jim/Dropbox/org/*.org', '/home/jim/MSQC/code/jims-org-repo/*.org']
 let g:org_todo_keywords=['TODO', 'IN-PROGRESS', 'REVIEW', '|', 'DONE', 'DELEGATED']
 let g:org_indent = 1
+
+autocmd FileType vue syntax sync fromstart
+let g:vue_pre_processors = ['scss']

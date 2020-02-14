@@ -83,3 +83,7 @@ if [ "$?" -eq 2 ]; then
     ssh-add
   fi
 fi
+
+PATH=${PATH}:$HOME/bin
+
+

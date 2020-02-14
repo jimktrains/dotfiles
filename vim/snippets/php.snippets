@@ -7,17 +7,44 @@ snippet usex
 snippet usemsqcx
 	use Msqc\Core\Exceptions\MsqcException;
 snippet namespace
-	namespace ${1:`substitute(substitute(expand("%:h"), 'app', 'App', ''), '\/', '\\\', 'g')`};
-snippet namespaceclass
-	namespace ${1:`substitute(substitute(expand("%:h"), 'app', 'App', ''), '\/', '\\\', 'g')`};
+	namespace ${1:`PhpNamespaceGet()`};
+snippet nsc
+	<?php
+
+	namespace ${1:`PhpNamespaceGet()`};
 
 	/**
 	 * Class ${2:`vim_snippets#Filename()`}
+	 *
 	 * @package $1
 	 */
 	${3:abstract }class $2
 	{
 		${0:${VISUAL}}
+	}
+snippet transform
+	<?php
+
+	namespace ${1:`PhpNamespaceGet()`};
+
+	/**
+	 * Class ${2:`vim_snippets#Filename()`}
+	 *
+	 * @package $1
+	 */
+	class $2
+	{
+	  /**
+	   * $3
+	   *
+	   * @param $4 $5
+	   *
+	   * @return $6
+	   */
+	  public function __invoke($4 $5)
+		{
+		  ${0:${VISUAL}}
+	  }
 	}
 snippet mvar
 	/**
@@ -142,7 +169,7 @@ snippet iresolutionmethod
 	{
 		public function __invoke(${3:Data } $model);
 	}
-snippet func "Function with docblock"
+snippet func "Function with doc"
 	/**
 	  * ${1:description}
 		*
