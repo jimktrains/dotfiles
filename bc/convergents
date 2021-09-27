@@ -1,0 +1,33 @@
+/* BC program convergents */
+"Typing pn(a[],n) returns p[n], where
+p[0]=a[0],p[1]=a[0]*a[1]+1,p[i+1]=a[i+1]*p[i]+p[i-1] if i >= 1.
+Typing qn(a[],n) returns q[n], where
+q[0]=1,q[1]=a[1],q[i+1]=a[i+1]*q[i]+q[i-1] if i >= 1.
+Hence pn/qn is the value of the simple continued fraction
+[a[0];a[1],...,a[n]].
+"
+define pn(a[],n){
+auto x,y,z,i
+if (n == 0)return(a[0])
+if (n == 1)return(a[0]*a[1]+1)
+x=a[0];y=a[0]*a[1]+1
+for(i=2;i<=n;i++){
+	z=a[i]*y+x
+	x=y
+	y=z
+}
+return(z)
+}
+
+define qn(a[],n){
+auto x,y,z,i
+if (n == 0)return(1)
+if (n == 1)return(a[1])
+x=1;y=a[1]
+for(i=2;i<=n;i++){
+	z=a[i]*y+x
+	x=y
+	y=z
+}
+return(z)
+}

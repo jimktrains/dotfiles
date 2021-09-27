@@ -1,0 +1,37 @@
+/* bc program factorial */
+
+/* recursive calculation of n! */
+define a(n){
+	if(n==0)return(1)
+	return(n*factorial(n-1))
+}
+
+define factorial(n){
+	auto i,s
+	s=1
+	for(i=1;i<=n;i++)s=s*i
+	return(s)
+}
+
+/* factorial_p(n,p) returns the power of prime p dividing n!. 
+ * s=[n/p]+[n/p^2]+...
+ */
+define factorial_p(n,p){
+	auto s
+	s=0
+	while(n){
+	    n=n/p
+            s=s+n
+	}
+	return(s)
+}
+
+define factorial1(n){
+	auto s
+	s=1
+	while(n){
+	s=s*n
+	n=n-1
+	}
+	return(s)
+}

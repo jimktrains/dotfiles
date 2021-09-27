@@ -1,0 +1,77 @@
+# https://oeis.org/A000041
+
+# Jos Koot, Jun 01 2016:
+# a(n) = Sum_{k=-inf..+inf} (-1)^k a(n-k(3k-1)/2) with a(0)=1 and a(negative)=0.
+# The sum can be restricted to the (finite) range from k = (1-sqrt(1+24n))/6 to (1+sqrt(1+24n))/6),
+# since all terms outside this range are zero.
+
+define partition(m, e) {
+	auto i, k, n, p[], s
+	p[0] = 1					# a(0)
+
+	for (n = 1; n <= m; n++) {
+		i = n					# n-k(3*k-1)/2
+		s = 0					# sum
+
+		for (k = 1;; k++) {
+			i -= 3 * k - 2
+			if (i < 0) break
+			s = p[i] - s
+			if (i < k) break
+			s += p[i - k]
+		}
+
+		if (s < 0) s = -s
+		p[n] = s
+
+		if (e) print "p[", n, "]=", s, "\n"
+	}
+
+	return p[m]
+}
+
+
+# https://oeis.org/A000009
+
+# From Evangelos Georgiadis, Andrew V. Sutherland, Kiran S. Kedlaya (egeorg(AT)mit.edu), Mar 03 2009:
+# a(0)=1. a(n)= 2*(Sum_{k=1} (-1)^(k+1) a(n-k^2)) + sigma(n) where
+# sigma(n)= (-1)^(j) if (n=(j*(3*j+1))/2 OR n=(j*(3*j-1))/2)
+# otherwise sigma(n)=0.
+
+define strict_partition(m, e) {
+	auto a, b, g, i, j, k, n, q[], s
+	q[0] = 1					# a(0)
+	a = 1						# j*(3*j-1)/2
+	b = 2						# j*(3*j+1)/2
+	j = 2						# 3*j-1
+	g = 1						# sigma(n) i.e. (-1)^j
+
+	for (n = 1; n <= m; n++) {
+		i = n					# n-k^2
+		s = 0					# sum
+
+		for (k = 1;; k++) {
+			i -= 2 * k - 1
+			if (i < 0) break
+			s = q[i] - s
+		}
+
+		if (s < 0) s = -s
+		s *= 2
+
+		if (n == a) s += g = -g
+		
+		if (n == b) {
+			a += j += 2
+			b += j += 1
+			s += g
+		}
+
+		q[n] = s
+
+		if (e) print "q[", n, "]=", s, "\n"
+	}
+
+	return q[m]
+}
+

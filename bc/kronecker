@@ -1,0 +1,32 @@
+/* bc program kronecker
+ * needs jacobi.
+ * using Henri Cohen's definition in the case n>=1, 
+ * this returns 0 if gcd(d,n)>1. Otherwise if n is even and 2^t||n,
+ * it returns jacobi(2,|d|) times jacobi(d,n/2^t).
+ */
+define kronecker(d,n){
+auto ks,t,j,temp,dn,rn
+
+dn=d%2
+rn=n%2
+if(dn==0 && rn==0){
+   return(0)
+}
+ks=1
+if(rn==0){
+  t=0
+  while(1){
+      n=n/2
+      t=t+1
+      if(n%2){
+        break
+      }
+  }
+  temp=mod(d,8)
+  if((temp==3 ||temp==5) && t%2){
+     ks=-ks
+  }
+}
+j=jacobi(d,n)
+return(ks*j)
+}

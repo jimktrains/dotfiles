@@ -1,0 +1,89 @@
+
+define log5(a,b,r){
+auto aa,bb,i,ii,s,t,c,aaa,bbb,num,den
+flag=1
+c=b^r
+aa=a*c;bb=b*c;s=0
+aaa=aa;bbb=bb
+while(bb>c && bbb>c){
+	i=0
+        x=c;y=aa;z=bb
+	while(1){
+           x=bb*x
+           y=y*c
+           z=bb*z
+           aa=y/(x/c)
+           i=i+1
+           if(x<=y && y<z)break
+	}
+	t=bb
+        bb=aa
+        aa=t
+
+        ii=0
+        x=c;y=aaa;z=bbb
+	while(1){
+           x=bbb*x
+           y=y*c
+           z=bbb*z
+           aaa=ceil(y,x/c)
+           ii=ii+1
+           if(x<=y && y<z)break
+	}
+	t=bbb
+        bbb=aaa
+        aaa=t
+        if(bb!=bbb)flag=0
+	if(i==ii){
+	  print "m[",s,"]=",i,"=m'[",s,"]\n "
+          partialquotient[s]=i
+	}else{
+	  print "m[",s,"]=",i,"!=",ii,"=m'[",s,"];"
+          flag=0
+          break
+        }
+	s=s+1
+	}
+        print "\n"
+	print "number of m[i]=m'[i] found with (a,b,r)=(",a,",",b,",",r,") is ",s,"\n"
+        if(flag){
+	   t=s+1
+           num=pn(partialquotient[],t)
+           den=qn(partialquotient[],t)
+           print "log(",a,")/log(",b,") is rational ",num,"/",den,"\n"
+        }
+	return (s)
+}
+/* BC program convergents */
+"Typing pn(a[],n) returns p[n], where
+p[0]=a[0],p[1]=a[0]*a[1]+1,p[i+1]=a[i+1]*p[i]+p[i-1] if i >= 1.
+Typing qn(a[],n) returns q[n], where
+q[0]=1,q[1]=a[1],q[i+1]=a[i+1]*q[i]+q[i-1] if i >= 1.
+Hence pn/qn is the value of the simple continued fraction
+[a[0];a[1],...,a[n]].
+"
+define pn(a[],n){
+auto x,y,z,i
+if (n == 0)return(a[0])
+if (n == 1)return(a[0]*a[1]+1)
+x=a[0];y=a[0]*a[1]+1
+for(i=2;i<=n;i++){
+	z=a[i]*y+x
+	x=y
+	y=z
+}
+return(z)
+}
+
+define qn(a[],n){
+auto x,y,z,i
+if (n == 0)return(1)
+if (n == 1)return(a[1])
+x=1;y=a[1]
+for(i=2;i<=n;i++){
+	z=a[i]*y+x
+	x=y
+	y=z
+}
+return(z)
+}

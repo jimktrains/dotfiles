@@ -1,0 +1,63 @@
+/* BC program john is a coded version of a recent algorithm of
+   John Campbell. It is meant to be run with the BC program gcd
+   which contains the functions gcd(a,b) and lcma(a[],n).
+   johna(a[],n) takes an array of positive integers aa[0],...,aa[n-1]
+   and replaces them by an array of positive integers a[0],...,a[n-1], 
+   where
+    (i) a[i] divides aa[i] for 0<=i<n;
+   (ii) gcd(a[i],a[j])=1 for 0<=i<j<n;
+   (iii) lcm(aa[0],...,aa[n-1])=lcm(a[0],...,a[n-1]).
+   19th February 2003
+ */
+
+/* john(a,b) solves the problem for n=2 and is used in johna(a[],n). */
+
+define john(a,b){
+auto d,h,lcm
+
+d=gcd(a,b)
+if(d==1){
+	john1=a
+	john2=b
+	lcm=a*b
+}else{
+	john1 = a/d
+	h = gcd(john1,b)
+	lcm = john1*b
+	john2 = b
+	while(h>1){
+	   john1 = john1*h 
+	    john2 = john2/h 
+	    h = gcd(john1,john2)
+	}
+}
+return(lcm)
+}
+ 
+define johna(aa[],n){
+auto i,j,a[],t,temp
+
+for(i=0;i<n;i++){
+a[i]=aa[i]
+}
+for(j=1;j<n;j++){
+	for(i=0;i<j;i++){
+		temp=john(a[i],a[j])
+		a[i]=john1
+		a[j]=john2
+	}
+}
+print "lcm("
+for(i=0;i<n-1;i++){
+	print aa[i],","
+}
+print aa[n-1],")="
+print "lcm("
+for(i=0;i<n-1;i++){
+	print a[i],","
+}
+print a[n-1],")="
+t=lcma(a[],n)
+return(t)
+}
+

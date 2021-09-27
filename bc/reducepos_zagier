@@ -1,0 +1,47 @@
+/* BC program  reducepos_zagier 
+ * needs function int, which is contained in file gcd.
+ */
+
+/* This program finds a reduced form equivalent to a given indefinite binary quadratic form (a,b,c)
+ * as defined in pages 120-132 of Don Zagier's book
+ * Zetafunktionen und quadratische Korper, Eine Einfuhrung in die hohere Zahlentheorie,
+ * Springer 1981 and prints the resulting cycle.
+ */
+define reduce(a,b,c){
+auto i,d,f,n,i0,a0,b0,c0,flag,temp,ta,tb,s,twoa
+   d=b^2-4*a*c
+   f=sqrt(d)
+   flag=0
+   i=0
+   while(1){
+      if(a>0 && c>0 && b>a+c && flag==0){
+         i0=i
+         a0=a
+         b0=b
+         c0=c
+         flag=1
+         print "\n"
+         print "cycle: "
+      }
+      print "(",a,",",b,",",c,")->"
+      twoa=2*a
+      temp=b+f
+      if(a>0){
+         n=int(temp,twoa)+1
+      }else{
+         n=int(temp+1,twoa)+1
+      }
+      ta=a*n^2-b*n+c
+      tb=twoa*n-b
+      c=a
+      a=ta
+      b=tb
+      i=i+1
+      if(a==a0 && b==b0 && c==c0){
+         print "(",a,",",b,",",c,")\n"
+         s=i-i0
+         print "length = "
+         return(s)
+      }
+   }
+}

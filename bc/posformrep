@@ -1,0 +1,359 @@
+/* gnubc program : posformrep */
+/* Needs squareroot and reduceneg */
+
+/* sign of an integer a */
+/* sign(a)=1,-1,0, according as a>0,a<0,a=0 */
+
+define sign(a){
+	if(a>0) return(1)
+	if(a<0) return(-1)
+	return(0)
+}
+
+/* absolute value of an integer n */
+
+define abs(n){
+	if(n>=0) return(n)
+	return(-n)
+}
+
+/*  mod(a,b)=the least non-negative remainder when an integer a is divided by a
+ positive integer b */
+
+define mod(a,b){
+	auto c
+	c=a%b
+	if(a>=0) return(c)
+	if(c==0) return(0)
+        return(c+b)	
+}
+
+/* int(a,b)=integer part of a/b, a, b integers, b != 0 */
+
+define int(a,b){
+	auto c
+	c=sign(b)
+	a=a*c
+	b=b*c
+	return((a-mod(a,b))/b)
+}
+
+
+
+/* posrep(a,b,c,n) deals with the more general case of finding the primitive soluitons of
+ * ax^2+bxy+cy^2=n, where gcd(a,n) may be >1. Again we assume d=b^2-4ac<0
+ * and that d is not a square. Also we assume gcd(a,b,c)=1. Here a>0 and n>0.
+ * The number r of primitive solutions is returned.
+ */ 
+define posrep(a,b,c,n,printflag){
+        auto aa,bb,cc,i,r,s,tmp1,tmp2,tmp3,tmp4
+	if(gcd(a,n)==1){
+           r=posrep0(a,b,c,n,printflag)
+           for(i=0;i<r;i++){
+               if(printflag){
+	          print "solution[",i,"]: (x,y)=(",posrep_solutionx0[i],",",posrep_solutiony0[i],")\n"
+               }
+               posrep_solutionx[i]=posrep_solutionx0[i]
+               posrep_solutiony[i]=posrep_solutiony0[i]
+           }
+           return(r)
+	}
+        /* Now we calculate aa,bb,cc, where ax^2+bxy+cy^2 is 
+         * transformed into aaX^2+bbXY+ccY^2 under the transformation
+         * x=alpha*X+beta*Y, y=gamma*X+delta*Y.
+         */
+         s=gauss(a,b,c,n)
+         aa=gauss_m
+         gauss_delta=gcd1(gauss_alpha,gauss_gamma)
+         gauss_beta= -gcd2(gauss_alpha,gauss_gamma)
+         tmp1=a*gauss_beta*gauss_beta
+         tmp2=b*gauss_beta*gauss_delta
+         tmp3=c*gauss_delta*gauss_delta
+         tmp4=tmp1+tmp2
+         cc=tmp4+tmp3
+         tmp1=2*a*gauss_alpha*gauss_beta
+         tmp2=2*c*gauss_gamma*gauss_delta
+         tmp3=b*gauss_alpha*gauss_delta
+         tmp4=b*gauss_beta*gauss_gamma
+         bb=tmp1+tmp2+tmp3+tmp4
+         r=posrep0(aa,bb,cc,n,printflag)
+         if(printflag){
+            print "(global_a,global_b,global_c)=(",global_a,",",global_b,",",global_c,")\n"
+         }
+         if(r==0){
+           return(0)
+         }
+         /* this creates arrays of solutions:
+          * posrep_solutionx0[0],...,posrep_solutionx0[r-1] and
+          * posrep_solutiony0[0],...,posrep_solutiony0[r-1].
+          */
+	 for(i=0;i<r;i++){
+	     tmp1=gauss_alpha*posrep_solutionx0[i]
+	     tmp2=gauss_beta*posrep_solutiony0[i]
+	     tmp3=gauss_gamma*posrep_solutionx0[i]
+	     tmp4=gauss_delta*posrep_solutiony0[i]
+             posrep_solutionx[i]=tmp1+tmp2
+             posrep_solutiony[i]=tmp3+tmp4
+             if(printflag){
+	        print "solution[",i,"]: (x,y)=(",posrep_solutionx[i],",",posrep_solutiony[i],")\n"
+             }
+         }
+         return(r)
+}
+
+/* gauss(a,b,c,n) takes a triple gcd(a,b,c)=1 and |n|>1 and produces
+ * (x,y)=(gauss_alpha,gauss_gamma) and an m=gauss_m such that ax^2+bxy+cy^2=m, 
+ * gcd(m,n)=1. See L.-K. Hua 'Introduction to number theory', 311-312.
+ */
+define gauss(a,b,c,n){
+       auto absn,e,g,i,s,t,tmp1,tmp2,xx[],yy[]
+
+       absn=abs(n)
+       e=omega(absn)
+       for(i=0;i<e;i++){
+	   tmp1=mod(a,qglobal[i])
+	   tmp2=mod(c,qglobal[i])
+           s=sign(tmp1)
+           t=sign(tmp2)
+           if(s){
+	      xx[i]=1
+	      yy[i]=0
+           }
+           if(s==0 && t){
+	      xx[i]=0
+	      yy[i]=1
+           }
+           if(s==0 && t==0){
+	      xx[i]=1
+	      yy[i]=1
+           }
+       }
+       tmp1=chineseae(xx[],qglobal[],e)
+       tmp2=chineseae(yy[],qglobal[],e)
+       g=gcd(tmp1,tmp2)
+       gauss_alpha=int(tmp1,g)
+       gauss_gamma=int(tmp2,g)
+       tmp1=a*gauss_alpha*gauss_alpha
+       tmp2=b*gauss_alpha*gauss_gamma
+       tmp3=c*gauss_gamma*gauss_gamma
+       tmp4=tmp1+tmp2
+       gauss_m=tmp4+tmp3
+       return
+}
+
+/* We are finding the primitive solutions of the quadratic diophantine equation b.t^2_c.tu+d.u^2=a.
+/* Here gcd(b,c,d)=1=gcd(b,a) and c^2-4bc<0. Also b>0,d>0,a>0.
+ * We first solve the congruence b.theta^2+c.theta+d=0 (mod a).
+ * We let t=theta.u-ay to get p.u^2+quy+ry^2=1, where p=(b.theta^2+c.theta+d)/a,
+ * q=-(2b.theta+c) and r=ab. We find the reduced form (global_a,global_b,global_c)
+ * which is equivalent to (p,q,r). If global_a>1, we continue the loop. 
+ * If global_a=1,  denote the unimodular transformation employed by
+ * u=a11.X+a12.Y, y=a21.X+a22.Y. we get two solutions (u,y)=(a11,a21) and (-a11,-a21). 
+ * If global_a=global_c, we get two more solutions (u,y)=(a12,a22) and (-a12,-a22).
+ * Then we get corresponding solutions (t,u), where t=theta.u-ay.
+ * The number of primitive solutions is returned.
+ * printflag=1 prints out the intermediate results.
+ * See http://www.numbertheory.org/pdfs/posrep.pdf.
+ */
+
+define posrep0(b,c,d,a,printflag){
+auto theta,p,q,r,q0,k,tt,u,y,solnumber,t,s,denomp
+
+    s=quadratic(b,c,d,a,0)
+        /* s=0 means no solutions of bx^2+cx+d=0 (mod a) */
+        /* If s>0, we get all solutions x, 0<=x<a as
+         * quadratic_solution[0],...,quadratic_solution[s-1]
+         */
+   if(s==0){
+      if(printflag){
+         print b,"theta^2+",c,"theta+",d,"=0 (mod ",a,") has no solution\n"
+      }
+      return(0)
+   }
+   solnumber=0
+   for(k=0;k<s;k++){
+      theta=quadratic_solution[k]
+      if(printflag){
+         print "theta[",k,"]=",theta,"\n"
+      }
+denomp=b*theta^2+c*theta+d
+if(denomp%a){
+   print denomp, " is not divisible by ",a,"\n"
+   return(0)
+}
+      p=(b*theta^2+c*theta+d)/a
+      q=-2*b*theta-c
+      r=a*b
+      t=reduce1(p,q,r) /* produces  global variables (global_a, global_b,global_c) and
+                          unimodular transforming matrix 
+                          [globala11,globala12,globala21,globala22]. */
+      if(printflag){
+         print "(a11,a12,a21,a22)=(",globala11,",",globala12,",",globala21,",",globala22,")\n"
+         print "(global_a,global_b,global_c)=(",global_a,",",global_b,",",global_c,")\n"
+      }
+      if(global_a>1){
+        continue
+      }else{
+           u=globala11
+           y=globala21
+           tt=theta*u-a*y
+           if(printflag){
+              print "solution0[",solnumber,"]: (t,u)=(",tt,",",u,")\n"
+           }
+           posrep_solutionx0[solnumber]=tt
+           posrep_solutiony0[solnumber]=u
+           solnumber=solnumber+1
+           if(printflag){
+              print "solution0[",solnumber,"]: (t,u)=(",-tt,",",-u,")\n"
+           }
+           posrep_solutionx0[solnumber]=-tt
+           posrep_solutiony0[solnumber]=-u
+           solnumber=solnumber+1
+           if(global_a==global_c){
+              u=globala12
+              y=globala22
+              tt=theta*u-a*y
+              if(printflag){
+                 print "solution0[",solnumber,"]: (t,u)=(",tt,",",u,")\n"
+              }
+              posrep_solutionx0[solnumber]=tt
+              posrep_solutiony0[solnumber]=u
+              solnumber=solnumber+1
+              if(printflag){
+                 print "solution0[",solnumber,"]: (t,u)=(",-tt,",",-u,")\n"
+              }
+              posrep_solutionx0[solnumber]=-tt
+              posrep_solutiony0[solnumber]=-u
+              solnumber=solnumber+1
+              if(global_b==1){
+                 u=globala11-globala12
+                 y=globala21-globala22
+                 tt=theta*u-a*y
+                 if(printflag){
+                    print "solution0[",solnumber,"]: (t,u)=(",tt,",",u,")\n"
+                 }
+                 posrep_solutionx0[solnumber]=tt
+                 posrep_solutiony0[solnumber]=u
+                 solnumber=solnumber+1
+                 if(printflag){
+                    print "solution0[",solnumber,"]: (t,u)=(",-tt,",",-u,")\n"
+                 }
+                 posrep_solutionx0[solnumber]=-tt
+                 posrep_solutiony0[solnumber]=-u
+                 solnumber=solnumber+1
+              }
+           }
+      }
+   }
+   return(solnumber)
+}
+
+/* This finds all solutions (primitive and imprimitive) of ax^2+bxy+cy^2=n as a global array. */
+/* b^2-4ac<0, a>0,n>0. */
+define posrepgen(a,b,c,n){
+auto absn,t,g,countpatzgen,temp,h,f
+   if(a<0){
+      a=-a;b=-b;c=-c;n=-n;
+   }
+   if(n<0){
+     print "no solutions\n"
+     return(0)
+   }
+   if(n==0){
+     print "one solution (x,y)=(0,0)\n"
+     globalposrepx[0]=0
+     globalposrepy[0]=0
+     return(1)
+   }
+   absn=abs(n)
+   if(absn!=1){
+      t=omega(absn)
+      g=divisors(qglobal[],kglobal[],t)
+   }else{
+      g=1
+      divisor[0]=1
+   }
+   countpatzgen=0
+   for(f=0;f<g;f++){
+      temp=divisor[f]^2
+      if(n%temp==0){
+        #print "divisor[",f,"]=",divisor[f],"\n"
+        #print "solving ", a,"x^2+(",b,"xy+(",c,")y^2=",n/temp,"\n"
+         t=posrep(a,b,c,n/temp,0)
+         if(t>0){
+         for(h=0;h<t;h++){
+            globalposrepx[countpatzgen+h]=divisor[f]*posrep_solutionx[h]
+            globalposrepy[countpatzgen+h]=divisor[f]*posrep_solutiony[h]
+         }
+         countpatzgen=countpatzgen+t
+         }
+      }
+   }
+   return(countpatzgen)
+}
+
+/* This lists the solutions of ax^2+bxy+cy^2=n, b^2-4ac< 0, a>0, n>0. */
+define posrepgenlist(a,b,c,n){
+auto h,g
+   g=posrepgen(a,b,c,n)
+   for(h=0;h<g;h++){
+     print "("
+     print globalposrepx[h],",",globalposrepy[h]
+     print ")\n"
+   }
+   return(g)
+}
+
+/* This solves the diophantine equation ax^2+bxy+cy^2+dx+ey+f=0, where a>0, b^2-4ac<0. 
+ * We use the transformation of Hua's book, p.278.
+ */
+define ssw1(a,b,c,d,e,f){
+auto dd,gcount,k,u,v,h,r,s,g,kk
+
+if(a==0){
+   print "a=0\n"
+   return(-1)
+}
+gcount=0
+dd=b^2-4*a*c
+if(dd>0){
+   print "D>0\n"
+   return(-1)
+}
+if(dd==0){
+   print "D=0\n"
+   return(-1)
+}
+print "D=",dd,"\n"
+u=b*e-2*c*d
+v=b*d-2*a*e
+k=-(a*u^2+b*u*v+c*v^2-d*dd*u-e*dd*v+f*dd^2)
+kk=-dd*(a*e^2-b*e*d+c*d^2+f*dd)
+print "k=",k,"\n"
+print "kk=",kk,"\n"
+if(k==0){
+   print "k=0\n"
+   r=-u
+   s=-v
+   if(r%dd==0 && s%dd==0){
+       print "(x,y)=(",r/dd,",",s/dd,")\n"
+       gcount=1
+    }
+   return(1)
+}
+print dd,"x=X-(",u,")," 
+print dd,"y=Y-(",v,")\n" 
+print "Find the solutions of ",a,"X^2+",b,"XY+",c,"Y^2=",k,"\n"
+g=posrepgen(a,b,c,k)
+print "There are ",g," solutions (X,Y)\n"
+for(h=0;h<g;h++){
+    r=globalposrepx[h]-u
+    s=globalposrepy[h]-v
+    if(r%dd==0 && s%dd==0){
+       print "(x,y)=(",r/dd,",",s/dd,")\n"
+       gcount=gcount+1
+    }
+}
+print "number of solutions (x,y) found is "
+return(gcount)
+}

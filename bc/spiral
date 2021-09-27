@@ -1,0 +1,31 @@
+define x(n){
+auto k,m,r,s
+m=sqrt(n)
+r=mod(sqrt(4*n),2)
+s=mod(m,2)
+k=(-1)^s*((n-m*(m+1))*(1-r)+ceiling(m,2))
+return(k)
+}
+
+define y(n){
+auto k,m,r,s
+m=sqrt(n)
+r=mod(sqrt(4*n),2)
+s=mod(m,2)
+k=(-1)^s*((n-m*(m+1))*r-ceiling(m,2))
+return(k)
+}
+
+define inverse_spiral(x,y){
+auto k,n,s
+
+k=max(abs(x),abs(y))
+if(x<y){
+   s=-1
+}else{
+  s=1
+}
+n=4*k^2+s*(2*k+x+y)
+return(n)
+}
+

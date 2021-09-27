@@ -1,0 +1,39 @@
+/* This algorithm is taken from http://www.numericana.com/answer/numbers.htm#partitions
+ * e=1 prints p[1],...,p[m] and returns p[m] if m>=1.
+ * e=0 merely returns p[m].
+ */
+define partition(m,e){
+auto i,p[],s,j,k,t,kk
+    p[0] = 1
+
+    for(i=1;i<=m;i++){
+      j=1;k=1;s=0;
+      while(j>0){
+        kk=k*k
+        j=i-(3*kk+k)/2
+        t=parity(k)
+        if(j>=0){
+           s=s-t*p[j]
+        }
+        j=i-(3*kk-k)/2
+        if(j>=0){
+           s=s-t*p[j]
+        }
+        k=k+1
+      }
+      p[i]= s
+      if(e){
+         print "p[",i,"]=",s,"\n"
+      }
+    }
+    return(s)
+}
+
+define parity(m){
+if(m%2){
+  return(-1)
+}else{
+  return(1)
+}
+}
+

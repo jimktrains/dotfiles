@@ -1,0 +1,83 @@
+/* BC program raney */
+print "Input: a non-singular matrix A=[p,q;r,s], p,q,r,s>=0.\n"
+print "With L=[1,0;1,1] and R=[1,1;0,1], we express A uniquely as\n"
+print "a product of positive powers of L and R, followed by a row-balanced B.\n"
+print "B=[a,b;c,d] is row-balanced if (a<c & b>d) or (c<a & d>b)\n"
+print "and a,b,c>=0. We exclude A=I_2 and A=[0,1;1,0]. \n"
+print "With U[a]=[a,1;1,0],\n"
+print "note that U[a[0]...U[a[2n]]=R^a[0]L^a[1]...R^a[2n]U\n"
+print "and that U[a[0]...U[a[2n+1]]=R^a[0]L^a[1]...L^a[2n+1]I_2\n"
+print "The number of terms L and R is returned.\n"
+print "See  'On continued fractions and finite automata', G.N. Raney, \n"
+print "Math. Annalen, 206, 265-283 (1973).\n"
+
+print "Type raney(p,q,r,s)\n"
+define raney(p,q,r,s){
+	auto det,i,j,k
+	det=p*s-q*r
+	if(det==0){
+		print "A is singular\n"
+		return(0)
+	}
+	if(p<0){
+		print "p<0\n"
+		return(0)
+	}
+	if(q<0){
+		print "q<0\n"
+		return(0)
+	}
+	if(r<0){
+		print "r<0\n"
+		return(0)
+	}
+	if(s<0){
+		print "s<0\n"
+		return(0)
+	}
+	if(p==1&&q==0&&r==0&&s==1){
+		print "A=I_2\n"
+		return(0)
+	}
+	if(p==0&&q==1&&r==1&&s==0){
+		print "A=U\n"
+		return(0)
+	}
+	k=0
+	while(1){
+                i=0
+		while(p>=r && q>=s){
+		      p=p-r
+		      q=q-s
+	              i=i+1
+		}
+		if(i){
+			k=k+1
+			if(i>1){
+				print "R^",i
+			}else{
+				print "R"
+			}
+		}
+                j=0
+		while(r>=p && s>=q){
+		      r=r-p
+		      s=s-q
+	              j=j+1
+		}
+		if(j){
+			k=k+1
+			if(j>1){
+				print "L^",j
+			}else{
+				print "L"
+			}
+		}
+		if((p<r && q>s) || (p>r && s>q)){
+			break
+		}
+	}
+	print"[",p,",",q,",",r,",",s,"]"
+	print "\n"
+	return(k)
+}

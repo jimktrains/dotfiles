@@ -1,0 +1,66 @@
+/*  the congruence mx=p(mod n) for use in ssw2 of file patz */
+/*  returns 0 if no solution, 1 if there is a solution, namely the globals
+ *  x equiv globalcongsol (mod globalcongmod).
+ */
+define legendrecong(m,p,n){
+auto a,b,t,x,y,z
+   a=gcd(m,n)
+   if(mod(p,a)>0){
+      return(0)
+   }
+   b=gcd1(m,n)
+   y=n/a
+   p=p/a
+   z=mod(b*p,y)
+   globalcongsol=z
+   globalcongmod=y
+   return(1)
+}
+ 
+/* This solves the congruences a1x equiv b1(mod p) and a2x equiv b2(mod q). 
+ * It returns 0 if no solution, and 1 if there is, in which case it returns the solution 
+ * x equiv globalchineselegsol (mod globalchineselegmod)
+ */
+define legendresimulcong(a1,b1,a2,b2,p,q){
+auto r,s,t,a,b,m,n
+    r=legendrecong(a1,b1,p)
+    if(r==0){
+       return(0)
+    }else{
+       a=globalcongsol
+       m=globalcongmod
+    }
+    s=legendrecong(a2,b2,q)
+    if(s==0){
+       return(0)
+    }else{
+       b=globalcongsol
+       n=globalcongmod
+    }
+    t=chineselegendre(a,b,m,n)
+    if(t==0){
+       return(0)
+    }else{
+       print "m = ",globalchineselegsol,"+k",globalchineselegmod,"\n"
+       return(1)
+    }
+}
+/* the Chinese remainder theorem for the congruences x=a(mod m)
+ * and x=b(mod n), m>0, n>0, a and b arbitrary integers.
+ * The construction of O. Ore, American Mathematical Monthly,
+ * vol.59,pp.365-370,1952, is implemented.
+ */
+
+define chineselegendre(a,b,m,n) {
+	auto c,d,x,y,z
+	d = gcd(m,n)
+	if(mod(a-b,d)!=0){
+           return(0)
+	}
+	x= m/d;y=n/d
+	z=(m*n)/d
+	globalchineselegsol = mod(b*gcd1(x,y)*x + a*gcd2(x,y)*y,z)
+        globalchineselegmod=z
+        return(1)
+}
+

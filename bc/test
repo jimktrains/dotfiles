@@ -1,0 +1,9 @@
+define f(m,n){
+	auto i,z
+   for(i=m;i<=n;i++){
+      z=period(3^(2*i+1))
+      scale=5
+      print "(",i,",",z,",",z/3^i,")\n"
+      scale=0
+   }
+}

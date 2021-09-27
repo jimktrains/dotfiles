@@ -1,0 +1,114 @@
+/* This is an implementation of John's descent algorithm. Currently,
+ * his e is minus my e. I may change this.
+ */
+define descent(k,x,y){
+auto r,s,r1,r2,h1,h2,t,h,tt,th,i,rr,hh,temp,e,j
+temp=y^2+1
+if(y==1){
+   e=-1
+}else{
+   if((x-y)%temp==0){
+      e=-1
+   }else{
+      e=1
+   }
+}
+  
+t=y^2+1
+print "checking divisibility\n"
+if((x+e*y)%temp==0){
+   print "OK\n"
+}
+r=(x+e*y)/t
+s=(x*y-e)/t
+h=k-r*y
+print "initially,(r,s,h,e)=(",r,",",s,",",h,",",e,")\n"
+i=0
+j=0
+print "r[",j,"]=",r,",h[",j,"]=",h,"\n"
+temp=2*y*(h+e)
+/*if(temp>0){
+   print "P[",i,"]=r^2-",temp,"r-",h^2,"\n"
+}else{
+   print "P[",i,"]=r^2+",-temp,"r-",h^2,"\n"
+}*/
+r2=temp-r
+print "r1=",r,",r2=",r2,"\n"
+while(r^2+h^2>0 && r^2+h^2!=2){
+   if(h==0){
+     print "h=0, r = ",r,", y divides r and hence x\n"
+     return
+   }else{
+     rr=abs(r)
+     hh=abs(h)
+     if(rr>hh){
+        temp=2*y*(h+e)
+        if(temp>0){
+          print "P[",i,"]=r^2-",temp,"r-",h^2,"\n"
+        }else{
+          print "P[",i,"]=r^2+",-temp,"r-",h^2,"\n"
+        }
+        th=y*(h+e)
+        t=th^2+h^2
+print "t=",t,"\n"
+        tt=sqrt(t)
+        r1=th+tt
+        r2=th-tt
+        print "r1=",r1,",r2=",r2,"\n"
+        if(abs(r1)<hh){
+           r=r1
+        }
+        if(abs(r2)<hh){
+           r=r2
+        }
+     }
+     if(rr<hh){
+        temp=2*r*y*e-r^2
+        if(r>0){
+           if(temp>0){
+              print "Q[",i,"]=h^2+",2*r*y,"h+",temp,"\n"
+           }
+           if(temp<0){
+              print "Q[",i,"]=h^2-",2*r*y,"h-",-temp,"\n"
+           }
+           if(temp==0){
+              print "Q[",i,"]=h^2+",2*r*y,"h\n"
+           }
+        }else{
+           if(temp>0){
+              print "Q[",i,"]=h^2",2*r*y,"h+",temp,"\n"
+           }
+           if(temp<0){
+              print "Q[",i,"]=h^2",2*r*y,"h-",-temp,"\n"
+           }
+           if(temp==0){
+              print "Q[",i,"]=h^2",2*r*y,"h\n"
+           }
+        }
+        t=(y*r-e)^2+r*r-1
+        tt=sqrt(t)
+        th=-y*r
+        h1=th+tt
+        h2=th-tt
+        print "h1=",h1,",h2=",h2,"\n"
+        if(abs(h1)<=rr){
+          h=h1
+        }
+        if(abs(h2)<=rr){
+          h=h2
+        }
+        i=i+1
+     }
+     j=j+1
+     print "r[",j,"]=",r,",h[",j,"]=",h,"\n"
+     if(r*r==h*h){
+       print "|r|=|h|=1, so r = 1 or -1 (mod y) and gcd(y,r)=gcd(y,x)=1\n"
+       return
+     }
+     if(r==0){
+       print "r=0 and so h=0 and y divides r and hence x\n"
+       return
+     }
+   }
+}
+}

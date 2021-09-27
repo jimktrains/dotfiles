@@ -1,0 +1,11 @@
+print "solving a*x^2+b*x+c=0 (mod n)\n"
+print "type q(a,b,c,n)\n"
+define q(a,b,c,n){
+auto i,x
+for(i=0;i<n;i++){
+	 x=a*i^2+b*i+c
+         if (x%n==0){
+		print "i=",i,"\n" 
+         }
+}
+}

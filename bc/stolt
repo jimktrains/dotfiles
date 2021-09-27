@@ -1,0 +1,494 @@
+/* stolt */
+
+/* This program uses the bounds provided by Bengt Stolt, to find the fundamental solutions
+ * of the diophantine equation au^2+buv+cv^2=n, where n is non-zero, a>0 and d=b^2-4ac>0
+ * is nonsquare.  See Arkiv for Matematik, Bd. 3, Nr 33, 381-390.
+ */
+print "Type stolt(209,29,1,31) to find (say) the fundamental solutions of 
+      209u^2+29uv+v^2=31\n"
+print "Type fund(148,1) to find the least positive solution of x^2-148y^2=4\n"
+print " for a verbose version, otherwise type fund(148,0)\n"
+
+
+/* This finds the fundamental solution (globalx,globaly) of Pell's equation x^2-dy^2=4,
+ * where d>0 and is nonsquare. 
+ * We use the fact that a positive solution with gcd(x,y)=1 must be a convergent of
+ * the continued fraction expansion of sqrt(d). If there is no such convergent, we use th
+ * familiar midpoint method of finding the least solution of Pell's equations X^2-dY^2=1
+ * and then (globalx,globaly)=(2X,2Y).
+ */
+define fund(d,printflag){
+	auto h,p,q,e,f,g,x,y,k,l,m,n,u,v,r,s,oldl,oldm,oldu,oldv,t,flag
+        flag=0
+        if(d==2){
+          globalx=6
+          globaly=4
+          flag=1
+        }
+        if(d==3){
+          globalx=4
+          globaly=2
+          flag=1
+        }
+        if(d==5){
+          globalx=3
+          globaly=1
+          flag=1
+        }
+        if(d==6){
+          globalx=10
+          globaly=4
+          flag=1
+        }
+        if(d==7){
+          globalx=16
+          globaly=6
+          flag=1
+        }
+        if(d==8){
+          globalx=6
+          globaly=2
+          flag=1
+        }
+        if(d==10){
+          globalx=38
+          globaly=12
+          flag=1
+        }
+        if(d==11){
+          globalx=20
+          globaly=6
+          flag=1
+        }
+        if(d==12){
+          globalx=4
+          globaly=1
+          flag=1
+        }
+        if(d==13){
+          globalx=11
+          globaly=3
+          flag=1
+        }
+        if(d==14){
+          globalx=30
+          globaly=8
+          flag=1
+        }
+        if(d==15){
+          globalx=8
+          globaly=2
+          flag=1
+        }
+        x=sqrt(d)
+        if(d==x^2+1 && d >17){
+          globalx=4*x^2+2
+          globaly=4*x
+          flag=1
+        }
+        if(printflag && flag){
+           print "globalx=",globalx,",globaly=",globaly,"\n"
+        }
+        if(flag){
+           return(d)
+        }
+	x=sqrt(d)
+	p=0;q=1
+	g=x*x
+        l=0;k=1;m=1;n=0
+        for(h=0;1;h++){
+		y=(x+p)/q
+                u=k*y+l;v=n*y+m
+/*print "n=",n,",y=",y,",m=",m,",v=",v,"\n"*/
+                if(printflag){
+                      print "A[",h,"]/B[",h,"]=",u,"/",v,"\n"
+                }
+                oldl=l;oldm=m
+                oldu=u;oldv=v;
+                l=k;m=n
+                k=u;n=v
+                
+		f=p
+		p=y*q-p
+		e=q
+		q=(d-(p*p))/q
+                t=(-1)^(h+1)
+                if(q==4 && t==1){
+                   globalx=k
+                   globaly=n
+                   if(printflag){
+                      print "globalx=",globalx,",globaly=",globaly,"\n"
+                   }
+                   return(4)
+                }
+                if(q==4 && t!=1){
+                   globalx=(k^2+d*n^2)/2
+                   globaly=k*n
+                   if(printflag){
+                      print "globalx=",globalx,",globaly=",globaly,"\n"
+                   }
+                   return(-4)
+                }
+		if(p==f){/* P_h=P_{h+1}, even period 2h */
+                   if(printflag){
+                      print "P_",h,"=P_",h+1,"\n"
+                   }
+                   globalx=2*(m*(oldu+oldl)+(-1)^h)
+                   globaly=2*m*(oldv+oldm)
+                   if(printflag){
+                      print "globalx=",globalx,",globaly=",globaly,"\n"
+                   }
+                   return(1)
+		}
+		if(q==e){/* Q_h=Q_{h+1}, odd period 2h+1 */
+                   if(printflag){
+                      print "Q_",h,"=Q_",h+1,"\n"
+                   }
+                   r=k*n+l*m
+                   s=n^2+m^2
+                   globalx=2*(r*r+d*s*s)
+                   globaly=4*r*s
+                   if(printflag){
+                      print "globalx=",globalx,",globaly=",globaly,"\n"
+                   }
+                   return(-1)
+		}
+       }
+}
+
+/* absolute value of an integer n */
+define abs(n){
+	if(n>=0) return(n)
+	return(-n)
+}
+define bcmul3(a,b,c){
+auto temp
+temp=a*b
+temp=temp*c
+return(temp)
+}
+
+define check(u,v,u1,v1,n){
+auto x,absn
+absn=abs(n)
+x=u*v1-u1*v
+if(x%absn==0){
+   return(1)
+}else{
+   return(0)
+}
+}
+
+define issquare(n){
+auto x
+x=sqrt(n)
+if(x^2==n){
+   return(x)
+}else{
+   return(-1)
+}
+}
+
+
+
+/* This computes the solution (x,y)=(u^2+(k^2+1)v^2,2uv) of x^2-(k^2+1)y^2=k^4,
+ * where (u,v) satisfies u^2-(k^2+1)v^2=k^2. Anitha Srinivasan has observed that if k is odd, 
+ * then gcd(u,v)=1 => gcd(x,y)=1.
+ */
+define double(u,v,k){
+auto x,y,d
+   d=k^2+1
+   x=u^2+d*v^2
+   y=2*u*v
+   print "(x,y)=(",x,",",y,")\n"
+}
+
+define stolt(a,b,c,n){
+auto d,tt,x,g,lb,ub,t,solno,dd,z,zz,v,twoa,temp,t1,an
+solno=0
+if(a<=0){
+  print "a<=0\n"
+  return(-1)
+}
+d=b*b-4*a*c
+if(d<1){
+       print "d=",d," is < 1\n"
+       return(-1)
+}
+x=sqrt(d)
+g=x*x
+if(d==g){
+       print "d=",d," is a perfect square\n"
+       return(-1)
+}
+print "D=",d,"\n"
+twoa=2*a
+temp=fund(d,0) /* this creates fundamental unit (globalx,globaly) */
+print "(x[1],y[1])=(",globalx,",",globaly,")\n"
+an=a*n
+if(n>0){
+   z= an*(globalx-2)
+   zz= an*(globalx+2)
+}else{
+   z= (-an)*(globalx+2)
+   zz= (-an)*(globalx-2)
+}
+if(n>0){
+   g=sqrt(n/a)
+   if(a*g^2!=n){
+      scale=5
+      print "sqrt(N/A)=sqrt(",n,"/",a,")=",sqrt(n/a)," is not an integer\n"
+      scale=0
+   }else{
+      print "sqrt(N/A)=sqrt(",n,"/",a,")=",g," is an integer\n"
+      print "(",g,",0) is a solution\n"
+      solno=solno+1
+   }
+   lb=1
+}else{
+   tt=(-4)*an
+   g=sqrt(tt/d)
+   if(d*g^2!=tt){
+      scale=5
+      print "sqrt(4A|N|/D)=",sqrt((-4)*an/d)," is not an integer\n"
+      scale=0
+   }else{
+      print "sqrt(4A|N|/D)=",g," is an integer "
+      if((b*g)%twoa==0){
+        print "and (",-b*g/twoa,",",g,") is a solution\n"
+        solno=solno+1
+      }else{
+        print "\n"
+      }
+   }
+   lb=g+1
+}
+ub=sqrt(z/d)
+print "ub=",ub,"\n"
+print "dub^2=",d*ub^2,"\n"
+print "z=",z,"\n"
+if(d*ub^2==z){/* V is an integer */
+   print "V=",ub," is an integer, U=",sqrt(zz)," is an integer,"
+   temp=sqrt(zz)-b*ub
+   if(temp%twoa==0){
+      temp=temp/twoa;
+      print "(U-BV)/2A = ",temp," is an integer and ";
+      print "(",temp,",",ub,") is a solution\n"
+      solno=solno+1
+   }else{
+      scale=5
+      temp=temp/twoa;
+      print "(U-BV)/2A = ",temp," is not an integer<br>\n";
+      scale=0
+   }
+   ub=ub-1;
+}else{
+   scale=5
+   temp=sqrt(z/d)
+   print "V=",temp," is not an integer\n"
+   scale=0
+}
+if(ub>=lb){
+    print "the remaining fundamental solutions lie in the range for v: [",lb,",",ub,"]\n"
+}
+for(v=lb;v<=ub;v++){
+        t=b*v
+        dd=d*v^2+4*an
+        if(dd<0){
+           continue
+        }
+        g=squaretest(dd)
+        if(g>0){
+           t1=-t+g
+           if(t1%twoa==0){
+              x=t1/twoa
+              print "(",x,",",v,") is a solution\n"
+              solno=solno+1
+           }
+           t1=-t-g
+           if(t1%twoa==0){
+              x=t1/twoa
+              print "(",x,",",v,") is a solution\n"
+              solno=solno+1
+           }
+        }
+}
+print "the number of fundamental solutions is "
+return(solno)
+}
+
+/* We find the fundamental solutions of x^2-dy^2=n, where d>0 is not a square and n=0(mod4).
+   The account is based on Bengt Stolt's paper On the Diophantine equation u^2-Dv^2=\pm4
+   in Archiv for Mathematik, (1952) 2, nr 1, 1-23. 
+   We also incorporate the theorem of Matthews, Robertson and Srinivasan.
+ */
+define stolt0(d,n,flag){
+auto count,flagr,nn,x1,y1,t,u,temp,temp1,temp2,temp4,temp5,g,h,t1,t2,v,absn,gg,ggg,lowerbound,upperbound
+#global globalx
+#global globaly
+#global globalstoltfundx
+#global globalstoltfundy
+#global globalsqrtr
+
+  count=0
+  flagr=0
+  nn=n/4
+  t=fund(d,0)
+  x1=globalx
+  y1=globaly
+  if(n>0){
+     u=squaretest(n)
+     if(u>0){
+       globalstoltfundx[count]=u
+       globalstoltfundy[count]=0
+       if(flag){
+          print "(",globalstoltfundx[count],",",globalstoltfundy[count],"), "
+          print "gcd(",u,",",0,")=",u,"\n"
+       }
+       count=count+1
+     }
+     temp1=nn*y1*y1
+     temp2=x1+2
+     g=squaretestr(temp1,temp2)
+     temp4=temp2*nn
+     h=squaretest(temp4)
+     if(g>0 && h>0){
+        globalstoltfundx[count]=h
+        globalstoltfundy[count]=g
+        if(flag){
+           print "(",globalstoltfundx[count],",",globalstoltfundy[count],"), "
+           print "gcd(",h,",",g,")=",gcd(h,g),"\n"
+        }
+        count=count+1
+        upperbound=globalsqrtr-1
+     }else{
+        upperbound=globalsqrtr
+     }
+     for(v=1;v<=upperbound;v=v+1){
+         t1=d*v*v
+         t2=t1+n
+         u=squaretest(t2);
+         if(u>0){
+            globalstoltfundx[count]=u
+            globalstoltfundy[count]=v
+            if(flag){
+               print "(",globalstoltfundx[count],",",globalstoltfundy[count],"), "
+               print "gcd(",u,",",v,")=",gcd(u,v),"\n"
+            }
+            count=count+1
+            globalstoltfundx[count]=-u
+            globalstoltfundy[count]=v
+            if(flag){
+               print "(",globalstoltfundx[count],",",globalstoltfundy[count],"), "
+               print "gcd(",-u,",",v,")=",gcd(u,v),"\n"
+            }
+            count=count+1
+         }
+     }
+  }
+  if(n<0){
+     absn=abs(nn);
+     temp1=absn*y1*y1
+     temp2=x1-2
+     g=squaretestr(temp1,temp2)
+     temp5=absn*temp2
+     gg=squaretest(temp5)
+     if(g>0 && gg>0){
+        globalstoltfundx[count]=gg
+        globalstoltfundy[count]=g
+        if(flag){
+           print "(",globalstoltfundx[count],",",globalstoltfundy[count],"), "
+           print "gcd(",gg,",",g,")=",gcd(gg,g),"\n"
+        }
+        upperbound=globalsqrtr-1
+        count=count+1
+     }else{
+        upperbound=globalsqrtr
+     }
+     absn=abs(n)
+     ggg=squaretestr(absn,d)
+     if(ggg>0){
+        globalstoltfundx[count]=0
+        globalstoltfundy[count]=ggg
+        if(flag){
+           print "(",globalstoltfundx[count],",",globalstoltfundy[count],"), "
+           print "gcd(",0,",",ggg,")=",ggg,"\n"
+        }
+        count=count+1
+     }
+     lowerbound=globalsqrtr+1
+     for(v=lowerbound;v<=upperbound;v=v+1){
+         t1=d*v*v
+         t2=t1+n
+         if(t2<0){
+            continue
+         }
+         u=squaretest(t2);
+         if(u>0){
+            globalstoltfundx[count]=u
+            globalstoltfundy[count]=v
+            if(flag){
+               print "(",globalstoltfundx[count],",",globalstoltfundy[count],"), "
+               print "gcd(",u,",",v,")=",gcd(u,v),"\n"
+            }
+            count=count+1
+            globalstoltfundx[count]=-u
+            globalstoltfundy[count]=v
+            if(flag){
+               print "(",globalstoltfundx[count],",",globalstoltfundy[count],"), "
+               print "gcd(",-u,",",v,")=",gcd(u,v),"\n"
+            }
+            count=count+1
+         }
+     }
+  }
+  if(flag){
+      if(count>1){
+         print "there are ",count," Stolt-fundamental solutions\n"
+      }
+      if(count==1){
+         print "there is one Stolt-fundamental solution\n"
+      }
+      if(count==0){
+         print "there are no Stolt-fundamental solutions\n"
+      }
+  }
+  return(count)
+}
+
+define squaretest(n){
+auto g
+g=sqrt(n)
+if(g*g==n){
+   return(g)
+}else{
+   return(-1)
+}
+}
+
+# Here a>=0,b>0.
+define squaretestr(a,b){
+auto s
+#global globalsqrtr
+   s=sqrt(a/b)
+   globalsqrtr=s
+   if(b*s^2==a){
+     return(s)
+   }else{
+     return(-1)
+   }
+}
+
+define stoltequivalent(u,v,u1,v1,a,b,c,n){
+auto s,t,absn
+  s=a*u*u1+b*(u*v1_u1*v)+2*c*v*v1
+  t=v*u1-u*v1
+  absn=abs(n)
+  if(s%absn==0 && t%absn==0){
+    print "(",u,",",v,") and (",u1,",",v1,") are not Stolt equivalent\n"
+    return(1)
+  }else{
+    print "(",u,",",v,") and (",u1,",",v1,") are not Stolt equivalent\n"
+    return(0)
+  }
+}

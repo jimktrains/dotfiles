@@ -1,0 +1,80 @@
+/* gnubc program: pell */
+"
+This is a program for finding least solution of Pell's
+equations ax^2-b*y^2=+-1,b>a>1, gcd(a,b)=1.  
+"
+define pellab(a,b,e){
+auto i,p,q,d,f,y,z,oldp,oldq,l,k,m,n,u,v,j
+        if(a>=b){
+          print "a>=b\n"
+          return(-1)
+        }
+        if(a==1){
+          print "a=1\n"
+          return(-1)
+        }
+        if(gcd(a,b)>1){
+          print "gcd(a,b)>1\n"
+          return(-1)
+        }
+        d=a*b
+	f=sqrt(d)
+        if(f*f==d){
+          print "ab is a perfect square\n"
+          return(-1)
+        }
+        p=0
+	q=a
+	l=0;k=1;m=1;n=0
+	if(e){
+		print "(P[0],Q[0])=(",p,",",q,")\n"
+	}
+	for(i=0;1;i++){
+		y=(p+f)/q
+                oldp=p
+		p=y*q-p
+                oldq=q
+		q=(d-(p*p))/q
+                j=i+1
+		if(e){
+			print "(P[",j,"],Q[",j,"])=(",p,",",q,")\n"
+		}
+                if(q==oldq){
+                   print "Q[",j,"]=Q[",i,"], period length =", 2*j-1," is odd, no solution of ",a,"x^2-",b,"y^2=-1 or -1\n"
+                   return(0)
+                }
+                if(p==oldp){
+                   if(e){
+                      print "P[",j,"]=P[",i,"], period length=",2*i," is even\n"
+                   }
+                   if(oldq==1){
+		      y=(oldp+f)/oldq
+		      if(e){
+		       	print "a[",i,"]=",y,"\n"
+                        print "(A[",i-1,"],B[",i-1,"])=(",k,",",n,") is the least solution of ",a,"x^2-",b,"y^2="
+                      }else{
+                        print "(A[",i-1,"],B[",i-1,"])=(",k,",",n,") is the least solution of ",a,"x^2-",b,"y^2="
+                      }
+                      z=i%2
+                      if(z){
+                        print "-1\n"
+                        print a,"x^2-",b,"y^2=1 is not soluble\n"
+                      }else{
+                        print "1\n"
+                        print a,"x^2-",b,"y^2=-1 is not soluble\n"
+                      }
+                      return(1)
+                   }else{
+                      print "Q[",i,"]!=1, so no solution of ",a,"x^2-",b,"y^2=-1 or -1\n"
+                      return(0)
+                   }
+                }
+		u=k*y+l;v=n*y+m
+		if(e){
+			print "a[",i,"]=",y,",A[",i,"]/B[",i,"]=",u,"/",v,"\n"
+		}
+                /* u/v is the i-th convergent to (sqrt(d))/a */
+		l=k;m=n
+		k=u;n=v
+	  }
+    }

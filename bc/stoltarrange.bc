@@ -1,0 +1,96 @@
+# This is an adaptation of code written by Alan Offer on 22/01/2020.
+# It is designed to break  the list of Nagell fundamental solutions into subsets of two
+# or three elements which are Stolt equivalent, according as e2=e4^2 or e1=e4^3..
+# 23rd January 2020.
+
+define void print_array1(a[], len) {
+	auto i
+	print "["
+	if ( len > 0 ) {
+		print a[0]
+	}
+	for ( i = 1; i < len; i++ ) {
+		print ", ", a[i]
+	}
+	print "]\n"
+}
+
+define void arrange(*lst1[],*lst2[],lstlen,gpsize,n) {
+# Elements (lst1[i],lst2[i]) are known in advance to fall into equivalence
+# classes of size 'gpsize', where equivalence is determined by the
+# function 'equivfunc'.
+# This function rearranges '(lst1[],lst2[])' so that equivalent elements are together.
+# N.B. Array indexing starts at 0.
+	auto i, inext, j, tmp1,tmp2, gpcount
+
+   if ( lstlen % gpsize != 0 ) {
+		print "lst length (", lstlen, ") not a multiple of gpsize (", gpsize, ")\n"
+		return
+	}
+	# The 'next' element to look at is at index 0.
+	inext = 0
+	# Keep going until the 'next' element is beyond the end of the array.
+	while ( inext < lstlen ) {
+		# Fix element at index i.  This is the start of the current equiv class.
+		i = inext
+		# Advance inext to the next yet-to-be-fixed element.
+		inext += 1
+		# Prepare to loop over rest of array to find others in equiv class.
+		j = i
+		gpcount = 1
+		# Keep going until we have all the elements in the current equiv class.
+		while ( gpcount < gpsize ) {
+			j += 1
+			# Running off the end of the array?
+			if ( j == lstlen ) {
+				print "An equivalence class with incorrect size exists\n"
+				return
+			}
+                        t=equivfunc(lst1[j],lst2[j],lst1[i],lst2[i],n)
+			if (t) {
+				# Found an element belonging to the current equiv class.
+				if ( j > inext ) {
+					# It's not already located with the others, so move it.
+					tmp1 = lst1[j]
+					tmp2 = lst2[j]
+					lst1[j] = lst1[inext]
+					lst2[j] = lst2[inext]
+					lst1[inext] = tmp1
+					lst2[inext] = tmp2
+					# Temporary lines for testing.  Delete this line and next 3 lines.
+					# Show what's happening...
+				       #print "Swap lst1[", j, "] and lst1[", inext, "] > "
+				       #print "Swap lst2[", j, "] and lst2[", inext, "] > "
+				       #print_array1(lst1[], lstlen); print "\n"
+				       #print_array1(lst2[], lstlen); print "\n"
+				}
+				# Advance inext to the next yet-to-be-fixed element.
+				inext += 1
+				# Keep track of size of fixed elements in curr equiv class.
+				gpcount += 1
+			}
+		}
+	}
+}
+
+# This tells us when two solutions (x1,y1) and (x2,y2) of x^2 - dy^2 = 4m are Stolt equivalent,
+# where n=2m.
+define equivfunc(x1,y1,x2,y2,n){
+auto t
+  n=abs(n)
+  t=(x1*y2-x2*y1)%n
+  if(t==0){
+    return(1)
+  }else{
+    return(0)
+  }
+}
+
+
+/* absolute value of an integer n */
+
+define abs(n){
+        if(n>=0) return(n)
+        return(-n)
+}
+

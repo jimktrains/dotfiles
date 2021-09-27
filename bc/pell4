@@ -1,0 +1,151 @@
+/* This finds the fundamental solution (globalx,globaly) of Pell's equation x^2-dy^2=4,
+ * where d>0 and is nonsquare. 
+ * We use the fact that a positive solution with gcd(x,y)=1 must be a convergent of
+ * the continued fraction expansion of sqrt(d). If there is no such convergent, we use th
+ * familiar midpoint method of finding the least solution of Pell's equations X^2-dY^2=1
+ * and then (globalx,globaly)=(2X,2Y).
+ * printflag=0 suppresses printing, printflag=1 prints output
+ */
+define fund4(d,printflag){
+	auto h,p,q,e,f,g,x,y,k,l,m,n,u,v,r,s,oldl,oldm,oldu,oldv,t,flag,oldn
+        flag=0
+        if(d==2){
+          globalx=6
+          globaly=4
+          flag=1
+        }
+        if(d==3){
+          globalx=4
+          globaly=2
+          flag=1
+        }
+        if(d==5){
+          globalx=3
+          globaly=1
+          flag=1
+        }
+        if(d==6){
+          globalx=10
+          globaly=4
+          flag=1
+        }
+        if(d==7){
+          globalx=16
+          globaly=6
+          flag=1
+        }
+        if(d==8){
+          globalx=6
+          globaly=2
+          flag=1
+        }
+        if(d==10){
+          globalx=38
+          globaly=12
+          flag=1
+        }
+        if(d==11){
+          globalx=20
+          globaly=6
+          flag=1
+        }
+        if(d==12){
+          globalx=4
+          globaly=1
+          flag=1
+        }
+        if(d==13){
+          globalx=11
+          globaly=3
+          flag=1
+        }
+        if(d==14){
+          globalx=30
+          globaly=8
+          flag=1
+        }
+        if(d==15){
+          globalx=8
+          globaly=2
+          flag=1
+        }
+        x=sqrt(d)
+        if(d==x^2+1 && d >17){
+          globalx=4*x^2+2
+          globaly=4*x
+          flag=1
+        }
+        if(printflag){
+           print "globalx=",globalx,",globaly=",globaly,"\n"
+        }
+        if(flag){
+          return(d)
+        }
+	x=sqrt(d)
+	p=0;q=1
+	g=x*x
+        l=0;k=1;m=1;n=0
+        for(h=0;1;h++){
+		y=(x+p)/q
+                u=k*y+l;v=n*y+m
+/*print "n=",n,",y=",y,",m=",m,",v=",v,"\n"*/
+                if(printflag){
+                      print "A[",h,"]/B[",h,"]=",u,"/",v,"\n"
+                }
+                oldl=l;oldm=m;oldn=n
+                oldu=u;oldv=v;
+                l=k;m=n
+                k=u;n=v
+                
+		f=p
+		p=y*q-p
+		e=q
+		q=(d-(p*p))/q
+                t=(-1)^(h+1)
+                if(q==4 && t==1){
+                   globalx=k
+                   globaly=n
+                   if(printflag){
+                      print "globalx=",globalx,",globaly=",globaly,"\n"
+                   }
+                   return(4)
+                }
+                if(q==4 && t!=1){
+                   globalx=(k^2+d*n^2)/2
+                   globaly=k*n
+                   if(printflag){
+                      print "globalx=",globalx,",globaly=",globaly,"\n"
+                   }
+                   return(-4)
+                }
+		if(p==f){/* P_h=P_{h+1}, even period 2h */
+                   if(printflag){
+                      print "P_",h,"=P_",h+1,"\n"
+                   }
+print "oldn=",oldn,"\n"
+print "m=",m,"\n"
+                   globalx=2*(m*(oldu+oldl)+(-1)^h)
+                   globaly=2*m*(oldv+oldm)
+                   if(printflag){
+                      print "globalx=",globalx,",globaly=",globaly,"\n"
+                   }
+                   return(1)
+		}
+		if(q==e){/* Q_h=Q_{h+1}, odd period 2h+1 */
+                   if(printflag){
+                      print "Q_",h,"=Q_",h+1,"\n"
+                   }
+                   r=k*n+l*m
+                   print "r=",r,"\n"
+                   s=n^2+m^2
+                   print "s=",s,"\n"
+                   globalx=2*(r*r+d*s*s)
+                   globaly=4*r*s
+                   
+                   if(printflag){
+                      print "globalx=",globalx,",globaly=",globaly,"\n"
+                   }
+                   return(-1)
+		}
+       }
+}

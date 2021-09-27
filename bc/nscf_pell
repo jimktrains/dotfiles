@@ -1,0 +1,374 @@
+/* bc program nscf_pell with jpr22 */
+/*
+ * This program solves the Pell equations x^2-dy^2=1 and -1, using the
+ * NSCF algorithm - nearest square continued fraction algorithm.
+ * We followed the account on page 407 of 'Solving the Pell Equation'
+ * by H.C. Williams, Proc. Millennial Conference on Number Theory, A.K. Peters,
+ * Natick MA, 2002, pp. 397-435
+ * Typing nscf_pell(d,1) prints the partial quotients, convergents, complete 
+ * quotients of the nearest square continued fraction of sqrt(d), as well as 
+ * the Pell equation solutions.
+ * nscf_pell(d,0) prints only the cfrac and  solutions of the Pell equation .
+ * Typing nscf_pqa(d,t,u,v), finds the nearest square continued 
+ * fraction of (u + t√d)/v and prints complete quotients and convergents.
+ * Also see papers by A.A. Krisnaswami Ayyangar at 
+ * http://www.ms.uky.edu/~sohum/AAK/PRELUDE.htm
+ */
+ print " typing nscf_pqa(d,t,u,v) prints a[i],b[i],convergents and (P[i[+sqrt(D))/Q[i],\n"
+ print "type nscf_pell(d,e) to solve Pell's equation using NSCF\n"
+
+define sign(a){
+	if(a>0) return(1)
+	if(a<0) return(-1)
+	return(0)
+}
+
+/* absolute value of an integer n */
+
+define abs(n){
+	if(n>=0) return(n)
+	return(-n)
+}
+
+/*NOTE: in bc we have */
+/* a%b=m(a,b) if a>=0 or a<0 and b divides a */
+/* a%b=m(a,b)-b if a<0, b>0, a not divisible by b */
+/* a/b=[a/b] if a>=0 or a<0 and b divides a */
+/* a/b=[a/b]+1 if a<0, b>0, a not divisible by b */
+/* a=b(a/b)+a%b */
+
+/* mod(a,b)=the least non-negative remainder when an integer
+   a is divided by a  positive integer b */
+
+define mod(a,b){
+auto c
+	c=a%b
+	if(a>=0) return(c)
+	if(c==0) return(0)
+        return(c+b)	
+}
+
+/* int(a,b)=integer part of a/b, a, b integers, b != 0 */
+
+define int(a,b){
+	if(b<0){
+	a= -a
+	b= -b
+	}
+	return((a-mod(a,b))/b)
+}
+
+define nscf_pell(d,e){
+auto g,x,p,q,k,p1,p2,q1,q2,c,b,t,b1,b2,c1,c2,flag,qvalue,temp1,temp2,a,olda,gvalue
+
+x=sqrt(d)
+g=1
+p=0
+q=1
+k=0
+b1=0
+c1=1
+b2=1
+c2=0
+a=1
+flag=0
+if(e){
+   print "(p[",k,"]+sqrt(",d,")/q[",k,"]=(",p,"+sqrt(",d,")/",q,","
+}
+while(1){
+  temp1=c1
+  temp2=c2
+  olda=a
+
+   if(q>0){
+      c=int(p+x,q)
+   }else{
+      c=int(x+p+1,q)
+   }
+   p1=c*q-p
+   q1=d-p1*p1
+   p2=p1+q
+   q2=-d+p2*p2
+   if(abs(q1)<abs(q2)||(abs(q1)==abs(q2)&& q<0)){
+      a=1
+      if(e){
+         print "a[",k+1,"]=1,"
+      }
+      p=p1
+      q=q1/q
+      b=c
+   }else{
+      a=-1
+      if(e){
+         print "a[",k+1,"]=-1,"
+      }
+      p=p2
+      q=q2/q
+      b=c+1
+   } 
+   g=-a*g
+  
+  if(k==0){
+    c1=b
+    c2=1
+  }else{
+    c1=b*c1+olda*b1
+    c2=b*c2+olda*b2
+  }
+  if(e){
+     print "A[",k,"]/B[",k,"]=",c1,"/",c2,","
+  }
+  b1=temp1
+  b2=temp2
+
+  t=k
+  k=k+1
+  if(e){
+    print "b[",t,"]=",b,",\n(p[",k,"]+sqrt(",d,")/q[",k,"]=(",p,"+sqrt(",d,")/",q,","
+  }else{
+     print b
+     if(!flag){
+        if(a==1){print "+1/"}
+        if(a==-1){print "-1/"}
+     }else{print "..."}
+  }
+   if(flag){
+     b1=abs(b1)
+     b2=abs(b2)
+     g=gvalue*qvalue
+     print "\n"
+     print "(",abs(b1),",",abs(b2),") is the least solution of x^2 - ",d,"y^2="
+     if(g==-1){
+        print "-1\n"
+        /*t1=b1*b1+d*b2*b2
+        t2=2*b1*b2*/
+        print "(",b1*b1+d*b2*b2,",",2*b1*b2,") is the least solution of x^2 - ",d,"y^2=1\n"
+        print "period length="
+        return(t)
+     }else{
+        print "1\n"
+        print "There is no solution of x^2 - ",d,"y^2= -1\n"
+        print "period length="
+        return(t)
+     }
+   }
+   if(abs(q)==1){
+    flag=1
+    qvalue=q
+    gvalue=g
+   }
+} 
+}
+
+define good1(d,p,q){
+auto r,t1,t2,fourd,x,y,z,asucc
+r=(d-p^2)/q
+t1=4*q^2+r^2
+t2=4*r^2+q^2
+fourd=4*d
+if(t1>fourd){
+/* print "Q^2+R^2/4 > D, so (",p,"+sqrt(",d,")/",q," is not good\n"*/
+   return(0)
+}
+if(t2>fourd){
+/* print "Q^2/4+R^2>D, so (",p,"+sqrt(",d,")/",q," is not good\n"*/
+   return(0)
+}
+asucc=nscf_succ(d,-p,r)
+if(psucc!=p || qsucc!=q){
+ /*print "(",p,"+sqrt(",d,")/",q," is not the successor of 1/(",-p,"+sqrt(",d,")/",r," and hence is not good\n"*/
+   return(0)
+}
+/*print "(",p,"+sqrt(",d,")/",q," is good\n"*/
+return(1)
+}
+
+/* This program uses a test for a quadratic surd to be NSCF reduced, developed in 2010 by John Robertson
+ * with help from Keith Matthews. See http://www.numbertheory.org/pdfs/nscf_reduced.pdf
+ * It assumes that (p+sqrt(d))/q satisfies  q divides d-p^2.
+ * It results in a simpler version of nscf_pqa(d,t,u,v,e).
+ */
+
+define jpr_test2(d,p,q){
+auto x,y,t,pp,qq,v
+x=good1(d,p,q)
+/*print "good1 returns x=",x,"\n"*/
+if(!x){
+   return(0)
+}
+/* q>0 here */
+t=q%2
+if(t){
+   /*print "(",p,"+sqrt(",d,")/",q," is not of the form (P+Q+sqrt(P^2+Q^2))/2Q, P>2Q>0 and so is NSCF reduced\n"*/
+   return(1)
+}else{
+   qq=q/2
+   pp=p-qq
+   v=pp^2+qq^2
+   if(d==v && pp > 2*qq){
+     /*print "(",p,"+sqrt(",d,")/",q," has the form (P+Q+sqrt(P^2+Q^2))/2Q, P>2Q>0,\n"
+     print " P=",pp,", Q=",qq," and so is not NSCF reduced\n"*/
+     return(0)
+   }else{
+     /*print "(",p,"+sqrt(",d,")/",q," is not of the form (P+Q+sqrt(P^2+Q^2))/2Q, P>2Q>0 and so is NSCF reduced\n"*/
+     return(1)
+   }
+}
+}
+
+define nscf_pqa(d,t,p,q){
+auto p1,p2,q1,q2,x,k,s,z1,z2,b1,c1,b2,c2,temp1,temp2,flag,reduced_k,olda
+
+x=sign(t)
+if(x==-1){
+   p=p*x
+   q=q*x
+}
+d=d*(t*t)
+x=abs(q)
+if((d-p*p)%x){
+   d=d*(x*x)
+   p=p*x
+   q=q*x
+}
+k=gcd3(p,q,(d-p*p)/q)
+if(k>1){/* converts to standard form */
+   p=p/k
+   q=q/k
+   d=d/(k*k)
+}
+x=sqrt(d)
+b1=0
+c1=1
+b2=1
+c2=0
+k=0
+a=1
+if(x*x==d){
+   print "\n"
+   return(0)
+}
+flag=0
+while(1){
+  if(flag==0){
+    t=jpr_test2(d,p,q)
+    if(t){
+        print "(P[",k,"]+sqrt(",d,")/Q[",k,"]=(",p,"+sqrt(",d,")/",q," is reduced\n"
+        p_reduced=p 
+        q_reduced=q 
+        k_reduced=k
+        flag=1
+    }
+   }
+  temp1=c1
+  temp2=c2
+  print "(P[",k,"]+sqrt(",d,")/Q[",k,"]=(",p,"+sqrt(",d,")/",q,","
+  olda=a
+
+  if(q>0){
+      c=int(p+x,q)
+  }else{
+      c=int(x+p+1,q)
+  }
+   p1=c*q-p
+   q1=d-p1*p1
+   p2=p1+q
+   q2=-d+p2*p2
+   if(abs(q1)<abs(q2)||(abs(q1)==abs(q2)&& q<0)){
+      a=1
+      print "a[",k+1,"]=1,"
+      p=p1
+      q=q1/q
+      b=c
+   }else{
+      a=-1
+      print "a[",k+1,"]=-1,"
+      p=p2
+      q=q2/q
+      b=c+1
+   } 
+  
+  oldc2=c2
+  if(k==0){
+    c1=b
+    c2=1
+  }else{
+    c1=b*c1+olda*b1
+    c2=b*c2+olda*b2
+  }
+  print "A[",k,"]/B[",k,"]=",c1,"/",c2,","
+  b1=temp1
+  b2=temp2
+
+  t=k
+  k=k+1
+  print "b[",t,"]=",b,",\n"
+
+  if((p==p_reduced && q==q_reduced)){
+    period_length=k-k_reduced
+      print "(P[",k,"]+sqrt(",d,")/Q[",k,"]=(",p,"+sqrt(",d,")/",q,"\n"
+      /*print "end of period detected\n"*/
+      print "P[",k,"]=P[",k_reduced,"]",","
+      print "Q[",k,"]=Q[",k_reduced,"]\n"
+    print "period_length=",period_length,"\n"
+    return(period_length)
+  }
+} 
+}
+
+/*  gcd(m,n) for any integers m and n */
+/* Euclid's division algorithm is used. */
+/* We use gcd(m,n)=gcd(m,|n|) */
+
+define gcd(m,n){
+	auto a,b,c
+	a=abs(m)         /* a=r[0] */ 
+	if(n==0) return(a)
+        b=abs(n)         /* b=r[1] */ 
+        c=a%b            /* c=r[2]=r[0] mod(r[1]) */ 
+        while(c>0){
+		a=b
+                b=c
+                c=a%b    /* c=r[j]=r[j-2] mod(r[j-1]) */
+        }
+	return(b)
+}   
+
+define gcd3(a,b,c){
+auto t
+t=gcd(a,b)
+t=gcd(t,c)
+return(t)
+}
+
+/* This program finds the NSCF successor (psucc+sqrt(d))/qsucc of (p+sqrt(d))/q.
+ * It also returns the sign of the positive/negative representation.
+ * psucc and qsucc are global.
+ */
+define nscf_succ(d,p,q){
+auto x,c,p1,q1,p2,q2,asucc
+
+   x=sqrt(d)
+   if(q>0){
+       c=int(p+x,q)
+   }else{
+       c=int(x+p+1,q)
+   }
+   p1=c*q-p
+   q1=d-p1*p1
+   p2=p1+q
+   q2=-d+p2*p2
+   if(abs(q1)<abs(q2)||(abs(q1)==abs(q2)&& q<0)){
+      asucc=1
+      psucc=p1
+      qsucc=q1/q
+      bsucc=c
+   }else{
+      asucc=-1
+      psucc=p2
+      qsucc=q2/q
+      bsucc=c+1
+   } 
+/* print "psucc=",psucc,",qsucc=",qsucc,"\n"*/
+   return(asucc)
+}

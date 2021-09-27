@@ -1,0 +1,512 @@
+/* bc program nipell - to be run with gcd */
+print "(a) nipell(d,0) finds the smallest solution of Pell's equation\n"
+print "    x^2-dy^2=1 or -1, using the nearest integer continued fraction\n"
+print "    of sqrt(d). The period (semi-period if negative Pell is soluble)\n"
+print "    is also printed.\n"
+print "    nipell(d,1) prints the partial quotients, complete convergents\n"
+print "    and convergents.\n"
+print "(b) nicp_pqa(d,t,u,v,1) prints partial quotients,convergents and\n"
+print "    complete convergents, of the nearest integer continued fraction\n"
+print "    of quadratic irrational (u+tsqrt(d))/v, where d is not a square,\n"
+print "    t,u,v integers, v nonzero.\n"
+print "    Period partial numerators and denominators are capitalised.\n"
+print "    nicp_pqa(d,t,u,v,0) prints only the partial quotients.\n"
+print "See R.A. Mollin, Quadratics, Exercise 4, 84-85 and  A. Hurwitz,\n"
+print "Mathematische Werke, Band II, 84-115 and H.C.Williams and P.A. Buhr\n"
+print "Math. Comp. 33 (1979) 369-381.\n"
+
+
+/* sign of an integer a */
+/* s(a)=1,-1,0, according as a>0,a<0,a=0 */
+
+define sign(a){
+	if(a>0) return(1)
+	if(a<0) return(-1)
+	return(0)
+}
+
+/* absolute value of an integer n */
+
+define abs(n){
+	if(n>=0) return(n)
+	return(-n)
+}
+
+/*NOTE: in bc we have */
+/* a%b=m(a,b) if a>=0 or a<0 and b divides a */
+/* a%b=m(a,b)-b if a<0, b>0, a not divisible by b */
+/* a/b=[a/b] if a>=0 or a<0 and b divides a */
+/* a/b=[a/b]+1 if a<0, b>0, a not divisible by b */
+/* a=b(a/b)+a%b */
+
+/* mod(a,b)=the least non-negative remainder when an integer
+   a is divided by a  positive integer b */
+
+define mod(a,b){
+	auto c
+	c=a%b
+	if(a>=0) return(c)
+	if(c==0) return(0)
+        return(c+b)	
+}
+
+/* int(a,b)=integer part of a/b, a, b integers, b != 0 */
+
+define int(a,b){
+	if(b<0){
+	a= -a
+	b= -b
+	}
+	return((a-mod(a,b))/b)
+}
+
+
+/* nint(p,q,d,f) finds the nearest integer to (p+sqrt(D)/q".
+ * Here d=int(sqrt(D)) and f = 1 if D-d > 1/2, 0 if D-d < 1/2.
+ * See http://www.numbertheory.org/notes.html.
+ * For use in nipell(d,v) below.
+ */
+define nint(p,q,d,f){
+auto r,s,t,q0,u
+
+q0=q
+r=sign(q)
+if(q<0){
+   q=-q
+}
+if(r>0){
+   t=p+d+(q+f)/2
+   u=int(t,q0)
+}else{
+   s=f+q+1
+   if(s%2){
+      t=1+p+d+s/2
+   }else{
+      t=p+d+s/2
+   }
+   u=int(t,q0)+1
+ }
+ return(u)
+}
+
+define nipell(d,v){
+auto x,p,q,a,k,z1,z2,b1,c1,b2,c2,temp1,temp2,flag,t1,t2,qvalue,temp
+
+x=sqrt(d)
+z1=(2*x+1)^2
+z2=4*d
+if(z2>z1){
+   f=1
+}else{
+   f=0
+}
+b1=0
+c1=1
+b2=-1
+c2=0
+p=0
+q=1
+k=0
+if(x*x==d){
+   return(0)
+}
+flag=0
+while(1){
+  temp1=c1
+  temp2=c2
+  if(v){
+    print "(p[",k,"]+sqrt(",d,")/q[",k,"]=(",p,"+sqrt(",d,")/",q,","
+  }
+  a=nint(p,q,x,f)
+  c1=a*c1-b1
+  c2=a*c2-b2
+  b1=temp1
+  b2=temp2
+  p=a*q-p
+  q=(-d+p*p)/q
+  if(v){
+    print "a[",k,"]=",a,",A[",k,"]/B[",k,"]=",c1,"/",c2,"\n"
+  }else{
+     print a,","
+     if(flag){
+        print "...\n"
+     }
+  }
+  if(flag){
+     if(v){
+        temp=k+1
+        print "(p[",temp,"]+sqrt(",d,")/q[",temp,"]=(",p,"+sqrt(",d,")/",q,"\n"
+     }
+     print "(",abs(b1),",",abs(b2),") is the least solution of x^2 - ",d,"y^2="
+     if(qvalue==-1){
+        print "-1\n"
+        t1=b1*b1+d*b2*b2
+        t2=2*b1*b2
+        print "(",t1,",",t2,") is the least solution of x^2 - ",d,"y^2=1\n"
+        print "period length="
+        return(k)
+     }else{
+        print "1\n"
+        print "There is no solution of x^2 - ",d,"y^2= -1\n"
+        print "period length="
+        return(k)
+   }
+  }else{
+    k=k+1
+  }
+  if(abs(q)==1){
+     qvalue=q
+     flag=1
+  }
+ }
+}
+
+/* This program finds the nearest integer continued fraction expansion of a
+ * quadratic irrational (u+tsqrt(d))/v, where d is not a square, t,u,v integers,
+ * v nonzero.
+ * After converting to (U+sqrt(D))/V, where V divides D-U^2,
+ * typing nicp_pqa(d,t,u,v,1) prints a[i],convergents and (P[i[+sqrt(D))/Q[i],
+ * typing nicp_pqa(d,t,u,v,0) prints only the a[i].
+ */
+
+define nicf_pqa(d,t,p,q,v){
+auto x,a,k,z1,z2,b1,c1,b2,c2,temp1,temp2,qvalue,temp,reduced_p,reduced_q,flag,reduced_k,period_length
+
+temp=sign(t)
+if(temp==-1){
+   p=p*temp
+   q=q*temp
+}
+d=d*(t*t)
+temp=abs(q)
+if((d-p*p)%temp){
+   d=d*(temp*temp)
+   p=p*temp
+   q=q*temp
+}
+k=gcd3(p,q,(d-p*p)/q)
+if(k>1){/* converts to standard form */
+   p=p/k
+   q=q/k
+   d=d/(k*k)
+}
+x=sqrt(d)
+z1=(2*x+1)^2
+z2=4*d
+if(z2>z1){
+   f=1
+}else{
+   f=0
+}
+b1=0
+c1=1
+b2=-1
+c2=0
+k=0
+if(x*x==d){
+   print "\n"
+   return(0)
+}
+flag=0
+while(1){
+  if(flag==0){
+      t=reduce_test(p,q,d)
+      if(t){
+       if(v){
+          print "(p[",k,"]+sqrt(",d,")/q[",k,"]=(",p,"+sqrt(",d,")/",q," is reduced\n"
+       }else{
+         print "period: "
+       }
+        reduced_k=k
+        reduced_p=p
+        reduced_q=q
+        flag=1
+      }
+  }
+  temp1=c1
+  temp2=c2
+  if(v){
+    print "(p[",k,"]+sqrt(",d,")/q[",k,"]=(",p,"+sqrt(",d,")/",q,","
+  }
+  a=nint(p,q,x,f)
+  c1=a*c1-b1
+  c2=a*c2-b2
+  if(v){
+    print "a[",k,"]=",a,",A[",k,"]/B[",k,"]=",c1,"/",c2,"\n"
+  }else{
+    print a,","
+  }
+  b1=temp1
+  b2=temp2
+  p=a*q-p
+  q=(-d+p*p)/q
+  k=k+1
+  if(p==reduced_p && q==reduced_q){
+    period_length=k-reduced_k
+    a=nint(p,q,x,f)
+    c1=a*c1-b1
+    c2=a*c2-b2
+    if(v){
+      print "(p[",k,"]+sqrt(",d,")/q[",k,"]=(",p,"+sqrt(",d,")/",q,"\n"
+      /*print "a[",k,"]=",a,",A[",k,"]/B[",k,"]=",c1,"/",c2,"\n"*/
+      print "end of period detected\n"
+      print "P[",k,"]=P[",reduced_k,"]",","
+      print "Q[",k,"]=Q[",reduced_k,"]\n"
+    }else{
+      print " "
+    }
+    print "period_length=",period_length,"\n"
+    return(period_length)
+  }
+ }
+}
+
+/* This is defined in Williams-Buhr */
+define m(d){
+auto g,y,x,h
+scale=3
+h=sqrt(d)
+g=(3-sqrt(5))/2
+x=h+g
+y=x-1
+print y," < b < ",x,"\n"
+}
+
+define reduce_test(p,q,d){
+auto x,y,t,r,u,v
+scale=10
+t=sqrt(d)
+x=(p+t)/q
+y=(p-t)/q
+r=(3-sqrt(5))/2
+u=1-r
+v=3-r
+if((x>2 && -u<y && y<r) || (x<-2 && -r<y && y<u) || x==v || x==-v){
+    scale=0
+    return(1)
+}else{
+    scale=0
+    return(0)
+}
+}
+
+define nicf_d(m,n){
+auto d,t,x
+for(d=m;d<=n;d++){
+   x=sqrt(d)
+   if(x*x==d){
+      continue
+   }
+   print d,":"
+   t=nicf_pqa(d,1,0,1,0)
+}
+}
+/* This program finds the half-regular nearest integer continued fraction 
+ * expansion of a quadratic irrational (u+tsqrt(d))/v, and  d>0 is not a square,
+ * t,u,v integers, v nonzero.
+ * After converting to (U+sqrt(D))/V, where V divides D-U^2,
+ * typing nicp_pqa0(d,t,u,v,1) prints a[i],convergents and (P[i[+sqrt(D))/Q[i],
+ * typing nicp_pqa0(d,t,u,v,0) prints only the a[i].
+ * See H.C. Williams, Solving the Pell equation, p. 406.
+ * We assume a recent conjecture of John Robertson to detect a period,
+ * namely \xi=(p+sqrt(d))/q is NICF-reduced (ie. belongs to a NICF period
+ * <=> \xi >2 and (1-sqrt(5))/2 < (p-sqrt(d))/q < (3-sqrt(5))/2 
+ * or \xi=(3+sqrt(5))/2.
+ * I have proved only the "<=" part, (9th January 2008).
+ * The partial numerators and denominators of the period are in capitals.
+ */
+
+define nicf_pqa0(d,t,p,q,v){
+auto x,a,k,z1,z2,b1,c1,b2,c2,temp1,temp2,qvalue,temp,reduced_p,reduced_q,flag,reduced_k,period_length,aa
+
+temp=sign(t)
+if(temp==-1){
+   p=p*temp
+   q=q*temp
+   d=d*(t*t)
+}
+temp=abs(q)
+if((d-p*p)%temp){
+   d=d*(q*q)
+   p=p*temp
+   q=q*temp
+}
+k=gcd3(p,q,(d-p*p)/q)
+if(k>1){/* converts to standard form */
+   p=p/k
+   q=q/k
+   d=d/(k*k)
+}
+x=sqrt(d)
+z1=(2*x+1)^2
+z2=4*d
+if(z2>z1){
+   f=1
+}else{
+   f=0
+}
+b1=0
+c1=1
+b2=1
+c2=0
+aa=1
+k=0
+if(x*x==d){
+   print "\n"
+   return(0)
+}
+flag=0
+while(1){
+  if(flag==0){
+      t=reduce_test1(p,q,d)
+      if(t){
+       if(v==0){
+        print "period: "
+       }
+       reduced_k=k
+       reduced_p=p
+       reduced_q=q
+       flag=1
+      }
+  }
+  temp1=c1
+  temp2=c2
+  if(v){
+      print "(p[",k,"]+sqrt(",d,")/q[",k,"]=(",p,"+sqrt(",d,")/",q,","
+      if(flag && k!=reduced_k){
+         print "A[",k,"]=",aa, " "
+      }else{
+         print "a[",k,"]=",aa, " "
+      }
+  }
+  a=nint(p,q,x,f)
+  c1=a*c1+aa*b1
+  c2=a*c2+aa*b2
+  aa=get_sign(p,q,a,x)
+  b1=temp1
+  b2=temp2
+  p=a*q-p
+  q=aa*(d-p*p)/q
+  if(v){
+    if(flag){
+       print "B[",k,"]=",a,",A[",k,"]/B[",k,"]=",c1,"/",c2,"\n"
+    }else{
+       print "b[",k,"]=",a,",A[",k,"]/B[",k,"]=",c1,"/",c2,"\n"
+    }
+  }else{
+      if(aa==1){
+          print a,"+1/";
+      }else{
+          print a,"-1/";
+      }
+  }
+  
+  k=k+1
+  if(p==reduced_p && q==reduced_q){
+    period_length=k-reduced_k
+    a=nint(p,q,x,f)
+    c1=a*c1+aa*b1
+    c2=a*c2+aa*b2
+    if(v){
+      print "(p[",k,"]+sqrt(",d,")/q[",k,"]=(",p,"+sqrt(",d,")/",q,","
+      print "A[",k,"]=",aa,","
+      print "b[",k,"]=",a,",A[",k,"]/B[",k,"]=",c1,"/",c2,"\n"
+      print "end of period detected\n"
+      print "p[",k,"]=p[",reduced_k,"]",","
+      print "q[",k,"]=q[",reduced_k,"]\n"
+      print "(p[",reduced_k,"]+sqrt(",d,")/q[",reduced_k,"]=(",reduced_p,"+sqrt(",d,")/",reduced_q," is reduced\n"
+    }else{
+      print "...\n"
+    }
+    print "period_length="
+    return(period_length)
+  }
+ }
+}
+
+/*
+  aa=get_sign(p,q,a,x) = sign((p-a*q+sqrt(d))/q), x=int(sqrt(d))
+ */
+define get_sign(p,q,a,x){
+auto t3,aa
+t3=p-a*q
+if(q>0){
+  if(t3>=0){
+     aa=1
+  }else{
+     t3=-t3
+     if(t3<=x){
+       aa=1
+     }else{
+       aa=-1
+     }
+  }
+}else{
+  if(t3>=0){
+     aa=-1
+  }else{
+     t3=-t3
+     if(t3<=x){
+       aa=-1
+     }else{
+       aa=1
+     }
+  }
+}
+return(aa)
+}
+
+define reduce_test0(p,q,x,aa){
+   if(aa== -1){
+       p=p-q
+   }
+   if(p<=x && q-p<=x && x<p+q){
+      return(1)
+   }else{
+      return(0)
+   }
+}
+
+/*  gcd(m,n) for any integers m and n */
+/* Euclid's division algorithm is used. */
+/* We use gcd(m,n)=gcd(m,|n|) */
+
+define gcd(m,n){
+	auto a,b,c
+	a=abs(m)         /* a=r[0] */ 
+	if(n==0) return(a)
+        b=abs(n)         /* b=r[1] */ 
+        c=a%b            /* c=r[2]=r[0] mod(r[1]) */ 
+        while(c>0){
+		a=b
+                b=c
+                c=a%b    /* c=r[j]=r[j-2] mod(r[j-1]) */
+        }
+	return(b)
+}   
+
+define gcd3(a,b,c){
+auto t
+t=gcd(a,b)
+t=gcd(t,c)
+return(t)
+}
+
+define reduce_test1(p,q,d){
+auto x,y,r,u,v,t
+scale=10
+t=sqrt(d)
+x=(p+t)/q
+y=(p-t)/q
+r=(3-sqrt(5))/2
+u=1-r
+v=3-r
+if((x>2 && -u<y && y<r) || x==v){
+    scale=0
+    return(1)
+}else{
+    scale=0
+    return(0)
+}
+}
+

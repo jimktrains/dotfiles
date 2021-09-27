@@ -1,0 +1,148 @@
+/* filename: 4_branch */
+
+"
+
+
+
+
+			A 4-branch conjecture.
+
+
+
+
+
+
+If s(y) is typed in, the iterates y, t(y), t(t(y)),... 
+
+of the 4-branched function t(x) below are printed and the number of steps
+
+taken to reach one of 0, -3, 2, 3, 6,-18, -46, -122, -330, -117, -137
+
+-186, -750, -261, -333, 5127 is recorded. 
+
+(It seems certain that every trajectory  will end in one of these numbers.)
+
+Type qu to exit the program.
+"
+/*  the least non-negative remainder when an integer a is divided by a positive
+integer b */
+
+/* a%b=m(a,b) if a>=0 or a<0 and b divides a */
+/* a%b=m(a,b)-b if a<0, b>0, a not divisible by b */
+
+define m(a,b){
+	auto c
+	c=a%b
+	if(a>=0) return(c)
+	if(c==0) return(0)
+        return(c+b)	
+}
+
+/* int(a,b)=integer part of a/b, a, b integers, b != 0 */
+
+define int(a,b){
+	if(b<0){
+	a= -a
+	b= -b
+	}
+	return((a-m(a,b))/b)
+}
+
+/* the 4-branched function */
+
+define t(x){
+auto y
+     y=m(x,4)
+	if(y==0) return(x/4)
+	if(y==1) return(int(3*x,4))
+	if(y==2) return(int(5*x,4))
+	return(int(17*x,4))
+}
+
+define s(y){
+	auto i,x
+	x=y
+		for(i=0;i>=0;i++){
+			if(x==0){
+				"starting value = ";y
+				"the number of iterations taken to reach 0 is "
+				return(i)
+			}
+			if(x==-3){
+				"starting value = ";y
+				"the number of iterations taken to reach -3 is "
+				return(i)
+			}
+			if(x==2){
+				"starting value = ";y
+				"the number of iterations taken to reach 2 is "
+				return(i)
+			}
+			if(x==3){
+				"starting value = ";y
+				"the number of iterations taken to reach 3 is "
+				return(i)
+			}
+			if(x==6){
+				"starting value = ";y
+				"the number of iterations taken to reach 6 is "
+				return(i)
+			}
+			if(x==-18){
+				"starting value = ";y
+				"the number of iterations taken to reach -18 is "
+				return(i)
+			}
+			if(x == -46){
+				"starting value = ";y
+				"the number of iterations taken to reach -46 is "
+				return(i)
+			}
+			if(x == -122){
+				"starting value = ";y
+				"the number of iterations taken to reach -122 is "
+				return(i)
+			}
+			if(x == -330){
+				"starting value = ";y
+				"the number of iterations taken to reach -330 is "
+				return(i)
+			}
+			if(x == -117){
+				"starting value = ";y
+				"the number of iterations taken to reach -117 is "
+				return(i)
+			}
+			if(x == -137){
+				"starting value = ";y
+				"the number of iterations taken to reach -137 is "
+				return(i)
+			}
+			if(x == -186){
+				"starting value = ";y
+				"the number of iterations taken to reach -186 is "
+				return(i)
+			}
+			if(x == -750){
+				"starting value = ";y
+				"the number of iterations taken to reach -750 is "
+				return(i)
+			}
+			if(x == -261){
+				"starting value = ";y
+				"the number of iterations taken to reach -261 is "
+				return(i)
+			}
+			if(x == -333){
+				"starting value = ";y
+				"the number of iterations taken to reach -333 is "
+				return(i)
+			}
+			if(x == 5127){
+				"starting value = ";y
+				"the number of iterations taken to reach 5127 is "
+				return(i)
+			}
+			(x=t(x))
+		}
+}

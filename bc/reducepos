@@ -1,0 +1,134 @@
+/* gnubc program : reducepos */
+"
+Enter an indefinite quadratic form (a,b,c)
+ie, where d=b^2-4ac> and d is not a perfect square
+To run this program: type reduce(a,b,c) (return)      
+to find the cycle of reduced forms to which (a,b,c) belongs
+See http://www.numbertheory.org/php/reducepos.html
+"
+/* sign of an integer a */
+/* sign(a)=1,-1,0, according as a>0,a<0,a=0 */
+
+define sign(a){
+	if(a>0) return(1)
+	if(a<0) return(-1)
+	return(0)
+}
+
+/* absolute value of an integer n */
+
+define abs(n){
+	if(n>=0) return(n)
+	return(-n)
+}
+
+/*  mod(a,b)=the least non-negative remainder when an integer a is divided by a
+ positive integer b */
+
+define mod(a,b){
+	auto c
+	c=a%b
+	if(a>=0) return(c)
+	if(c==0) return(0)
+        return(c+b)	
+}
+
+/* int(a,b)=integer part of a/b, a, b integers, b != 0 */
+
+define int(a,b){
+	auto c
+	c=sign(b)
+	a=a*c
+	b=b*c
+	return((a-mod(a,b))/b)
+}
+
+/*
+ * This is a function for finding the period of the continued fraction
+ * expansion of reduced quadratic irrational a=(u+sqrt(d))/v.
+ * Here d is non-square, 1<(u+sqrt(d))/v, -1<(u-sqrt(d))/v<0.
+ * The algorithm also assumes that v divides d-u*u and is based on K. Rosen,
+ * Elementary Number theory and its applications, p.379-381 and Knuth's The art
+ * of computer programming, Vol. 2, p. 359.  0 is returned if a is not reduced.
+ */
+define period(d,u,v,i){
+	auto a,r,s,t,f,j,temp,len
+	f=sqrt(d)
+	s=v
+	r=u
+	print "cycle:\n"
+/* i is created by reduce(x,b,c) below and indexes the ith 
+   convergent of the (u+sqrt(d))/v created there) */
+
+	for(j=i;1;j++){
+		a=(f+u)/v
+		u=a*v-u
+		temp=v
+		v=(d-u*u)/v
+	        /*   print "        u[",j+1,"]=",u, ", v[",j+1,"]=", v,"\n"*/
+		print "(",sign*temp/2,",",u,",",sign*(-v/2),")\n"
+		sign= -sign
+
+		if(u==r){if(v==s)break}
+	}
+	len=j+1-i
+        llen=len /* global variable */
+	if(len%2==0){
+		return(len)
+	}else{/* we are getting the remaining half of the cycle of forms */
+		for(j=i;1;j++){
+			a=(f+u)/v
+			u=a*v-u
+			temp=v
+			v=(d-u*u)/v
+                        /*print "        u[",j+1,"]=",u, ", v[",j+1,"]=", v,"\n"*/
+			print "(",sign*temp/2,",",u,",",sign*(-v/2),")\n"
+			sign= -sign
+
+			if(u==r){if(v==s)return(2*len)}
+		}
+	}
+}
+
+/*
+ * This function uses the continued fraction algorithm expansion in K. Rosen,
+ * Elementary Number theory and its applications,p.379-381 and Knuth's
+ * The art of computer programming, Vol. 2, p. 359. It locates the first 
+ * complete quotient that is reduced and then uses the function period(d,u,v)
+ * to locate the period of the continued fraction expansion.
+ */
+
+define reduce(a,b,c){
+	auto x,d,f,j,u,v,len
+	d=b*b-4*a*c
+	f=sqrt(d)
+	print "(",a,",",b,",",c,")\n"
+	sign=1
+	u=b
+	v=-sign*2*c
+	
+	for(j=0;1;j++){
+		/*print "        u[",j,"]=",u, ", v[",j,"]=", v,"\n" */
+	        if(j){ print "(",sign*(d-u^2)/(2*v),",",u,",",sign*(-v/2),")\n"
+	        }
+		sign= -sign
+		if(v>0){
+			if(u>0){
+				if(u<= f){
+					if(f<u+v){
+						if(v-u <=f){
+				 /* (u+sqrt(d))/v is reduced */
+							len=period(d,u,v,j)
+print "cfrac has period_length ",llen,"\n"
+print "cycle of reduced forms has period length ";return(len)
+						}
+					}
+				}
+			}
+		}
+		if(v>0)x=int(f+u,v)
+		if(v<0)x=int(f+u+1,v)
+		u=x*v-u
+		v=int(d-u*u,v)
+	}
+}

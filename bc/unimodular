@@ -1,0 +1,91 @@
+/* BC program unimodular */
+
+define max(a,b){
+	if(a>=b){
+	  return(a)
+	}else{
+	  return(b)
+	}
+}
+
+define min(a,b){
+	if(a>=b){
+	  return(b)
+	}else{
+	  return(a)
+	}
+}
+print "This algorithm expresses a unimodular matrix A !=I_2 or U=[0 1]\n"
+print "                                                          [1 0]\n"
+print "with non-negative coefficients, as a product of one of the \n"
+print "following forms:\n"
+print "P, UP, PU, or UPU, where P is a product of matrices of the form\n"
+print "[a 1], a>0.\n"
+print "[1 0]\n"
+print "The representation is unique. See Kjell Kolden, 'Continued fractions\n"
+print "and linear substitutions', Arch. Math. Naturvid. 50 (1949), 141-196.\n"
+print "The number n of matrices in the product [d[0]1]***[d[n-1]1] \n"
+print "is returned.                            [  1 0]   [  1   0]\n"
+                     
+print "type unimodular(p,q,r,s)\n"
+
+define unimodular(p,q,r,s){
+	auto det,tempp,tempq,d,d1,d2,i
+
+	det=p*s-q*r
+	if(det!= -1 && det !=1){
+		print "A is not unimodular\n"
+		return(0)
+	}
+	if(p<0){
+		print "p<0\n"
+		return(0)
+	}
+	if(q<0){
+		print "q<0\n"
+		return(0)
+	}
+	if(r<0){
+		print "r<0\n"
+		return(0)
+	}
+	if(s<0){
+		print "s<0\n"
+		return(0)
+	}
+	if(p==1&&q==0&&r==0&&s==1){
+		print "A=I_2\n"
+		return(0)
+	}
+	if(p==0&&q==1&&r==1&&s==0){
+		print "A=U\n"
+		return(0)
+	}
+	i=0
+	while(1){
+		if(s==0){
+		  print "d[",i,"]=",p,"\n"
+		  i=i+1
+		  break
+		}
+		if(r==0){
+		  print "d[",i,"]=",q,"\n"
+		  i=i+1
+		  print "d[",i+1,"]=0\n"
+		  i=i+1
+		  break
+		}
+		d1=q/s
+		d2=p/r
+		d=min(d1,d2)
+		tempp=p
+		p=r
+		r=tempp-d*r
+		tempq=q
+		q=s
+		s=tempq-d*s
+		  print "d[",i,"]=",d,"\n"
+	        i=i+1
+	}
+	return(i)
+}

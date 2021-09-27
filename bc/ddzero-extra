@@ -1,0 +1,66 @@
+# This takes the array sol[] of m integers outputted by sswgeneral in the case D=0 
+# where u is nonzero and  tests to see if it can be decomposed into m/nn arithmetic progressions
+# of length nn with common difference |u|/nn, where nn > 1 is a divisor of m, as well as u.  
+# The idea is due to Chi Chon Lei November 19th, 2019. Alan Offer coded the important apr function.
+define improvement(u,v,sol[],m,a,b,d,e){
+auto t,g,nn,dd,c[],i,j,tcount,minusbu,twoa,twob,bdu4,bsquared4v,abu8,r
+
+minusbu=-b*u
+twoa=2*a
+twob=2*b
+bdu4=4*b*d*u
+bsquared4v=4*b*b*v
+abu8=8*a*b*u
+r=u^2-bdu4+bsquared4v
+print "r=",r,"\n"
+print "abu8=",abu8,"\n"
+t=omega(m)
+g=divisors(qglobal[],kglobal[],t)
+# now we have divisors divisor[0]=1, ...,divisor[g-1], which I think are in order of magnitude
+
+tcount=0
+for(i=1;i<g;i++){
+   print "divisor[",g-i,"]=",divisor[i],","
+}
+print "\n"
+for(i=1;i<g;i++){# we start with the greatest divisor > 1 of m 
+   nn=divisor[g-i]
+   if(u%nn==0){
+      dd=abs(u)/nn
+print "(u,v,m,dd,nn)=(",u,",",v,",",m,",",dd,",",nn,")\n"
+      h=apr(sol[],m,dd,nn)
+      if(h==1){
+         continue
+      }
+      k=m/nn
+      for(j=0;j<k;j++){
+          c[j]=globaloutput_array[j]
+          print "c[",tcount,"]=",c[j],"\n"
+          tcount=tcount+1
+          print "x=(",minusbu,"/",twoa,")(k/",nn,"+(",twob*c[j]-u,"/",twob*u,"))^2+(",r,"/",abu8,")\n"
+          print "y=",u,"(k/",nn,"+(",c[j],"/",u,"))^2-(",v,"/",u,")\n"
+      }
+      print "we have ",globaloutput_array_number," reduced solution families\n"
+      return
+   }
+}
+}
+
+define sort_array(a[],n){
+auto i,j,temp,s,t
+
+   t=n-1
+   for(i=0;i<t;i++){
+      s=i+1
+      for(j=s;j<n;j++){
+         if(a[i]>a[j]){
+            temp=a[i]
+            a[i]=a[j]
+            a[j]=temp
+         }
+      }
+   }
+   for(i=0;i<n;i++){
+      output_array[i]=a[i]
+   }
+}

@@ -1,0 +1,244 @@
+/*
+ * bc program discrete_log. 11/7/99.
+ * modified on 14th May 2004 by adding only those functions of gcd 
+ * that are needed.
+ */
+
+/* s(a)=1,-1,0, according as a>0,a<0,a=0 */
+
+define sign(a){
+	if(a>0) return(1)
+	if(a<0) return(-1)
+	return(0)
+}
+
+/* absolute value of an integer n */
+
+define abs(n){
+	if(n>=0) return(n)
+	return(-n)
+}
+
+/*NOTE: in bc we have */
+/* a%b=m(a,b) if a>=0 or a<0 and b divides a */
+/* a%b=m(a,b)-b if a<0, b>0, a not divisible by b */
+/* a/b=[a/b] if a>=0 or a<0 and b divides a */
+/* a/b=[a/b]+1 if a<0, b>0, a not divisible by b */
+/* a=b(a/b)+a%b */
+
+/* mod(a,b)=the least non-negative remainder when an integer
+   a is divided by a  positive integer b */
+
+define mod(a,b){
+	auto c
+	c=a%b
+	if(a>=0) return(c)
+	if(c==0) return(0)
+        return(c+b)	
+}
+
+/* int(a,b)=integer part of a/b, a, b integers, b != 0 */
+
+define int(a,b){
+	if(b<0){
+	a= -a
+	b= -b
+	}
+	return((a-mod(a,b))/b)
+}
+
+/*  gcd(m,n) for any integers m and n */
+/* Euclid's division algorithm is used. */
+/* We use gcd(m,n)=gcd(m,|n|) */
+
+define gcd(m,n){
+	auto a,b,c
+	a=abs(m)         /* a=r[0] */ 
+	if(n==0) return(a)
+        b=abs(n)         /* b=r[1] */ 
+        c=a%b            /* c=r[2]=r[0] mod(r[1]) */ 
+        while(c>0){
+		a=b
+                b=c
+                c=a%b    /* c=r[j]=r[j-2] mod(r[j-1]) */
+        }
+	return(b)
+}   
+
+/* gcd(a,b)=a*h(a,b)+b*k(a,b) for any integers a and b,
+ * where h(a,b) and k(a,b) are calculated as follows:
+ * Let q[1],...,q[n] be the quotients in Euclid's algorithm.
+ * Then the recurrence relation 
+ * s[0]=1, s[1]=0, s[j]=s[j-2]-q[j-1]*s[j-1] for j=2,...,n
+ * is implemented. Then h(a,b)=s[n].
+ * The recurrence relation 
+ * t[0]=0, t[1]=1, t[j]=t[j-2]-q[j-1]*t[j-1] for j=2,...,n
+ * is implemented. Then k(a,b)=t[n]. 
+ */
+
+/* gcd1(m,n)=h(m,n).
+ * gcd2(m,n)=k(m,n).
+ */
+
+define gcd1(m,n){
+	auto a,b,c,h,k,l,q,t
+	if(n==0) return(sign(m))
+        a=m                /* a=r[0] */ 
+        b=abs(n)           /* b=r[1] */ 
+        c=mod(a,b)         /* c=r[2] */ 
+	if(c==0) return(0)
+        l=1                /* l=s[0] */ 
+        k=0                /* k=s[1] */ 
+        while(c>0){
+                q=(a-c)/b  /* q=q[j-1]=[r[j-2]/r[j-1]] */
+                a=b
+                b=c
+                c=mod(a,b) /* c=r[j],r[j-2]=q[j-1]*r[j-1]+r[j]*/
+                h=l-q*k    /* h=s[j],k=s[j-1], l=s[j-2] */ 
+              	l=k 
+              	k=h
+        }         
+	return(k)          /* k=s[j] */
+}   
+
+
+define gcd2(m,n){
+        auto a,b,c,h,k,l,q,t,j
+	if(n==0) return(0)
+        a=m                /* a=r[0] */ 
+        b=abs(n)           /* b=r[1] */ 
+        c=mod(a,b)         /* c=r[2] */ 
+	if(c==0) return(sign(n))
+	l=0                /* l=t[0] */ 
+	k=1                /* k=t[1] */ 
+        while(c>0){
+                q=(a-c)/b  /* q=q[j-1]=[r[j-2]/r[j-1]] */
+                a=b
+                b=c
+                c=mod(a,b) /* c=r[j],r[j-2]=q[j-1]*r[j-1]+r[j]*/
+                h=l-q*k    /* h=t[j],k=t[j-1], l=t[j-2] */ 
+               	l=k
+               	k=h
+        }
+		q=(a-c)/b
+	if(n<0)	return(-k)
+	return(k)          /* k=t[j] */
+}  
+
+/* inv(a,n) returns the inverse of a (mod n), n>0 if gcd(a,n)=1.
+ * uses the fact that |s[j]|<n in general.
+ */
+define inv(a,n){
+	auto s
+	if(gcd(a,n)>1){print "gcd(a,n)>1\n";return(0)}
+	s=gcd1(a,n)
+	if(s<0)return(s+n)
+	return(s)
+}
+
+/* a^b (mod c), a,b,c integers, a,b>=0,c>=1 */
+define mpower(a,b,c){
+	auto x,y,z
+	x=a
+	y=b
+	z=1
+	while(y>0){
+		while(y%2==0){
+			y=y/2
+			x=(x*x)%c
+		}
+		y=y-1
+		z=mod(z*x,c)
+	}
+	return(z)
+}
+
+/* Divide and conquer method for locating the
+ * index k such that integer i=a[k] in the
+ * sequence of distinct integers a[m],...,a[n].
+ * returns -1 if i does not occur.
+ */
+
+define detect(i,a[],m,n){
+auto j,k,l,t,s
+j=m
+k=n
+s=k-j
+while(s>1){
+	t=(j+k)/2
+	l=a[t]
+	if(i==l)return(t)
+	if(i<l)k=t
+	if(i>l)j=t
+	s=k-j
+}
+if(i==a[j])return(j)
+if(i==a[k])return(k)
+return(-1)
+}
+
+/* From "Algorithms", by R. Sedgewick, p. 118.
+ * Here the arrays a[],b[] are global, being
+ * produced by program shanks() below.
+ * Initially b[k]=k, while at the end of sorting,
+ * b[i]<-s[i], where s is the sorting permutation
+ * and a[i]<-a[s[i]].
+ */
+
+define quicksort(l,r){
+auto v,t,i,j,k,z,x,y
+
+	if(r>l){
+		v=a[r]
+		i=l-1
+		j=r
+		while(j>i){
+			while(1){
+				i=i+1
+				if(a[i]>=v)break
+			}
+			while(1){
+				j=j-1
+				if(a[j]<=v)break
+			}
+			t=a[i];z=b[i]
+			a[i]=a[j]; b[i]=b[j]
+			a[j]=t; b[j]=z;
+		}
+		a[j]=a[i]; b[j]=b[i];
+		a[i]=a[r]; b[i]=b[r];
+		a[r]=t; b[r]=z;
+		x=quicksort(l,i-1)
+		y=quicksort(i+1,r)
+	}else {
+	   return(0)
+	}
+}
+
+/* From O. Forster, "Algorithmische Zahlentheorie", Vieweg 1996, 65-66.
+ * returns y, 0<=y<p-1, where g^y=x(mod p). Here ord_p(g)=p-1.
+ * If no solution y exists, we return -1.
+ */
+define shanks(x,g,p){
+        auto b,i,h,k
+	if(p>=2^32-2^16){
+		print "p>= 2^32-2^16\n"
+		return
+	}
+        q=(sqrt(4*p+1)+1)/2
+
+        for(i=0;i<=q;i++){b[i]=i}
+        for(k=0;k<=q;k++){
+              a[k]=mpower(g,q*k,p)
+        }
+        b=quicksort(0,q)
+        h=inv(g,p)
+        for(i=0;i<q;i++){
+             j=mod((x*mpower(h,i,p)),p)
+	     k=detect(j,a[],0,q)
+	     if(k>=0){
+		return((b[k]*q+i)%(p-1))
+	     }
+        }
+        return(-1)
+}

@@ -1,0 +1,20 @@
+/* bc program tangent */
+/* This constructs the tangent number  t[n]. In fact it constructs t[1],...,t[n].
+   See slides by Richard Brent at http://maths.anu.edu.au/~brent/talks.html
+ */
+define tangent(n){
+auto k,j
+   t[1]=1
+   for(k=2;k<=n;k++){
+      t[k]=(k-1)*t[k-1]
+   }
+   for(k=2;k<=n;k++){
+      for(j=k;j<=n;j++){
+         t[j]=(j-k)*t[j-1]+(j-k+2)*t[j]
+      }
+   }
+  /* for(k=1;k<=n;k++){
+      print "t[",k,"]=",t[k]," "
+   }*/
+   return(t[n]) 
+}

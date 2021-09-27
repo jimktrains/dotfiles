@@ -1,0 +1,51 @@
+/* BC program irregular */
+
+/* irreg(p) returns 1 if p is an irregular prime and prints the B_2n which p divides. */
+/* returns 0 if p is a regualr prime.*/
+define irreg(p){
+   auto a[],b[],flag,limit,n,sum,t,s,r,i
+   flag=0
+   a[p-1]=p-1
+   a[p-2]=1
+   for(i=p-2;i>=2;i--){
+     a[i-1]=(a[i]*i)%p
+/*   print "a[",i-1,"]=",a[i-1],","*/
+   }
+/* print "\n"*/
+   t=inv(2,p)
+   b[0]=1
+   limit=(p-3)/2
+   for(n=1;n<=limit;n++){
+      sum=0
+      r=n+n
+      for(i=0;i<n;i++){
+         temp=(b[i]*a[r-i-i+1])%p
+         sum=(sum+temp)%p
+      }
+      b[n]=(a[r]*t-sum)%p
+      if(b[n]==0){
+          print "B[",2*n,"],"
+          flag=1
+      }
+   }
+   return(flag)
+}
+
+/* This finds the irregular primes p in primes[m] <= p <= primes[n]. */
+define irreglist(m,n){
+auto i,t
+ for(i=m;i<=n;i++){
+     t=irreg(prime[i])
+     if(t){
+        print prime[i],"\n"
+     }
+ }
+}
+
+define test(p){
+auto i
+   for(i=p-2;i>=2;i--){
+     a[i-1]=(a[i]*i)%p
+     print "a[",i-1,"]=",a[i-1],"\n"
+   }
+}

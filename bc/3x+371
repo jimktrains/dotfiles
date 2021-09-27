@@ -1,0 +1,96 @@
+/* filename: 3x+371 */
+
+"
+
+
+
+
+			THE 3x+371 CONJECTURE.
+
+
+
+
+
+
+If s(y) is typed in, (y non-zero), the iterates y, t(y), t(t(y)),... 
+
+of the 3x+371 function t(x) are printed and the number of steps
+
+taken to reach one of 25, 265, 371, 721, -371, -1855, -6307, -563
+ 
+is recorded. 
+
+(It seems certain that every trajectory starting from a non-zero
+
+integer will end in one of these numbers.)
+
+Type qu to exit the program.
+"
+/*  the least non-negative remainder when an integer a is divided by a positive
+integer b */
+
+/* a%b=m(a,b) if a>=0 or a<0 and b divides a */
+/* a%b=m(a,b)-b if a<0, b>0, a not divisible by b */
+
+define m(a,b){
+	auto c
+	c=a%b
+	if(a>=0) return(c)
+	if(c==0) return(0)
+        return(c+b)	
+}
+
+/* the 3x+371 function */
+
+define t(x){
+	if(m(x,2)==0) return(x/2)
+	return((3*x+371)/2)
+}
+
+define s(y){
+	auto i,x
+	x=y
+		for(i=0;i>=0;i++){
+			if(x==721){
+				"starting value = ";y
+				"the number of iterations taken to reach 721 is "
+				return(i)
+			}
+			if(x==371){
+				"starting value = ";y
+				"the number of iterations taken to reach 371 is "
+				return(i)
+			}
+			if(x==265){
+				"starting value = ";y
+				"the number of iterations taken to reach 265 is "
+				return(i)
+			}
+			if(x==25){
+				"starting value = ";y
+				"the number of iterations taken to reach 25 is "
+				return(i)
+			}
+			if(x == -371){
+				"starting value = ";y
+				"the number of iterations taken to reach -371 is "
+				return(i)
+			}
+			if(x == -1855){
+				"starting value = ";y
+				"the number of iterations taken to reach -1855 is "
+				return(i)
+			}
+			if(x == -6307){
+				"starting value = ";y
+				"the number of iterations taken to reach -6307 is "
+				return(i)
+			}
+			if(x == -563){
+				"starting value = ";y
+				"the number of iterations taken to reach -563 is "
+				return(i)
+			}
+			(x=t(x))
+		}
+}

@@ -1,0 +1,31 @@
+/* If euclid0(m,n) is typed in (n>0).
+ * The length i of Euclid's algorithm is returned.
+ * The partial quotients and convergents for the cfrac of m/n are returned.
+ */
+define euclid0(m,n){
+auto a,b,r,q,i,ax,ay,bx,by,za,zb
+        a=m
+        b=n
+        r=mod(a,n)
+        q=(a-r)/b
+	i=0
+        ax=1;ay=q
+        bx=0;by=1
+        print "q[0]=",q,",A[0]=",ay,",B[0]=",by,"\n"
+        while(r>0){
+           a=b
+           b=r
+           r=a%b
+           q=(a-r)/b
+           za=q*ay+ax
+           zb=q*by+bx
+           ax=ay
+           ay=za
+           bx=by
+           by=zb
+	   i=i+1
+           print "q[",i,"]=",q,",A[",i,"]=",ay,",B[",i,"]=",by,"\n"
+        }
+        return(i)
+}   
+

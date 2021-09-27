@@ -1,0 +1,108 @@
+/* BC program wildberger1.
+ * This solves Pell's equation using Norman Wildberger's algorithm.
+ * See http://www.numbertheory.org/php/wildberger.html
+ * e=1 is verbose.
+ */
+define wild(d,e){
+auto a,b,c,t,i,u,v,r,s,lr[],j,count,temp,flag,negv,negs
+
+a=1
+b=0
+c=-d
+u=1
+v=0
+r=0
+s=1
+i=0
+flag=0
+if(e){
+   print "(a[0[,b[0],c[0])=(1,0,",-d,")\n"
+}
+while(1){
+  t=a+2*b+c
+  if(t>0){
+    a=t
+    b=b+c
+    u=u+v
+    r=r+s
+if(e){
+    print"L:"
+}
+    lr[i]=-1
+  }else{
+    b=a+b
+    c=t
+    v=u+v
+    s=r+s
+if(e){
+    print"R:"
+}
+    lr[i]=1
+  }
+  temp=i+1
+if(e){
+  print "N[",temp,"]=(",u,",",v,",",r,",",s,")\n"
+  print "(a[",temp,"],b[",temp,"],c[",temp,"])=(",a,",",b,",",c,")\n"
+}
+  if(a==d && b==0 && c==-1){
+     negv=v
+     negs=s
+     flag=1
+  }
+  if(a==1 && b==0 && c=-d){
+    if(flag){
+       print "The negative Pell equation has least positive solution (",negv,",",negs ,")\n"
+    }
+    print "The Pell equation  has least positive solution (",u,",",r ,")\n"
+     count=i+1
+     if(e){
+        print "N[",temp,"]="
+        for(k=i;k>=0;k--){
+           if(lr[k]==1){
+              print "R"
+           }else{
+              print "L"
+           }
+        }
+        print "\n"
+        print "="
+        while(i>=0){
+           if(lr[i]==1){
+             j=0
+             print "R"
+             while(i>=0 && lr[i]==1){
+                  i=i-1
+                  j=j+1
+             }
+           }
+           if(j>1){
+              print j
+           }
+           if(i>0){
+              print"."
+           }
+           if(i==-1){
+             break
+           }
+           if(lr[i]==-1 && i>=0){
+             j=0
+             print "L"
+             while(lr[i]==-1){
+                  i=i-1
+                  j=j+1
+             }
+           }
+           if(j>1){
+              print j
+           }
+           print"."
+        }
+        print "\n"
+        print "number of matrices R and L in N[",temp,"] = "
+     }
+     return(count)
+  }
+  i=i+1
+}
+}
+

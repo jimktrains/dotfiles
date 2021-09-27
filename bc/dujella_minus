@@ -1,0 +1,147 @@
+define negdujella(k){
+auto r,i,kk,z,g,count,kkover2
+kk=k^2+1
+kkover2=kk/2
+r=sqroot(1,kk,0)
+count=0
+for(i=0;i<numbr;i++){
+   x=solution[i]
+   if(x>1 && x<=kkover2){
+      z=(x^2-1)/kk
+      g=issquare(z+1)
+      if(g>1 && g<k){
+        print "k=",k,": (X,Y)=(",x,",",g,"), (x,y)=(",kk*g-k*x,",",k*g-x,")\n"
+        count=count+1
+      }
+   }
+}
+return(count)
+}
+
+define test(m,n){
+auto k,r,count
+count=0
+for(k=m;k<=n;k++){
+ r=negdujella1(k)
+ if(r==1){
+    count=count+1
+ }
+ if(r>1){
+    print "counter-example\n"
+    return(-1)
+ }
+}
+return(count)
+}
+
+/* This uses the fact that X^2-(k^2+1)=-k^2 implies X^2-1=(k^2+1)(y^2-1).
+ * Dujella's unicity conjecture is equivalent to there being at most one positive integer
+ * solution satisfying 1<Y<k.   In fact we can show that such a solution must satisfy Y< k/2,
+ * which implies 1 < X < (k^2+1)/2.
+ * So we look for solutions of the congruence X^2=1 mod(k^2+1) satisfying 1<X<(k^2+1)/2
+ * and for which (X^2-1)/(k^2+1)=Y^2-1. 
+ * We solve the congruence by the Chinese remainder theorem after factorizing k^2+1
+ * and using the fact that we know the solutions of X^2=1 mod 2 and an odd prime power.
+ * Note that if k is odd, then k^2+1 = 2(2m+1).
+ * negdujella(k) above uses the sqroot function, which might make it slower than negdujella1(k).
+ * test(m,n) tests the unicity conjecture for k = m,...,n, using negdujella1(k).
+ */
+print "To run this program you need gcd and squareroot2\n"
+define negdujella1(k){
+auto kk,kkover2,n,t,i,j,x,z,g,count
+count=0
+kk=k^2+1
+kkover2=kk/2
+n=omega(kk)
+for(i=0;i<n;i++){
+   global_primepower[i]=qglobal[i]^kglobal[i]
+}
+t=2^n
+for(j=0;j<t;j++){
+    if(k%2){ /* if k is odd, we have k^2+1=2xodd and we choose arrays of length n 
+                with global_digits_array[0]=1,  whereas the remaining n-1 digits 
+                are 1 or -1*/
+       if(j%2==0){
+          x=randomarray(j,n,0)
+       }else{
+          continue
+       }
+    }else{
+       x=randomarray(j,n,0)
+    }
+    /*for(i=0;i<n;i++){
+     print global_digits_array[i]," "
+    }
+    print "\n" */
+    x=chinesearray(global_digits_array[],global_primepower[],n)
+    /*print "x=",x,"\n"*/
+    if(x>1 && x<=kkover2){
+      z=(x^2-1)/kk
+      g=issquare(z+1)
+      if(g>1 && g<k){
+        print "k=",k,": (X,Y)=(",x,",",g,"), (x,y)=(",kk*g-k*x,",",k*g-x,")\n"
+        count=count+1
+      }
+   }
+}
+return(count)
+}
+
+/* m < 2^array_length */
+define randomarray(m,array_length,flag){
+auto i,t,r
+t=array_length
+r=binary(m,0)
+/*for(i=0;i<r;i++){
+ print "binary digit[",i,"]=",global_binary_digit[i]," "
+}
+print "\n"*/
+
+for(i=0;i<t;i++){
+     global_digits_array[i]=1
+}
+for(i=0;i<r;i++){
+     if(global_binary_digit[i]==1){
+        global_digits_array[i]=-1
+     }
+     if(flag){
+        print global_digits_array[i]," "
+     }
+}
+if(flag){
+   print "\n"
+}
+}
+
+/* binary(n,flag) calculates the binary expansion of n */
+define binary(n,flag){
+auto i,g
+i=0
+while(n){
+   global_binary_digit[i]=n%2
+   i=i+1
+   n=n/2
+}
+g=i
+for(i=0;i<g;i++){
+     if(flag){
+        print "binary digit[",i,"]=",global_binary_digit[i]," "
+     }
+}
+if(flag){
+   print "\n"
+}
+return(g)
+}
+
+define chinesearray(a[],m[],n){
+	auto i,m,x
+	m=m[0]
+	x=a[0]
+	for(i=1;i<n;i++){
+		x=chinese1(a[i],x,m[i],m)
+		m=lcm(m[i],m)
+	}
+	return(x)
+}
+

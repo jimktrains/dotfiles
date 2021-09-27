@@ -1,0 +1,34 @@
+/* gnubc program: unit */
+"
+This is a program for finding the period of sqrt(d)).
+The algorithm is based on K. Rosen, Elementary number theory
+and its applications, p382, B.A. Venkov, Elementary Number theory,
+p.62 and D. Knuth, Art of computer programming, Vol.2, p359, with
+Pohst's trick of using half the period.
+To run the program for (say) d=33: type z=period(33) (return)
+"
+define period(d){
+	auto h,p,q,e,f,g,x,y
+	x=sqrt(d)
+	p=0;q=1
+	g=x*x
+	if(d==g){d;"is a perfect square ";return(0)}
+	if(d==g+1){/* period length = 1 */
+          return(1)
+	}
+	for(h=0;1;h++){
+		y=(x+p)/q
+		f=p
+		p=y*q-p
+		e=q
+		q=(d-(p*p))/q
+		if(p==f){/* P_h=P_{h+1}, even period 2h */
+                   print "P_",h,"=P_",h+1,"\n"
+                   return(2*h)
+		}
+		if(q==e){/* Q_{h-1}=Q_h, odd period 2h+1 */
+                   print "Q_",h,"=Q_",h+1,"\n"
+                   return(2*h+1)
+		}
+    }
+}

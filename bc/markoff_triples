@@ -1,0 +1,34 @@
+define tree(x,y,z,limit){
+   auto nodecount
+   /* It is assumed that y<=limit and z<=limit */
+   /* Return value: number of nodes in the tree */
+   
+   /* output this node */
+   print "(",x,",",y,",",z,")\n"
+   nodecount = 1
+
+   /* do left subtree (if limit not exceeded) */
+   newz1=3*x*z-y
+   if ( newz1 <= limit ){
+       nodecount += tree(x, z, newz1, limit)
+   }
+   
+   /* do right subtree (if limit not exceeded) */
+   newz2=3*y*z-x
+   if ( newz2 <= limit ){
+      nodecount += tree(y, z, newz2, limit)
+   }
+
+   return nodecount
+}
+
+/* test*limit) prints all markoff triples (x,y,z) with x<y<z and 5<=z<=limit.
+ * The recursion is due to Alan Offer July 26, 2013
+ */
+define test(limit){
+   auto counter
+   counter = tree(1,2,5,limit)
+
+   print "\nNumber of nodes is "
+   return counter
+}

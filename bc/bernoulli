@@ -1,0 +1,31 @@
+/* bc program bernoulli */
+/* This constructs the Bernoulli number B[n] for n >= 0.
+   See slides by Richard Brent at http://maths.anu.edu.au/~brent/talks.html
+	   B[0]=1, B[1]=-1/2, B[2m+1]=0 if m >= 1, B[2m]=(-1)^(m-1)*2m*T[m]/2^m*(2^m-1) if m >= 1.
+	   Also see http://www.bernoulli.org/
+ */
+define bernoulli(n){
+auto k,s,t,g,numerator, denominator
+   if(n==0){
+     print "B[",n,"]=1\n"
+     return
+   }
+   if(n==1){
+     print "B[",n,"]=-1/2\n"
+     return
+   }
+   if(n%2){
+     print "B[",n,"]=0\n"
+     return
+   }
+   t=n/2
+   s=(-1)^(t-1)
+   numerator=s*n*tangent(t)
+   k=2^n
+   denominator=k*(k-1)
+   g=gcd(numerator,denominator)
+   numerator=numerator/g
+   denominator=denominator/g
+   print "B[",n,"]=",numerator,"/",denominator,"\n"
+   return
+}

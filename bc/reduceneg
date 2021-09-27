@@ -1,0 +1,422 @@
+/* BC program reduceneg */
+/* absolute value of an integer n */
+
+define abs(n){
+	if(n>=0) return(n)
+	return(-n)
+}
+
+/* lmodd(m,n) returns r, m=q*n+r, -n/2 < r <= n/2 */
+define lmodd(m,n){
+	return(m-n*lnearint(m,n))
+}
+
+/* rmodd(m,n) returns r, m=q*n+r, -n/2 <= r < n/2 */
+define rmodd(m,n){
+	return(m-n*rnearint(m,n))
+}
+
+/* lnearint(m,n) returns z, the nearest integer to m/n,  
+ * z=t if m/n=t+1/2
+ */
+define lnearint(m,n){
+	auto x,y,z
+	y=int(m,n)
+	x=n*y
+	z=2*(m-x)
+	if (abs(z)>abs(n)){y=y+1}
+	return(y)
+}
+
+define mod(a,b){
+	auto c
+	c=a%b
+	if(a>=0) return(c)
+	if(c==0) return(0)
+        return(c+b)	
+}
+
+/* int(a,b)=integer part of a/b, a, b integers, b != 0 */
+
+define int(a,b){
+	if(b<0){
+	a= -a
+	b= -b
+	}
+	return((a-mod(a,b))/b)
+}
+
+/* This is Gauss' algorithm for reducing a positive definite binary
+ * quadratic form. See L.E. Dickson, Introduction to the theory of numbers,
+ * page 69. Here d=b^2-4ac <0, a>0,c>0, while the reduced form (A,B,C)
+ * satisfies -A<B<=A, C>=A, with B>=0 if C=A.
+ * The number of steps taken in the reduction is returned.
+ */
+
+define reduce(a,b,c){
+	auto i,d,x,y,u,v,temp,tempx,delta
+        i=0
+	x=1;y=0;u=0;v=1
+	d=b^2-4*a*c
+        if(d>=0){
+           print "d>=0\n"
+           return(-1)
+        }
+
+	if(-a<b && b<=a && a<c || b>=0 && a==c){
+		print "(",a,",",b,",",c,") is reduced\n"
+		print "Transforming matrix:1,0,0,1\n"
+			return(0)
+	}
+	while(1){
+		temp=b
+		b=lmodd(-b,2*c)
+		delta= -(temp+b)/(2*c)
+		temp=u
+		tempx=x
+		x= -y;y=tempx+y*delta;u= -v;v=temp+v*delta
+		a=c
+		c=(b^2-d)/(4*a)
+		i=i+1
+	        print "(",a,",",b,",",c,")\n"
+		if(c>=a)break
+	}
+	if(a==c && b<0){
+		b= -b
+	tempx=x
+	x=y;y= -tempx
+	tempu=u
+	u=v;v= -tempu
+	}
+	print "(",a,",",b,",",c,") is reduced\n"
+	print "Transforming matrix:",x,",",y,",",u,",",v,"\n"
+	return(i)
+}
+
+/* This produces reduced form coefficients as global variables (global_a, global_b,global_c) and
+ * unimodular transforming matrix [globala11,globala12,globala21,globala22].
+ * returns the number of steps.
+ */
+define reduce1(a,b,c){
+	auto i,d,x,y,u,v,temp,tempx,delta
+        i=0
+	x=1;y=0;u=0;v=1
+	d=b^2-4*a*c
+        if(d>=0){
+          print "Here d>=0\n"
+          return(-1)
+        }
+	if(-a<b && b<=a && a<c || b>=0 && a==c){
+                   global_a=a
+                   global_b=b
+                   global_c=c
+                   globala11=1
+                   globala12=0
+                   globala21=0
+                   globala22=0
+                   return(0)
+	}
+	while(1){
+		temp=b
+		b=lmodd(-b,2*c)
+		delta= -(temp+b)/(2*c)
+		temp=u
+		tempx=x
+		x= -y;y=tempx+y*delta;u= -v;v=temp+v*delta
+		a=c
+		c=(b^2-d)/(4*a)
+		i=i+1
+		if(c>=a)break
+	}
+	if(a==c && b<0){
+		b= -b
+	tempx=x
+	x=y;y= -tempx
+	tempu=u
+	u=v;v= -tempu
+	}
+        global_a=a
+        global_b=b
+        global_c=c
+        globala11=x
+        globala12=y
+        globala21=u
+        globala22=v
+	return(i)
+}
+
+/* This is algorithm 5.4.7 of Henri Cohen's book. 
+ * It outputs the composite (a,b,c) of positive definite forms
+ * (a1,b1,c1) and (a2,b2,c2).  Here a=global_compose_a etc are
+ * global variables.
+ */
+define compose(a1,b1,c1,a2,b2,c2){
+auto d1,d2,disc,d,t,s,n,dd,y1,y2,x2,u,v,v1,v2,r,b3,a3,c3
+
+    d1=b1^2-4*a1*c1
+    d2=b2^2-4*a2*c2
+    if(d1!=d2){
+    /* print "(",a1,",",b1,",",c1,")\n"
+      print "d1=",d1,"\n"
+      print "d2=",d2,"\n"*/
+      print "Unequal discriminants\n"
+      return
+    }else{
+      disc=d1
+    }
+    if(disc>=0){
+       print "discriminants > 0\n"
+      return
+    }
+    if(a1>a2){
+       t=a1
+       a1=a2
+       a2=t
+       t=b1
+       b1=b2
+       b2=t
+       t=c1
+       c1=c2
+       c2=t
+    }
+    s=(b1+b2)/2
+    n=b2-s
+    if(a2%a1==0){
+       y1=0
+       d=a1  
+    }else{
+       d=bezout1(a2,a1)
+       u=globalu
+       v=globalv
+       y1=u
+    }
+    if(s%d==0){
+       y2=-1
+       x2=0
+       d1=d
+    }else{
+       d1=bezout1(s,d)
+       u=globalu
+       v=globalv
+       x2=u
+       y2=-v
+    }
+    v1=a1/d1
+    v2=a2/d1
+    r=mod(y1*y2*n-x2*c2,v1)
+    b3=b2+2*v2*r
+    a3=v1*v2
+    c3=(c2*d1+r*(b2+v2*r))/v1
+    i=reduce1(a3,b3,c3)
+    global_compose_a=global_a
+    global_compose_b=global_b
+    global_compose_c=global_c
+    print "(",a1,",",b1,",",c1,")"
+    print "(",a2,",",b2,",",c2,")="
+    print "(",global_a,",",global_b,",",global_c,")\n"
+    return
+}
+
+/* This is algorithm 5.4.7 of Henri Cohen's book. 
+ * It outputs the composite (a,b,c) of positive definite forms
+ * (a1,b1,c1) and (a2,b2,c2).  Here a=global_compose_a etc are
+ * global variables. Non verbose.
+ */
+define compose1(a1,b1,c1,a2,b2,c2){
+auto d1,d2,disc,d,t,s,n,dd,y1,y2,x2,u,v,v1,v2,r,b3,a3,c3
+
+    d1=b1^2-4*a1*c1
+    d2=b2^2-4*a2*c2
+    if(d1!=d2){
+    /* print "(",a1,",",b1,",",c1,")\n"
+      print "d1=",d1,"\n"
+      print "d2=",d2,"\n"*/
+      print "Unequal discriminants\n"
+      return
+    }else{
+      disc=d1
+    }
+    if(disc>=0){
+       print "discriminants > 0\n"
+      return
+    }
+    if(a1>a2){
+       t=a1
+       a1=a2
+       a2=t
+       t=b1
+       b1=b2
+       b2=t
+       t=c1
+       c1=c2
+       c2=t
+    }
+    s=(b1+b2)/2
+    n=b2-s
+    if(a2%a1==0){
+       y1=0
+       d=a1  
+    }else{
+       d=bezout1(a2,a1)
+       u=globalu
+       v=globalv
+       y1=u
+    }
+    if(s%d==0){
+       y2=-1
+       x2=0
+       d1=d
+    }else{
+       d1=bezout1(s,d)
+       u=globalu
+       v=globalv
+       x2=u
+       y2=-v
+    }
+    v1=a1/d1
+    v2=a2/d1
+    r=mod(y1*y2*n-x2*c2,v1)
+    b3=b2+2*v2*r
+    a3=v1*v2
+    c3=(c2*d1+r*(b2+v2*r))/v1
+    i=reduce1(a3,b3,c3)
+    global_compose_a=global_a
+    global_compose_b=global_b
+    global_compose_c=global_c
+    return
+}
+
+/* Outputs (a,b,c)^n as reduced form (za,za,zc), n >= 0. */
+define power_compose(a,b,c,n){
+auto xa,xb,xc,d,t,m
+ 
+   m=n
+   d=-(b*b-4*a*c)
+   if(d%4==0){
+     za=1
+     zb=0
+     zc=d/4
+   }else{
+     za=1
+     zb=1
+     zc=(d+1)/4
+   }
+   xa=a
+   xb=b
+   xc=c
+   if(n==0){
+     print "(",za,",",zb,",",zc,")\n"
+     return
+   }
+   if(n==1){
+     za=a
+     zb=b
+     zc=c
+     print "(",a,",",b,",",c,")\n"
+     return
+   }
+   while(n>0){
+       while(n%2==0){
+           n=n/2
+          t=compose1(xa,xb,xc,xa,xb,xc)
+           xa=global_compose_a
+           xb=global_compose_b
+           xc=global_compose_c
+       }
+       n=n-1
+       t=compose1(za,zb,zc,xa,xb,xc)
+       za=global_compose_a
+       zb=global_compose_b
+       zc=global_compose_c
+   }
+   print "(",a,",",b,",",c,")^",m,"="
+   print "(",za,",",zb,",",zc,")\n"
+   return
+}
+
+/* Outputs (a,b,c)^n as reduced form (za,za,zc), n >= 0. */
+/* nonverbose. */
+define power_compose1(a,b,c,n){
+auto xa,xb,xc,d,t
+ 
+   d=-(b*b-4*a*c)
+   if(d%4==0){
+     za=1
+     zb=0
+     zc=d/4
+   }else{
+     za=1
+     zb=1
+     zc=(d+1)/4
+   }
+   xa=a
+   xb=b
+   xc=c
+   if(n==0){
+     return
+   }
+   if(n==1){
+     za=a
+     zb=b
+     zc=c
+     return
+   }
+   while(n>0){
+       while(n%2==0){
+           n=n/2
+          t=compose1(xa,xb,xc,xa,xb,xc)
+           xa=global_compose_a
+           xb=global_compose_b
+           xc=global_compose_c
+       }
+       n=n-1
+       t=compose1(za,zb,zc,xa,xb,xc)
+       za=global_compose_a
+       zb=global_compose_b
+       zc=global_compose_c
+   }
+   return
+}
+
+/* This returns the order of positive definite form (a,b,c) of negative discriminant
+ * in the class group.  It uses the same algorithm as for orderp(a,p) in phi.
+ * flag=1 is verbose, flag=0 is nonverbose.
+ */
+define ordercomposite(a,b,c,flag){
+auto d,q,t,dd,u,i,j,ida,idb,idc
+
+    d=4*a*c-b*b
+    if(d%4==0){
+      ida=1
+      idb=0
+      idc=d
+    }else{
+      ida=1
+      idb=1
+      idc=(d+1)/4
+    }
+    j=reduce1(a,b,c)
+    if(global_a==ida && global_b==idb && global_c==idc){
+       if(flag){
+          print "order of (",a,",",b,",",c,")=" 
+       }
+       return(1)
+    }
+    q=class_number(-d,1,0)
+    if(flag){
+       print "h(",-d,")==",q,"\n"
+       print "order of (",a,",",b,",",c,")=" 
+    }
+    dd=omega(q)
+    for(u=0;u<dd;u++){
+                for(i=1;i<=kglobal[u];i++){
+                        t = q/qglobal[u]
+                        j=power_compose1(a,b,c,t)
+                        if(za!=ida || zb!=idb || zc!=idc){
+                           break
+                        }
+                        q = t
+                }
+    }
+    return(q)
+}

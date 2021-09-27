@@ -1,0 +1,40 @@
+/* gnubc program: Euclid */
+
+"
+
+
+
+
+
+			EUCLID'S ALGORITHM:
+
+
+
+
+
+
+
+If euclid(m,n) is typed in (m>0,n>0), 
+
+The length of Euclid's algorithm is printed. (Type quit to quit)
+
+"
+
+define euclid(m,n){
+auto a,b,r,q,i
+        a=m
+        b=n
+        r=m%n
+        q=(a-r)/b
+	i=1
+        while(r>0){
+           i=i+1
+           a=b
+           b=r
+           r=a%b
+           q=(a-r)/b
+        }
+	i=i+1
+        print "the Euclidean algorithm for m/n with m = ",m, " n = ",n
+        print " has length "; return(i-1)
+}   

@@ -1,0 +1,185 @@
+/* bc program lagrange */"
+/* needs sturm */
+f(x)=a[n]x^n+...+a[0], a[n]>0, is a polynomial
+with integer coefficients, having no rational roots
+and having exactly one real positive root x, this
+being > 1.
+The method of Lagrange (1797) is used to find the
+the first m+1 partial quotients of x.
+type lagrange(a[],n,m)
+"
+/* (See Knuth, Art of computer programming, volume2,
+ * problem 13, 4.5.3. Also S. Lang and H. Trotter,
+ * 'Continued fractions for some algebraic numbers'
+ * J. fur Math. 255 (1972) 112-134; Addendum 267 (1974) ibid. 219-220.
+ * Also see page 261, Number Theory with Applications, by R. Kumanduri and
+ * C. Romero. See end of file.
+ *
+ * Improved by Sean Seefried, Vacation scholar, University of Queensland, 
+ * 17/12/99. 
+ */
+
+
+/* returns the integer part of the logarithm of n base 2 */
+define log_base2(n) 
+{
+  auto p, log;
+  log=0;
+  for (p=2; p<=n; p*=2) {
+    log=log+1;
+  }
+  return (log);
+}
+
+define cauchy(a[],n)
+{
+  auto k, k_, k__, l, i, j, t, c, ci_, cn_, p, q, r, tmp;
+  if (a[n] < 0) 
+  for (c=0; c<=n; c++)
+    a[c]=-a[c];
+  /* count number of negative coefficients */
+  l=0;
+  for (c=0; c<n; c++) 
+    if (a[c] < 0)
+      l=l+1;
+  k__ =0 ;
+  j = log_base2(a[n]);
+  t = 0;
+  if (!(l==0 || n==0)) {
+    for (c=0; c<n;  c++)
+      if (a[c] < 0) {
+	k=n-c;
+	ci_ = -l*a[c];
+	i = log_base2(ci_);
+	p=i-j-1;
+	q=p/k;
+	r=p-k*q;
+	if (r<0) {
+	  r= r + k;
+	  q = q - 1;
+	}
+	k_ = q + 1;
+	if (r == (k-1)) {
+	  cn_ = cn*2^(k_*k);
+	  if (ci_ > cn_)
+	    k_ = k_ + 1;
+	}
+	if (t==0 || k_ > k__) {
+	  k__ = k_;
+	  t = 1;
+	}
+      }
+  }
+  return (2^(k__));  
+}
+
+define lagrange(a[],n,m)
+{
+  auto g,i,j,k,low,high,mid,t,g0,g1,gc,h,deggcd,diff;
+
+/* first check a[] is not linear */
+if(degreepi(a[],n)<2){
+	print "a is  linear\n"
+	return
+}
+/* now to check that a[n]>0 */
+if(a[n]<=0){
+	print "a[n]<=0\n"
+	return
+}
+/* now to check that a[0]!=0 */
+if(a[0]==0){
+	print "a(0)=0\n"
+	return
+}
+/* now to check that a is squarefree */
+g=derivpi(a[],n)
+deggcd=gcdpi(a[],derpi[],n,degderpi,0)
+if(deggcd){
+	print "a has a multiple root\n"
+	return
+}
+/* now to check that a has one positive real root and that it is > 1 */
+/* First to check that a(1)!=0 */
+if(evalpi(a[],n,1)==0){
+	print "a(1)=0\n"
+	return
+}
+g0=sturm(a[],n,0,0)
+g1=sturm(a[],n,1,0)
+h=cauchy(a[],n)
+/* Next to deal with the unlikely possibility that a(h)!=0 */
+if(evalpi(a[],n,h)==0){
+	print "a(h)=0\n"
+	h=h+1
+}
+gc=sturm(a[],n,h,0)
+if(g0==g1){/* a has no roots in (0,1) */
+	diff=g1-gc;
+	if(diff>1){
+		print "a has ",diff, " roots > 1\n"
+		return
+	}
+	if(diff==0){
+		print "a has no root > 1\n"
+		return
+	}
+}else{
+	print "a has a root between 0 and 1\n"
+	return
+}
+/* a now has exactly one positive root t and that t > 1.
+ * We do not check to see if t is rational.
+ * However output is ok until a[n] becomes 0.
+ * So we exit at this point. 
+ */
+
+  for(i=0;i<=m;i++) {
+    low=1;
+    high=cauchy(a[],n);
+/* standard binary search */
+    while (low+1 !=high) {
+      mid=(low+high)/2;
+	temp= evalpi(a[], n, mid)
+      if (evalpi(a[], n, mid) >0)
+	{high=mid}\
+		    else low=mid;
+    }
+    print "a[",i,"]=",low, " \n" 
+    /* assigns f(x) = f(x+aa) */
+    for(k=0;k<=n-1;k++){
+      for(j=n-1;j>=k;j--){
+	a[j]=low*a[j+1]+a[j];
+      }
+    }
+    for(j=n;j>n/2;j--){
+      t=a[j];
+      a[j]= -a[n-j];
+      a[n-j]= -t;
+    }
+    if(n%2==0)
+      {a[n/2]= -a[n/2]}
+ /*     g=printp(a[],n) to print the polnomials f_h(x) */
+	if(a[n]==0){ /* will occur iff the root is rational */
+		print "rational root\n"
+		return
+	}
+  }
+  print "
+";
+}
+/* Justification of Kumanduri and Romero's bisection argument.
+a[0]=0, b[0]=n>1,
+f(a[t])<=0<f(b[t])
+x=\int{(a[t]+b[t])/2)}
+if(f(x)>0){
+	b[t+1]=x, a[t+1]=a[t]
+}
+if(f(x)<0){
+	a[t+1]=x, b[t+1]=b[t]
+}
+The algorithm stops if a[t]+1=b[t].
+
+Note: if b-a>=2, then b>a 
+\int((b+a)/2)>=a+1 and (b+a)/2 < b.
+*/

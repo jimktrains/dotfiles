@@ -1,0 +1,138 @@
+/* bc file zagier - needs bc file gcd*/
+/* The least integer >= x is used, instead of the greatest integer <= x.
+ * See Zagier's book, page 136.
+ */
+/* We compute the backward cfrac of sqrt(d). */
+define zagier(d){
+auto k,f,p,q,p0,q0,a,s
+f=sqrt(d)
+p=0
+q=1
+k=0
+s=0
+while(1){
+  if(q>0){
+    a=(p+f)/q+1
+  }else{
+    a=(p+1+f)/q+1
+  }
+  print "a[",k,"]=",a,","
+  if(k%25==0){
+    print "\n"
+  }
+  p=a*q-p
+  q=(-d+p*p)/q
+  if(k>0){
+    s=s+a
+    if(p==p0 && q==q0){
+      break
+    }
+  }
+  if(k==0){
+    p0=p
+    q0=q
+  }
+  k=k+1
+}
+print "\nperiod-length=",k,"\n"
+print "s=",s,"\n"
+if(s%3==0){
+  print "3 divides s\n"
+  print "s/3-k=",s/3-k,"\n"
+}
+}
+
+/* The least integer >= x is used, instead of the greatest integer <= x.
+   x is reduced if x > 1 > x' > 0.
+ */
+/* We compute the backward cfrac of (u+tsqrt(d))/v. */
+define zagier0(d,t,u,v){
+auto k,f,p,q,p_reduced,q_reduced,a,flag,k0,aminus1,aminus2,bminus1,bminus2,am,bm,g
+
+  if(t<0){
+    u= -u
+    v= -v
+  }
+  w=abs(v)
+  d=d*t*t
+  d=d*v*v
+  u=u*w
+  v=v*w
+  g=gcd3(u,v,(d-u*u)/v)
+  u=u/g
+  v=v/g
+  d=d/(g*g)
+  f=sqrt(d)
+  p=u
+  q=v
+  k=0
+  s=0
+  aminus1=1
+  aminus2=0
+  bminus1=0
+  bminus2=1
+
+  flag=0
+  while(1){
+    if(flag==0){
+       t=reduced(d,p,q)
+    }
+    if(t==1 && flag==0){
+      flag=1
+      p_reduced=p
+      q_reduced=q
+      k0=k
+    }
+    if(q>0){
+      temp=p+f
+      a=int(temp,q)+1
+    }else{
+      temp=p+f=1
+      a=int(temp,q)+1
+    }
+    if(flag){
+       print ":a[",k,"]=",a,","
+    }else{
+       print "a[",k,"]=",a,","
+    }
+    if(k>0){
+       am=a*aminus1-aminus2
+       bm=a*bminus1-bminus2
+    }else{
+       am=a
+       bm=1
+    }
+    print "A[",k,"]/B[",k,"]=",am,"/",bm," "
+    print "(p[",k,"]+sqrt(",d,"))/q[",k,"]=",p,"+sqrt(",d,")/",q,"\n"
+    aminus2=aminus1
+    aminus1=am
+    bminus2=bminus1
+    bminus1=bm
+    if(k%25==0 && k){
+      print "\n"
+    }
+    p=a*q-p
+    q=(-d+p*p)/q
+    if(p==p_reduced && q==q_reduced){
+      k=k+1
+      print "(p[",k,"]+sqrt(",d,"))/q[",k,"]="
+      print "(p[",k0,"]+sqrt(",d,"))/q[",k0,"]\n"
+      break
+    }
+    k=k+1
+  }
+  g=k-k0
+  print "period-length=",g,"\n"
+  return(g)
+}
+
+define reduced(d,p,q){
+auto f,g
+f=sqrt(d)
+g=abs(q-p)
+if(f>=g && p>f){
+   return(1)
+}else{
+   return(0)
+}
+}

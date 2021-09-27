@@ -1,0 +1,28 @@
+# BC program ternary
+define mod3(n){
+    auto r
+    r=n%3
+    if(r==2){
+       r=-1
+    }
+    return(r)
+}
+
+# This gives the ternary expansion of n, where the digits are 0, 1 or -1.
+define ternary(n,e){
+    auto i,r,j
+    i=0
+  while(n){
+    r=mod3(n)
+    globalr[i]=r
+    if(e){
+       print r
+    }
+    n=(n-r)/3
+    i=i+1
+  }
+  if(e){
+     print "\n"
+  }
+  return(i)
+}

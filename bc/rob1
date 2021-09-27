@@ -1,0 +1,255 @@
+define functionu(a,b,c,k,alpha,beta,dd,gamma,epsilon,e){
+auto gg,gcount,aa,bb,cc,kk,phi,psi,u11,u12,u21,u22,v11,v12,v21,v22,phi1,psi1,delta,zeta,dd1,u,v,x,y,t,s,tempx,tempy,temp
+
+  gg=gcd3(a,b,c)
+  gcount=0
+  s=fund4(dd,0)
+  phi=globalx
+  psi=globaly
+  if(e){
+     print "(phi,psi)=(",phi,",",psi,")\n"
+     u11=(phi-b*psi)/2
+     u12=-c*psi
+     u21=a*psi
+     u22=(phi+b*psi)/2
+     print "U=(",u11,",",u12,",",u21,",",u22,")\n"
+     v11=u11^2+u12*u21
+     v12=u11*u12+u12*u22
+     v21=u21*u11+u22*u21
+     v22=u21*u12+u22^2
+     print "U^2=(",v11,",",v12,",",v21,",",v22,")\n"
+     print "x[n+1=",v11,"x[n]+",v12,"y[n]+",-(v11*alpha+v12*beta)/dd,"\n"
+     print "y[n+1=",v21,"x[n]+",v22,"y[n]+",-(v21*alpha+v22*beta)/dd,"\n"
+  }
+  aa=a/gg;bb=b/gg;cc=c/gg;kk=k/gg
+  dd1=bb^2-4*aa*cc
+  if(e){
+    print "dd1=",dd1,"\n"
+  }
+  s=fund4(dd1,0)
+  phi1=globalx
+  psi1=globaly
+  if(e){
+     print "(phi1,psi1)=(",phi1,",",psi1,")\n"
+  }
+  t=pellexponent(phi1,psi1,phi,psi,dd1,dd)
+  t=2*t # John Robertson's U^2 lemma
+  if(e){
+     print "t=",t,"\n"
+  }
+  if(bb%2){
+  delta=-(2*cc*epsilon+bb*gamma)
+  zeta=bb*epsilon+2*aa*gamma
+  if(e){
+    print "delta=",delta,",zeta=",zeta,"\n"
+  }
+  for(i=0;i<=t;i++){
+     s=powerdd(phi1,psi1,dd1,i)
+     u=z1
+     v=z2
+     s=2^i
+     x=(gamma*u+delta*v)/s+alpha
+     y=(epsilon*u+zeta*v)/s+beta
+     if(x%dd==0 && y%dd==0){
+       #print "(u,v,i)=(",u,",",v,",",i,")\n"
+        tempx=x/dd;tempy=y/dd
+        print "(",tempx,",",tempyd,") is a solution of ax^2+bxy+cy^2+dx+ey+f=0\n"
+        exp=nextsolutionodd(aa,bb,cc,tempx,tempy,alpha,beta,dd,phi1,psi1)
+        print "next solution is (",globalnextx,",",globalnexty,")\n"
+        print "F+Gsqrt(",dd1,")=(",phi1,"/2+(",psi1,"/2)sqrt(",dd1,")^"
+        temp=printexponent(exp,i)
+        print ", n an integer\n"
+        return(1)
+     }
+     x=(gamma*(-u)+delta*v)/s+alpha
+     y=(epsilon*(-u)+zeta*v)/t+beta
+     if(x%dd==0 && y%dd==0){
+       #print "(-u,v,i)=(",-u,",",v,",",i,")\n"
+        tempx=x/dd;tempy=y/dd
+        print "(",tempx,",",tempy,") is a solution of ax^2+bxy+cy^2+dx+ey+f=0\n"
+        exp=nextsolutionodd(aa,bb,cc,tempx,tempy,alpha,beta,dd,phi1,psi1)
+        print "next solution is (",globalnextx,",",globalnexty,")\n"
+        print "F+Gsqrt(",dd1,")=-(",phi1,"/2+(",psi1,"/2)sqrt(",dd1,")^"
+        temp=printexponent(exp,-i)
+        print ", n an integer\n"
+        return(1)
+     }
+     x=(gamma*u+delta*(-v))/s+alpha
+     y=(epsilon*u+zeta*(-v))/s+beta
+     if(x%dd==0 && y%dd==0){
+       #print "(u,-v,i)=(",u,",",-v,",",i,")\n"
+        tempx=x/dd;tempy=y/dd
+        print "(",tempx,",",tempy,") is a solution of ax^2+bxy+cy^2+dx+ey+f=0\n"
+        exp=nextsolutionodd(aa,bb,cc,tempx,tempy,alpha,beta,dd,phi1,psi1)
+        print "next solution is (",globalnextx,",",globalnexty,")\n"
+        print "F+Gsqrt(",dd1,")=(",phi1,"/2+(",psi1,"/2)sqrt(",dd1,")^"
+        temp=printexponent(exp,-i)
+        print ", n an integer\n"
+        return(1)
+     }
+     x=(gamma*(-u)+delta*(-v))/s+alpha
+     y=(epsilon*(-u)+zeta*(-v))/s+beta
+     if(x%dd==0 && y%dd==0){
+       #print "(-u,-v,i)=(",-u,",",-v,",",i,")\n"
+        tempx=x/dd;tempy=y/dd
+        print "(",tempx,",",tempy,") is a solution of ax^2+bxy+cy^2+dx+ey+f=0\n"
+        exp=nextsolutionodd(aa,bb,cc,tempx,tempy,alpha,beta,dd,phi1,psi1)
+        print "next solution is (",globalnextx,",",globalnexty,")\n"
+        print "F+Gsqrt(",dd1,")=-(",phi1,"/2+(",psi1,"/2)sqrt(",dd1,")^"
+        temp=printexponent(exp,i)
+        print ", n an integer\n"
+        return(1)
+     }
+  }
+  return(0)
+}else{
+  dd1=(bb/2)^2-aa*cc
+  if(e){
+     print "dd1=",dd1,"\n"
+  }
+  s=fund1(dd1)
+  phi1=globalr
+  psi1=globals
+  if(e){
+     print "(phi1,psi1)=(",phi1,",",psi1,")\n"
+  }
+  delta=-(cc*epsilon+(bb/2)*gamma)
+  zeta=(bb/2)*epsilon+aa*gamma
+  if(e){
+     print "delta=",delta,", zeta=",zeta,"\n"
+  }
+  for(i=0;i<=t;i++){
+     s=powerdd(phi1,psi1,dd1,i)
+     u=z1
+     v=z2
+     x=gamma*u+delta*v+alpha
+     y=epsilon*u+zeta*v+beta
+     if(x%dd==0 && y%dd==0){
+       #print "(u,v,i)=(",u,",",v,",",i,")\n"
+        tempx=x/dd;tempy=y/dd
+        print "(",tempx,",",tempy,") is a solution of ax^2+bxy+cy^2+dx+ey+f=0\n"
+        exp=nextsolutioneven(aa,bb,cc,tempx,tempy,alpha,beta,dd,phi1,psi1)
+        print "next solution is (",globalnextx,",",globalnexty,")\n"
+        print "F+Gsqrt(",dd1,")=(",phi1,"+",psi1,"sqrt(",dd1,")^"
+        temp=printexponent(exp,i)
+        print ", n an integer\n"
+        return(1)
+     }
+     x=gamma*(-u)+delta*v+alpha
+     y=epsilon*(-u)+zeta*v+beta
+     if(x%dd==0 && y%dd==0){
+       #print "(-u,v,i)=(",-u,",",v,",",i,")\n"
+        tempx=x/dd;tempy=y/dd
+        print "(",tempx,",",tempy,") is a solution of ax^2+bxy+cy^2+dx+ey+f=0\n"
+        exp=nextsolutioneven(aa,bb,cc,tempx,tempy,alpha,beta,dd,phi1,psi1)
+        print "next solution is (",globalnextx,",",globalnexty,")\n"
+        print "F+Gsqrt(",dd1,")=-(",phi1,"+",psi1,"sqrt(",dd1,")^"
+        temp=printexponent(exp,-i)
+        print ", n an integer\n"
+        return(1)
+     }
+     x=gamma*u+delta*(-v)+alpha
+     y=epsilon*u+zeta*(-v)+beta
+     if(x%dd==0 && y%dd==0){
+       #print "(u,-v,i)=(",u,",",-v,",",i,")\n"
+        tempx=x/dd;tempy=y/dd
+        print "(",tempx,",",tempy,") is a solution of ax^2+bxy+cy^2+dx+ey+f=0\n"
+        exp=nextsolutioneven(aa,bb,cc,tempx,tempy,alpha,beta,dd,phi1,psi1)
+        print "next solution is (",globalnextx,",",globalnexty,")\n"
+        print "F+Gsqrt(",dd1,")=(",phi1,"+",psi1,"sqrt(",dd1,")^"
+        temp=printexponent(exp,-i)
+        print ", n an integer\n"
+        return(1)
+     }
+     x=gamma*(-u)+delta*(-v)+alpha
+     y=epsilon*(-u)+zeta*(-v)+beta
+     if(x%dd==0 && y%dd==0){
+       #print "(-u,-v,i)=(",-u,",",-v,",",i,")\n"
+        tempx=x/dd;tempy=y/dd
+        print "(",tempx,",",tempy,") is a solution of ax^2+bxy+cy^2+dx+ey+f=0\n"
+        exp=nextsolutioneven(aa,bb,cc,tempx,tempy,alpha,beta,dd,phi1,psi1)
+        print "next solution is (",globalnextx,",",globalnexty,")\n"
+        print "F+Gsqrt(",dd1,")=-(",phi1,"+",psi1,"sqrt(",dd1,")^"
+        temp=printexponent(exp,i)
+        print ", n an integer\n"
+        return(1)
+     }
+  }
+}
+  return(0)
+}
+
+# Here d2 = d^2*d1, d>=1, d10 and not a perfect square.
+# epsilon1=t1+u1sqrt(d1) is the fundamental solution of Pell equation t^2 - d1*u^2 = 4.
+# epsilon2=t2+u1sqrt(d2) is the fundamental solution of Pell equation t^2 - d2*u^2 = 4.
+# This program finds the exponent e such that epsilon2=epsilon1^e.
+define pellexponent(t1,u1,t2,u2,d1,d2){
+auto d,i,t,u,temp,e,x,y
+
+   d=sqrt(d2/d1)
+   t=t1
+   u=u1
+   u2=u2*d
+   e=1
+   for(i=0;1;i++){
+   #  print "(t,u)=(",t,",",u,")\n"
+      x=t/2^i
+      y=u/2^i
+      if(x==t2 && y==u2){
+   #    print "(x,y)=(",x,",",y/d,")\n"
+        return(e)
+      }else{
+        e=e+1
+      }
+      temp=t*t1+u*u1*d1
+      u=t*u1+u*t1
+      t=temp
+   }
+}
+
+
+define nextsolutionodd(a,b,c,x,y,alpha,beta,dd,phi,psi){
+auto xx,yy,tempx,i,temp1,temp2,temp3,temp4,iplus1
+   xx=dd*x-alpha
+   yy=dd*y-beta
+   for(i=0;1;i++){
+      tempx=xx*(phi-b*psi)/2-c*psi*yy
+      yy=yy*(phi+b*psi)/2+a*psi*xx
+      xx=tempx
+
+      temp1=xx+alpha
+      temp2=yy+beta
+      temp3=temp1%dd
+      temp4=temp2%dd
+      if(temp3==0 && temp4==0){
+         globalnextx=temp1/dd
+         globalnexty=temp2/dd
+         iplus1=i+1
+         return(iplus1)
+      }
+   }
+}
+
+define nextsolutioneven(a,b,c,x,y,alpha,beta,dd,phi,psi){
+auto xx,yy,tempx,i,temp1,temp2,temp3,temp4,iplus1,bover2
+   xx=dd*x-alpha
+   yy=dd*y-beta
+   bover2=b/2
+   for(i=0;1;i++){
+      tempx=xx*(phi-bover2*psi)-c*psi*yy
+      yy=yy*(phi+bover2*psi)+a*psi*xx
+      xx=tempx
+
+      temp1=xx+alpha
+      temp2=yy+beta
+      temp3=temp1%dd
+      temp4=temp2%dd
+      if(temp3==0 && temp4==0){
+         globalnextx=temp1/dd
+         globalnexty=temp2/dd
+         iplus1=i+1
+         return(iplus1)
+      }
+   }
+}
+

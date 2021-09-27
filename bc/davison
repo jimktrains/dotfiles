@@ -1,0 +1,186 @@
+/*bc program davison */
+define positivity(a,b,c,d){
+	if(a>=0 && b>=0 && c>=0 && d>=0){
+		return(1)
+	}else{
+		return(0)
+	}
+}
+
+/* nprod(l,m) finds the least n such that A_n and D=A_0...A_n are non-negative.
+ * The matrix of globabl variables D=[globala,globalb,globalc,globald] is
+ * returned along with n. See Proposition 4.1, J.L. Davison, 'An algorithm for 
+ * the continued fraction of e^{l/m}', Proceedings of the Eighth Manitoba 
+ * Conference on Numerical Mathematics and Computing (Univ. Manitoba, Winnipeg,
+ * 1978), 169--179, Congress. Numer., XXII, Utilitas Math. 
+ */
+define nprod(l,m){
+	auto k,a1,b1,c1,d1,temp1,temp2,s,t,t1,t2
+
+	globala=m+l;globalb=m;globalc=m;globald=m-l
+	for(k=1;1;k++){
+		s=positivity(globala,globalb,globalc,globald)
+		if(s){
+			break
+		}
+		t=(2*k+1)*m
+		t1=globala+globalb
+		t2=globalc+globald
+		temp1=t*t1
+		temp2=t*t2
+		a1=temp1+globala*l
+		b1=temp1-globalb*l
+		c1=temp2+globalc*l
+		d1=temp2-globald*l
+		globala=a1
+		globalb=b1
+		globalc=c1
+		globald=d1
+	}
+	return(k-1)
+}
+
+define abs(n){
+	if(n>=0) return(n)
+	return(-n)
+}
+
+/*  gcd(m,n) for any integers m and n */
+/* Euclid's division algorithm is used. */
+/* We use gcd(m,n)=gcd(|m|,|n|) */
+
+define gcd(m,n){
+	auto a,b,c
+	a=abs(m)
+	if(n==0) return(a)
+        b=abs(n)
+        c=a%b
+        while(c>0){
+		a=b
+                b=c
+                c=a%b
+        }
+	return(b)
+}   
+
+define reduce(a,b,c,d){
+	auto g
+	g=gcd(a,b)
+	g=gcd(g,c)
+	g=gcd(g,d)
+	return(g)
+}
+
+/*
+ * Input: a non-singular matrix A=[p,q;r,s], p,q,r,s>=0, A!=I_2, A!=[0,1;1,0].
+ * With L=[1,0;1,1] and R=[1,1;0,1], we express A uniquely as
+ * a product of non-negative powers of L and R, followed by a row-balanced B.
+ * B=[a,b;c,d] is row-balanced if (a<c & b>d) or (c<a & d>b)
+ * and a,b,c>=0. We exclude A=I_2 and A=[0,1;1,0].
+ * See  'On continued fractions and finite automata', G.N. Raney,
+ * Math. Annalen, 206, 265-283 (1973).
+ */
+
+define raney(p,q,r,s){
+	auto i,j,k
+	k=0
+	while(1){
+                i=0
+		while(p>=r && q>=s){
+		      p=p-r
+		      q=q-s
+	              i=i+1
+		}
+		if(i){
+			globalr=globalr+i
+			flagr=1
+			if(flagl*flagr){
+				flagl=0
+				print globall,","
+				globall=0
+				count=count+1
+			}
+			k=k+1
+		}
+                j=0
+		while(r>=p && s>=q){
+		      r=r-p
+		      s=s-q
+	              j=j+1
+		}
+		if(j){
+			globall=globall+j
+			flagl=1
+			if(flagr*flagl){
+				flagr=0
+				print globalr,","
+				globalr=0
+				count=count+1
+			}
+			k=k+1
+		}
+		if((p<r && q>s) || (p>r && s>q)){
+			break
+		}
+	}
+	globala=p
+	globalb=q
+	globalc=r
+	globald=s
+	return(k)
+}
+
+/* We perform the algorithm of J.L. Davison's paper.
+ * With n>=0, we first find the n* of Davison's Proposition 4.1
+ * and apply raney's factorisation to A_0...A_k, for n*<=k<=n*+n.
+ * The number (count) of partial quotients of e^{l/m} found is returned.
+ * count becomes positive for all large n.
+ */
+define davison(l,m,n){
+	auto g,i,j,k,t
+	count=0
+	flagr=0
+	flagl=0
+	globalr=0
+	globall=0
+	k=nprod(l,m)
+	g=reduce(globala,globalb,globalc,globald)
+	if(g>1){
+		globala=globala/g
+		globalb=globalb/g
+		globalc=globalc/g
+		globald=globald/g
+	}
+	i=k
+	j=k+n
+	while(i<=j){
+	        if(i>k){
+			t=(2*i+1)*m
+			t1=globala+globalb
+			t2=globalc+globald
+			temp1=t*t1
+			temp2=t*t2
+			a1=temp1+globala*l
+			b1=temp1-globalb*l
+			c1=temp2+globalc*l
+			d1=temp2-globald*l
+			globala=a1
+			globalb=b1
+			globalc=c1
+			globald=d1
+
+		}
+		i=i+1
+		t=raney(globala,globalb,globalc,globald);
+                /* the input matrix will not be I_2 or [0,1;1,0] here. */
+		g=reduce(globala,globalb,globalc,globald)
+		if(g>1){
+			globala=globala/g
+			globalb=globalb/g
+			globalc=globalc/g
+			globald=globald/g
+		}
+	}
+	print "...\nThe number of partial quotients found for e^(",l,"/",m,") is "
+	return(count)
+}

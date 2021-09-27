@@ -1,0 +1,78 @@
+/* gnubc program: 3x+1 */
+
+"
+			THE 3x+1 CONJECTURE:
+
+
+
+
+
+
+
+if collatz(y) is typed in, (y non-zero), the iterates
+
+y, t(y), t(t(y)),... of the 3x+1 function t(x) are printed
+
+and the number of steps taken to reach one of 1, -1, -5, -17
+
+is recorded.  (It is conjectured that every trajectory starting
+
+from a non-zero integer will end in one of these numbers.)
+"
+
+/* the 3x+1 function */
+
+/*  the least non-negative remainder when an integer a is divided by a positive
+integer b */
+
+/* a%b=m(a,b) if a>=0 or a<0 and b divides a */
+/* a%b=m(a,b)-b if a<0, b>0, a not divisible by b */
+
+define mod(a,b){
+	auto c
+	c=a%b
+	if(a>=0) return(c)
+	if(c==0) return(0)
+        return(c+b)	
+}
+
+define collatzt(x){
+	if(mod(x,2)==0) return(x/2)
+	return((3*x+1)/2)
+}
+
+define collatz(y){
+	auto i,x
+	x=y
+		for(i=0;i>=0;i++){
+			if(x==1 || x == -1 || x == -5 || x == -17){
+				print "starting number = ",y,"\n"
+				print "the number of iterations taken to reach ", x, " is "
+				return(i)
+			}
+			(x=collatzt(x)) /* this prints t(x) */
+		}
+}
+
+define stopping(y){
+	auto i,x
+	x=y
+        for(i=0;i>=0;i++){
+       		if(x<y){
+			"starting number = ";y;
+"the number of iterations taken to reach below "; y; " is "; return(i)
+		}
+		(x=collatzt(x)) /* this prints t(x) */
+	}
+}
+define f(n,a){
+if(n==1)return(a)
+return(collatzt(f(n-1,a)))
+}
+define g(n,a){
+auto i,s
+if(n==1)return(a)
+s=a
+for(i=1;i<=n-1;i++)s=collatzt(s)
+return(s)
+}

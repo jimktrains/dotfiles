@@ -1,0 +1,139 @@
+/* gnubc program: GCD */
+/* sign of an integer a */
+/* s(a)=1,-1,0, according as a>0,a<0,a=0 */
+
+define sign(a){
+	if(a>0) return(1)
+	if(a<0) return(-1)
+	return(0)
+}
+
+/* absolute value of an integer n */
+
+define abs(n){
+	if(n>=0) return(n)
+	return(-n)
+}
+
+/*NOTE: in bc we have */
+/* a%b=m(a,b) if a>=0 or a<0 and b divides a */
+/* a%b=m(a,b)-b if a<0, b>0, a not divisible by b */
+/* a/b=[a/b] if a>=0 or a<0 and b divides a */
+/* a/b=[a/b]+1 if a<0, b>0, a not divisible by b */
+/* a=b(a/b)+a%b */
+
+/* mod(a,b)=the least non-negative remainder when an integer
+   a is divided by a  positive integer b */
+
+define mod(a,b){
+	auto c
+	c=a%b
+	if(a>=0) return(c)
+	if(c==0) return(0)
+        return(c+b)	
+}
+
+/* int(a,b)=integer part of a/b, a, b integers, b != 0 */
+
+define int(a,b){
+	if(b<0){
+	a= -a
+	b= -b
+	}
+	return((a-mod(a,b))/b)
+}
+
+/*  gcd(m,n) for any integers m and n */
+/* Euclid's division algorithm is used. */
+/* We use gcd(m,n)=gcd(m,|n|) */
+
+define gcd(m,n){
+	auto a,b,c
+	a=abs(m)         /* a=r[0] */ 
+	if(n==0) return(a)
+        b=abs(n)         /* b=r[1] */ 
+        c=a%b            /* c=r[2]=r[0] mod(r[1]) */ 
+        while(c>0){
+		a=b
+                b=c
+                c=a%b    /* c=r[j]=r[j-2] mod(r[j-1]) */
+        }
+	return(b)
+}   
+
+/* gcd(a,b)=a*h(a,b)+b*k(a,b) for any integers a and b,
+ * where h(a,b) and k(a,b) are calculated as follows:
+ * Let q[1],...,q[n] be the quotients in Euclid's algorithm.
+ * Then the recurrence relation 
+ * s[0]=1, s[1]=0, s[j]=s[j-2]-q[j-1]*s[j-1] for j=2,...,n
+ * is implemented. Then h(a,b)=s[n].
+ * The recurrence relation 
+ * t[0]=0, t[1]=1, t[j]=t[j-2]-q[j-1]*t[j-1] for j=2,...,n
+ * is implemented. Then k(a,b)=t[n]. 
+ */
+
+/* gcd1(m,n)=h(m,n).
+ * gcd2(m,n)=k(m,n).
+ */
+
+define gcd1(m,n){
+	auto a,b,c,h,k,l,q,t
+	if(n==0) return(sign(m))
+        a=m                /* a=r[0] */ 
+        b=abs(n)           /* b=r[1] */ 
+        c=mod(a,b)         /* c=r[2] */ 
+	if(c==0) return(0)
+        l=1                /* l=s[0] */ 
+        k=0                /* k=s[1] */ 
+        while(c>0){
+                q=(a-c)/b  /* q=q[j-1]=[r[j-2]/r[j-1]] */
+                a=b
+                b=c
+                c=mod(a,b) /* c=r[j],r[j-2]=q[j-1]*r[j-1]+r[j]*/
+                h=l-q*k    /* h=s[j],k=s[j-1], l=s[j-2] */ 
+              	l=k 
+              	k=h
+        }         
+	return(k)          /* k=s[j] */
+}   
+
+
+define gcd2(m,n){
+        auto a,b,c,h,k,l,q,t,j
+	if(n==0) return(0)
+        a=m                /* a=r[0] */ 
+        b=abs(n)           /* b=r[1] */ 
+        c=mod(a,b)         /* c=r[2] */ 
+	if(c==0) return(sign(n))
+	l=0                /* l=t[0] */ 
+	k=1                /* k=t[1] */ 
+/*	print "     ","   r[0]=",a," t[0]=",0,"\n"
+	print "q[1]=",(a-c)/b,"  r[1]=",b," t[1]=",1,"\n" */
+/*j=2*/
+        while(c>0){
+                q=(a-c)/b  /* q=q[j-1]=[r[j-2]/r[j-1]] */
+                a=b
+                b=c
+                c=mod(a,b) /* c=r[j],r[j-2]=q[j-1]*r[j-1]+r[j]*/
+                h=l-q*k    /* h=t[j],k=t[j-1], l=t[j-2] */ 
+/*              j=j+1
+		print "q[",j-1,"]=",(a-c)/b,"  r[",j-1,"]=",b," t[",j-1,"]=",h,"\n" */
+               	l=k
+               	k=h
+        }
+		q=(a-c)/b
+/*		print "        r[",j,"]=",c," t[",j,"]=",l-q*k,"\n" */
+	if(n<0)	return(-k)
+	return(k)          /* k=t[j] */
+}  
+
+/* inv(a,n) returns the inverse of a (mod n), n>0 if gcd(a,n)=1.
+ * uses the fact that |s[j]|<n in general.
+ */
+define inv(a,n){
+auto s
+if(gcd(a,n)>1){print "gcd(a,n)>1\n";return(0)}
+s=gcd1(a,n)
+if(s<0)return(s+n)
+return(s)
+}

@@ -1,0 +1,31 @@
+# This is Algorithm 2 of New algorithms for modular inversion and representation 
+# by binary quadratic forms arising from structure in the Euclidean algorithm by
+# Christina Doran, Shen Lu and Barry R. Smith.
+# The program returns the inverse of m (mod n) if gcd(m,n)=1 (here n>0), while
+# if gcd(m,n)>1 it returns 0. Note that in BC, if m is negative, then m%n=r, where 
+# m \equiv r (mod n) and -n<r<0.
+
+define inverse(m,n){
+auto a,b,r,mnplus1,nn
+   if(m<0){
+     temp=m%n
+     m=temp+n
+   }
+   mnplus1=m*n+1
+   nn=n*n
+   a=nn
+   b=mnplus1
+   r=a%b
+   while(r>=n){
+      a=b
+      b=r
+      r=a%b
+      print "r=",r,"\n"
+   }
+   if((r*m)%n!=1){
+     print "gcd(",m,",",n,",)>1\n"
+     return(0)
+   }
+   return(r)
+}
+

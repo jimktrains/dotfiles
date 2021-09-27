@@ -1,0 +1,119 @@
+
+define abs(x) {
+	if ( x < 0 ) {
+		return -x
+	} else {
+		return x
+	}
+}
+
+define print_array(a[], m) {
+	print "["
+	for ( i = 0 ; i < m-1 ; i++ ) {
+		print a[i], ", "
+	}
+	print a[m-1], "]\n"
+}
+
+define apr(a[], m, d, n) {
+	auto i,j,temp,k,x,y,c,s,t,z
+print "input array: "
+        z = print_array(a[], m)
+	if ( m % n != 0 ) { return 1 }
+	for ( i = 0; i < m-1; i++ ) {
+		for ( j = i+1; j < m; j++ ) {
+			s = a[i] % d
+			t = a[j] % d
+			if ( s < 0 ) s += d
+			if ( t < 0 ) t += d
+			if ( (s>t) || ((s==t) && (a[i]>a[j])) ) {
+				temp = a[i]
+				a[i] = a[j]
+				a[j] = temp
+			}
+		}
+	}
+        print "sorted array: "
+	z = print_array(a[], m)
+	j = 0
+	k = 0
+	for ( i = 0; i < m; i++ ) {
+		y = a[i]
+		if ( j == 0 ) {
+			j = n
+			c = y
+		} else {
+			if ( y-x != d ) { return 1 }
+			if ( abs(y) < abs(c) ) { c = y }
+		}
+		x = y
+		j -= 1
+		if ( j == 0 ) {
+			globaloutput_array[k] = c
+			k += 1
+		}
+	}
+        print "array of reps: "
+        print "m/n=",m/n,"\n"
+	z = print_array(globaloutput_array[], m/n)
+        globaloutput_array_number=m/n
+	return 0
+}
+
+#define test() {
+#	a[0] = 3; a[1] = 27; a[2] = 21; a[3] = 45;
+#	a[4] = -27; a[5] = -51; a[6] = -45; a[7] = -69;
+#	d = 72
+#	n = 2
+#	m = 8
+#	result = apr(a[], m, d, n)
+#	print "a = "
+#	z = print_array(a[], m)
+#	print "d = ", d, "\nn = ", n, "\nResult: "
+#	if ( result ) {
+#		print "None\n"
+#	} else {
+#		z = print_array(globaloutput_array[], m/n)
+#	}
+#
+#	print "------\n"
+#
+#	a[7] = -68;
+#	d = 72
+#	n = 2
+#	m = 8
+#	result = apr(a[], m, d, n)
+#	print "a = "
+#	z = print_array(a[], m)
+#	print "d = ", d, "\nn = ", n, "\nResult: "
+#	if ( result ) {
+#		print "None\n"
+#	} else {
+#		z = print_array(globaloutput_array[], m/n)
+#	}
+#
+#	print "------\n"
+#
+#	a[0] = 44; a[1] = 92; a[2] = 140; a[3] = 188;
+#	a[4] = 28; a[5] = 76; a[6] = 124; a[7] = 172;
+#	a[8] = 20; a[9] = 68; a[10] = 116; a[11] = 164;
+#	a[12] = 4; a[13] = 52; a[14] = 100; a[15] = 148;
+#	a[16] = -44; a[17] = -92; a[18] = -140; a[19] = -188;
+#	a[20] = -28; a[21] = -76; a[22] = -124; a[23] = -172;
+#	a[24] = -20; a[25] = -68; a[26] = -116; a[27] = -164;
+#	a[28] = -4; a[29] = -52; a[30] = -100; a[31] = -148;
+#	d = 24
+#	n = 16
+#	m = 32
+#	result = apr(a[], m, d, n)
+#	print "a = "
+#	z = print_array(a[], m)
+#	print "d = ", d, "\nn = ", n, "\nResult: "
+#	if ( result ) {
+#		print "None\n"
+#	} else {
+#		z = print_array(globaloutput_array[], m/n)
+#	}
+#}
+#
+#z = test()

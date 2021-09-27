@@ -1,0 +1,504 @@
+/*
+ * This program finds the continued fraction expansion of a
+ * quadratic irrational (u+tsqrt(d))/v, where d is not a square,
+ * t,u,v integers, v nonzero.
+ * After converting to (U+sqrt(D))/V, where V divides D-U^2,
+ */
+/* sign of an integer a */
+/* sign(a)=1,-1,0, according as a>0,a<0,a=0 */
+/* Here is the algorithm that I used in my BC program and which underlies my treatment
+   of the Examples.
+
+1. Let p = length of period of cfrac of rho and sigma (or double the period-length
+   if period length if odd).
+
+2. Examine the convergents p[m]/q[m],...,p[m+p-1]/q[m+p-1] and
+   P[r]/Q[r],...,P[r+p-1]/Q[r+p-1] to find which if any, give solutions to ax^2+bxy+cy^2=mu.
+   If none, then exit the program.
+   Otherwise form two arrays of solutions, one for rho and one for sigma: 
+
+                  rhosol[1],...,rhosol[t]
+                  sigmasol[1],...,sigmasol[t].
+
+   Then t is the number of equivalence classes of solutions.
+
+3. Create an array array[1],...,array[t] of solutions got by first determining the
+   pairs sigmasol[i], rhosol[j] that are  equivalent and then chosing the one with
+   least second entry or, in the case of equal second entry - the one with greater x value.
+
+4. Decide if (p[m-1],q[m-1]) is a solution. If it is, then it will be equivalent to 
+   say array[i]. Compare the two solutions and if appropriate, replace array[i]
+   by (p[m-1],q[m-1]).  Then do the same for (P[r-1],Q[r-1]).
+
+5. Decide if (p[m]-p[m-1],q[m]-q[m-1}) or (P[r]-P[r-1],Q[r]-Q[r-1}) is a solution. 
+   (It may be that one will be a solution and the other not, or else both are and then
+   they will be equal. Call the solution (x,y).
+   If so, then (x,y) will be equivalent to say array[j]. 
+   Compare the two solutions as in 3 and if appropriate, replace array[j] by (x,y).
+
+6. Print out array[1],...,array[t].  This will be the array of FS's.
+ */
+
+define sign(a){
+	if(a>0) return(1)
+	if(a<0) return(-1)
+	return(0)
+}
+
+/* absolute value of an integer n */
+
+define abs(n){
+	if(n>=0) return(n)
+	return(-n)
+}
+
+/*  mod(a,b)=the least non-negative remainder when an integer a is divided by a
+ positive integer b */
+
+define mod(a,b){
+	auto c
+	c=a%b
+	if(a>=0) return(c)
+	if(c==0) return(0)
+        return(c+b)	
+}
+
+/* int(a,b)=integer part of a/b, a, b integers, b != 0 */
+
+define int(a,b){
+	auto c
+	c=sign(b)
+	a=a*c
+	b=b*c
+	return((a-mod(a,b))/b)
+}
+
+/*
+ * This is a function for finding the period of the continued fraction
+ * expansion of reduced quadratic irrational a=(u+sqrt(d))/v.
+ * Here d is non-square, 1<(u+sqrt(d))/v, -1<(u-sqrt(d))/v<0.
+ * The algorithm also assumes that v divides d-u*u and is based on K. Rosen,
+ * Elementary Number theory and its applications, p.379-381 and Knuth's The art
+ * of computer programming, Vol. 2, p. 359.  0 is returned if a is not reduced.
+ */
+define period(d,u,v,a,b,c,mu,print_flag){
+	auto aa,r,s,t,f,j,k,temp
+	f=sqrt(d)
+	s=v
+	r=u
+        if(global_flag==0){
+           global_count=0
+        }
+	global_a_surd_length=global_m
+        
+	for(j=global_m;1;j++){
+ 	   aa=(f+u)/v
+	   global_a_surd[j]=aa
+	   u=aa*v-u
+	   v=(d-u*u)/v
+           global_pr=global_ps*aa+global_pt
+           global_qr=global_qs*aa+global_qt
+           if(print_flag){
+           if(global_flag==0){
+             print "during first period, testing  A[",j-1,"]/B[",j-1,"]=",global_ps,"/",global_qs,"\n"
+           }else{
+             print "during second period, testing  A[",j-1,"]/B[",j-1,"]=",global_ps,"/",global_qs,"\n"
+           }
+           }
+           temp=a*global_ps^2+b*global_ps*global_qs+c*global_qs^2
+           if(temp==mu){
+             print "we have a solution (A[",j-1,"],B[",j-1,"])=(",global_ps,",",global_qs,")\n"
+             global_solution_pr[global_count]=global_ps
+             global_solution_qr[global_count]=global_qs
+             #print "solution(global_solution_pr[",global_count,",global_solution_qr[",global_count,"])\n"
+             global_count=global_count+1
+           }
+           if(j==global_m && global_flag==0){
+              global_pm=global_ps
+              global_qm=global_qs
+            }
+            global_pt=global_ps;global_ps=global_pr
+            global_qt=global_qs;global_qs=global_qr 
+            global_u_surd[j+1]=u
+            global_v_surd[j+1]=v
+            if(u==r && v==s){
+              t=j+1-global_m
+	      global_a_surd_length=global_a_surd_length+t
+              print "the continued fraction has period length j+1-global_m = ",t,"\n"
+              return(t)
+           }
+	}
+}
+
+/*
+ * This function uses the continued fraction algorithm expansion in K. Rosen,
+ * Elementary Number theory and its applications,p.379-381 and Knuth's
+ * The art of computer programming, Vol. 2, p. 359. It locates the first reduced
+ * complete quotient and then uses the function period(d,u,v,i,flag)
+ * to locate the period of the continued fraction expansion.
+ */
+
+define surd(d,t,u,v,a,b,c,mu,print_flag){
+	auto aa,g,f,i,j,k,w,z,con_length,pr,qr
+	if(v==0){
+           print "v="
+           return(0)
+        }
+	f=sqrt(d)
+	if(f*f==d){
+           print "d is the square of "
+           return(f)
+        }
+	if(t==0){
+           print "t = "
+           return(-1)
+        }
+	z=sign(t)
+	u=u*z
+	v=v*z
+	d=d*t*t
+	w=abs(v)
+	if((d-u*u)%w!=0){
+           d=d*v*v
+	   u=u*w
+	   v=v*w
+	}
+	f=sqrt(d)
+        global_ps=1;global_pt=0
+        global_qs=0;global_qt=1
+        global_flag=0
+	for(j=0;1;j++){
+	    global_u_surd[j]=u
+	    global_v_surd[j]=v
+            g=reducetest(u,v,d)
+            if(g){ /* (u+sqrt(d))/v is reduced */
+                 print "(u[",j,"],v[",j,"])=(",u,",",v,") is reduced\n"
+                 global_m=j
+                 global_preperiodm=j-1
+                 pre_period_length=j
+                 global_pmminus1=global_pt
+                 global_qmminus1=global_qt
+               /*print "here a[",j-1,"] = ",global_a_surd[j-1],"\n"*/
+                 l=period(d,u,v,a,b,c,mu,print_flag)
+                 if(l%2==0){
+                   if(print_flag){
+                      print "printing even period:\n"
+                   }
+                 }
+                 if(l%2){
+                    global_flag=1
+                    global_m=global_m+l
+                    l=period(d,u,v,a,b,c,mu,print_flag)
+                    if(print_flag){
+                       print "printing extraperiod:\n"
+                    }
+                 }
+                 con_length=global_a_surd_length-1
+                 if(print_flag){
+                    print "partial quotients:\n"
+                    for(k=0;k<=con_length;k++){
+                        if(k==pre_period_length){
+                           print "\n period:\n"
+                        }
+                        if(l%2 && k==pre_period_length+l){
+                           print "\n extra period:\n"
+                        }
+                        print "a[",k,"]=",global_a_surd[k],"\n"
+                    }
+                    print "\n"
+                    print "complete quotients:\n"
+                    for(k=0;k<=global_a_surd_length;k++){
+                        print "(P[",k,"]+sqrt(",d,"))/Q[",k,"]=(",global_u_surd[k],"+sqrt(",d,"))/",global_v_surd[k],"\n"
+                    }
+                    print "cfrac has period length ",l,"\n"
+                 }
+                 return(l)
+            }
+            if(v>0){
+               aa=int(f+u,v)
+            }
+            if(v<0){
+               aa=int(f+u+1,v)
+            }
+            global_pr=global_ps*aa+global_pt
+            global_qr=global_qs*aa+global_qt
+            print "in pre-period, A[",j,"]/B[",j,"]=",global_pr,"/",global_qr,"\n"
+            global_pt=global_ps;global_ps=global_pr
+            global_qt=global_qs;global_qs=global_qr 
+            global_a_surd[j]=aa
+            print "a[",j,"] = ",global_a_surd[j],"\n"
+            u=aa*v-u
+            v=int(d-u*u,v)
+        }
+}
+
+define reducetest(u,v,d){
+auto f
+  f=sqrt(d)
+  if(v>0 && u>0 && u<=f && f<u+v && v-u<=f){
+    return(1)
+  }else{
+    return(0)
+  }
+}
+
+define testequiv(x1,y1,x2,y2,mu){
+auto n,t
+  n=abs(mu)
+  t=x1*y2-x2*y1
+  if(t%n==0){
+    return(1)
+  }else{
+    return(0)
+  } }
+
+define serret(a,b,c,mu,print_flag){
+auto d,g,temp,rhox,rhoy,sigmax,sigmay,x1,y1,x2,y2,j,k,g1,g2,t,r
+   d=b^2-4*a*c
+   global_mu=mu
+   s=sqrt(d)/2
+   if(abs(mu)>s){
+      print " d=",d,",sqrt(d)/2=",s,",mu =",mu,"too large\n"
+      return(0)
+   }
+   g=surd(d,1,-b,2*a,a,b,c,mu,print_flag)
+   for(j=0;j<global_count;j++){
+       rhosolp[j]=global_solution_pr[j]
+       rhosolq[j]=global_solution_qr[j]
+   }
+   if(print_flag){
+   print "printing solutions1\n"
+      for(j=0;j<global_count;j++){
+        print "(rhosolp[",j,"],rhosolq[",j,"])=(",rhosolp[j],",",rhosolq[j],")\n"
+      }
+   }
+   print "sigma global_preperiodm=",global_preperiodm,"\n"
+   print "number of primitive classes =",global_count,"\n"
+   print "rho global_preperiodm=",global_preperiodm,"\n"
+   rhox=global_pmminus1
+   rhoy=global_qmminus1
+   print "p[m-1]=p[",global_preperiodm-1,"]=",rhox,"\n"
+   print "q[m-1]=q[",global_preperiodm-1,"]=",rhoy,"\n"
+   print "p[m]=p[",global_preperiodm,"]=",global_pm,"\n"
+   print "q[m]=q[",global_preperiodm,"]=",global_qm,"\n"
+   x1=global_pm-rhox
+   y1=global_qm-rhoy
+   t=soltest(x1,y1,a,b,c,mu)
+   if(t){
+   if(print_flag){
+      g=surdtest(d,1,-b,2*a,x1,y1)
+      if(g==0){
+         print "p[m]-p[m-1]/q[m]-q[m-1]=",x1,"/",y1," is not a convergent to rho\n"
+      }else{
+         print "p[m]-p[m-1]/q[m]-q[m-1]=",x1,"/",y1," is a convergent p[",globalj,"]/q[",globalj,"] to rho\n"
+      }
+      g=surdtest(d,-1,-b,2*a,x1,y1)
+      if(g==0){
+         print "p[m]-p[m-1]/q[m]-q[m-1]=",x1,"/",y1," is not a convergent to sigma\n"
+      }else{
+         print "p[m]-p[m-1]/q[m]-q[m-1]=",x1,"/",y1," is a convergent P[",globalj,"]/Q[",globalj,"] to sigma\n"
+      }
+   }
+   }
+print "-----------\n"
+   g=surd(d,-1,-b,2*a,a,b,c,mu,print_flag)
+   print "sigma global_preperiodm=",global_preperiodm,"\n"
+   for(j=0;j<global_count;j++){
+       sigmasolp[j]=global_solution_pr[j]
+       sigmasolq[j]=global_solution_qr[j]
+   }
+   if(print_flag){
+      print "printing solutions2\n"
+      for(j=0;j<global_count;j++){
+         print "(sigmasolp[",j,"],sigmasolq[",j,"])=(",sigmasolp[j],",",sigmasolq[j],")\n"
+      }
+   }
+   i=0 # now to create arrayp[] and arrayq[]
+   for(j=0;j<global_count;j++){
+      for(k=0;k<global_count;k++){
+         t=testequiv(rhosolp[j],rhosolq[j],sigmasolp[k],sigmasolq[k],mu)
+         if(t==0){ # non equivalence of the two solutions
+           continue
+         }else{ # equivalence of the two solutions
+              r=test(rhosolp[j],rhosolq[j],sigmasolp[k],sigmasolq[k])
+              arrayp[i]=global_p
+              arrayq[i]=global_q
+              print "(arrayp[",i,"],array[",j,"]=(",arrayp[i],",",arrayq[i],")\n"
+              i=i+1
+         }
+      }
+   }
+
+   sigmax=global_pmminus1
+   sigmay=global_qmminus1
+   print "P[r-1]=P[",global_preperiodm-1,"]=",sigmax,"\n"
+   print "Q[r-1]=Q[",global_preperiodm-1,"]=",sigmay,"\n"
+   print "P[r]=P[",global_preperiodm,"]=",global_pm,"\n"
+   print "Q[r]=Q[",global_preperiodm,"]=",global_qm,"\n"
+   x2=global_pm-sigmax
+   y2=global_qm-sigmay
+   t=soltest(x2,y2,a,b,c,mu)
+   if(t){
+   if(print_flag){
+      g=surdtest(d,1,-b,2*a,x2,y2)
+      if(g==0){
+         print "P[r]-P[r-1]/Q[r]-Q[r-1]=",x2,"/",y2," is not a convergent to rho\n"
+      }else{
+         print "P[r]-P[r-1]/Q[r]-Q[r-1]=",x2,"/",y2," is a convergent  p[",globalj,"]/q[",globalj,"] to rho\n"
+      }
+      g=surdtest(d,-1,-b,2*a,x2,y2)
+      if(g==0){
+         print "P[r]-P[r-1]/Q[r]-Q[r-1]=",x2,",",y2," is not a convergent P[r-1]/Q[r-1] to sigma\n"
+      }else{
+         print "P[r]-P[r-1]/Q[r]-Q[r-1]=",x2,",",y2," is a convergent P[",globalj,"]/Q[",globalj,"] to sigma\n"
+      }
+   }
+   }
+   g=soltest(rhox,rhoy,a,b,c,mu)
+   if(g){ # find the term (arrayp[i],arrayq[i]) that is equivalent to
+          #(rhox,rhoy) and exchange terms
+        for(i=0;i<global_count;i++){
+           t=testequiv(rhox,rhoy,arrayp[i],arrayq[i],mu)
+           if(t){
+              t1=test(rhox,rhoy,arrayp[i],arrayq[i])
+              arrayp[i]=global_p
+              arrayq[i]=global_q
+              break
+           }
+        }
+   }
+   g=soltest(sigmax,sigmay,a,b,c,mu)
+   if(g){ # find the term (arrayp[i],arrayq[i]) that is equivalent to
+          #(sigmax,sigmay) and exchange terms
+        for(i=0;i<global_count;i++){
+           t=testequiv(sigmax,sigmay,arrayp[i],arrayq[i],mu)
+           if(t){
+              t1=test(sigmax,sigmay,arrayp[i],arrayq[i])
+              arrayp[i]=global_p
+              arrayq[i]=global_q
+              break
+           }
+        }
+   }
+   # this finishes dealing with (p[m-1],q[m-1]) and (P[r-1],Q[r-1])
+   # now to deal with (x1,y1) and (x2,y2)
+   g1=soltest(x1,y1,a,b,c,mu)
+   g2=soltest(x2,y2,a,b,c,mu)
+
+   if(g1!=0){
+      for(i=0;i<global_count;i++){
+        t=testequiv(x1,y1,arrayp[i],arrayq[i],mu)
+        if(t){
+          t1=test(x1,y1,arrayp[i],arrayq[i])
+          arrayp[i]=global_p
+          arrayq[i]=global_q
+          break
+       }
+     }
+   }
+   if(g2!=0){
+      for(i=0;i<global_count;i++){
+        t=testequiv(x2,y2,arrayp[i],arrayq[i],mu)
+        if(t){
+          t1=test(x2,y2,arrayp[i],arrayq[i])
+          arrayp[i]=global_p
+          arrayq[i]=global_q
+          break
+       }
+     }
+   }
+   for(i=0;i<global_count;i++){
+      print "FS (",arrayp[i],",",arrayq[i],")\n"
+   } 
+   print "The number of solution classes is "
+   return(global_count)
+}
+
+define test(p1,q1,p2,q2){
+if(q1<q2){
+   global_p=p1
+   global_q=q1
+}
+if(q1>q2){
+   global_p=p2
+   global_q=q2
+}
+if(q1==q2){
+   global_q=q1
+   if(p1>=p2){
+     global_p=p1
+   }else{
+     global_p=p2
+   }
+} 
+}
+
+/* Here (a,b) is the exceptional solution  and (p1,q1) and (p2,q2) are from the rho
+ * and sigma lists, respectively. They are all equivalent and one is a fundamental solution. 
+ */
+define testab(p1,q1,p2,q2,a,b,mu){
+auto r
+    r=test(p1,q1,p2,q2) /* this produces (global_p,globalq) */
+    r=test(global_p,global_q,a,b)
+    global_a=global_p
+    global_b=global_q
+    return
+}
+/* This  is meant to be used when (x,y)=(p[m]-p[m-1],q[m]-q[m-1]) and
+ * (u,v)=(P[r-1],Q[r-1]) or (x,y)=(P[r]-P[r-1],Q[r]-Q[r-1]) and
+ * (u,v)=(p[m-1],q[m-1]).
+ */
+define soltest(x,y,a,b,c,mu){
+auto temp
+   temp=a*x^2+b*x*y+c*y^2
+   if(temp==mu){
+      return(1)
+   }else{
+      return(0)
+   }
+}
+
+# This is takes a fraction p/q, with q>0 and tests to see if it is a convergent
+# to ((u+tsqrt(d))/v.
+define surdtest(d,t,u,v,p,q){
+	auto a,f,j,k,w,z,pr,qr,ps,qs,pt,qt
+
+	z=sign(t)
+	u=u*z
+	v=v*z
+	d=d*t*t
+	w=abs(v)
+	if((d-u*u)%w!=0){
+           d=d*v*v
+	   u=u*w
+	   v=v*w
+	}
+	f=sqrt(d)
+        ps=1;pt=0
+        qs=0;qt=1
+        j=0
+	while(1){
+            if(v>0){
+               a=int(f+u,v)
+            }
+            if(v<0){
+               a=int(f+u+1,v)
+            }
+            pr=ps*a+pt
+            qr=qs*a+qt
+            if(qr>q){
+               return(0)
+            }else{
+               if(qr==q && pr==p){
+                 globalj=j
+                 return(1)
+               }
+            }
+            
+            pt=ps;ps=pr
+            qt=qs;qs=qr 
+            u=a*v-u
+            v=int(d-u*u,v)
+            j=j+1
+        }
+}

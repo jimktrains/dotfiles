@@ -1,0 +1,80 @@
+<html>
+<head>
+<link rel="shortcut icon" href="http://www.numbertheory.org/gnubc/favicon_gbc.ico" type="image/x-icon"> 
+<title>
+BC PROGRAMMING LANGUAGE NUMBER THEORY PROGRAMS
+</title>
+<STYLE TYPE="text/css">
+<!--
+body { font-family: Helvetia, sans-serif}
+A:visited { text-decoration: none }
+A:link {text-decoration: none}
+A:hover {text-decoration: underline}
+H3 {text-align: center}
+-->
+</STYLE>
+<meta content="number theory programs in the BC programming language"/>
+</head>
+<body bgcolor="FFFFFF">
+<!--<font face=arial,helvetica size=-1>-->
+<h2>BC number theory programs</h2>
+<hr>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Bc_programming_language">BC</a> - an arbitrary precison desk-calcuator language
+<li><a href="https://www.techrepublic.com/blog/it-security/cryptographer-and-computer-scientist-robert-morris-dies-at-78/">Robert Morris died on 26th June 2011</a> (Robert Morris and <a href="http://tiny.antville.org/stories/906514/">Lorinda Cherry</a> created the BC exact arithmetic programming language)
+<li><a href="https://fossies.org/linux/misc/bc-1.07.1.tar.gz/">Download site</a> for  "Fossies" - the Fresh Open Source Software Archive Contents of bc-1.07.1.tar.gz 
+<li><a href="https://fossies.org/linux/bc/doc/bc.1">BC manual</a>
+<li><a href="./bc_programs.html">List</a> of bc programs written by <a href="../keith.html">Keith Matthews</a>
+<li>BC has been included in PHP as BCMATH and in this form can produce nice HTML output. <br>
+Many of my BC programs have been converted to <a href="../php/php.html">BCMATH programs</a>.
+<li><a href="https://stackoverflow.com/questions/19061824/format-output-of-unix-bc-utility">Formatting the output in BC in oneline</a> (Stack Overflow)
+<li>Download site for my bc programs: (<a href="http://www.numbertheory.org/gnubc/bc_programs.tar.gz">gzipped tar version</a>)
+<li><a href="./updates.html">Updates</a>
+</ul>
+<b>BC</b> (version 1.07.1) (see the <a href="http://www.gnu.org/software/bc/manual/bc.html">manual</a>)  is a programming language that supports arbitrary precision integer arithmetic calculations with interactive execution of statements. 
+ It is an idiosyncratic programming language which closely resembles parts
+ of the C language. While it is somewhat slow for some purposes (all code is
+ executed as it is read), the author has found <strong>bc</strong> very useful in
+ teaching and research.  The code is very easy to read and students can see
+ directly how an algorithm has been implemented. It is also useful as a template
+ for harder-to-write, but faster C code.<p>
+Bugs and idiosyncrasies: 
+<ol>
+<li> When using the if-else construction, insert a "<tt>\</tt>", as follows:
+<pre>
+          if(expression){statement1}\
+          else{ statement2}
+</pre>
+Alternatively, as pointed out by <a href="http://www.instantlogic.net/">Anton Stiglic</a>, use the construction
+<pre>
+          if(expression){
+               statement1
+          }else{
+               statement2
+          }
+</pre>
+<li>The <tt>continue</tt> statement only works for <tt>for</tt> loops.
+<li>Alan Offer pointed out that f(*b[]) changes the array values.
+<li>January 27, 2020.  I found that the BC 1.06.95 command<p>
+
+<tt>bc bigu stoltvialmm squareroot</tt><p>
+
+produced an error message:<p>
+
+<tt>squareroot 667: Assignment of a void expression</tt><p>
+
+However on changing the order of files to<p>
+
+<tt>bc squareroot bigu stoltvialmm</tt><p>
+
+there was no problem!  This phenomenon is not present in bc 1.07.1.<p>
+
+Also see <a href="http://www.pixelbeat.org/programming/oss_bug_flow.html">
+P&aacute;draig Brady's example</a>.
+</ol>
+
+<p>
+<br><i><a href="http://www.numbertheory.org/keith.html">http://www.numbertheory.org/keith.html</a></i><p>
+<em> Last modified February 3, 2020</em>
+</body>
+</html>

@@ -1,0 +1,294 @@
+# We are dealing with the hyperbola equation ax^2+bxy+cy^2+dx+ey+f=0 (1).
+# We find the reduced equation AX^2+BXY+CY^2=K (2), where A=a/g,B=b/g,C=c/g, and where g=gcd(a,b,c).
+# Also with D=b^2-4ac, K=k/g, where k=-D(ae^2-bed+cd^2+fD).
+# The lemma states that if a solution (X0,Y0) of (2) corresponds to a solution (x,y) of (1),
+# then (X2,Y2)^t = U^2(X0,Y0)^2 also corresponds to a solution of (1), where
+# U=((t-bu)/2, -cu, au, (t+bu)/2) and (t,u) is the least positive solution of t^2-Du^2=4.
+# Similarly with U^2 replaced by U^(-2).
+# Consequently we need only examine all  pm(X0,Y0)^t  and pmU(X0,Y0)^t.
+
+define bigu(a,b,c,d,e,f,printflag){
+auto alpha,beta,k,dd,x,y,u11,u12,u21,u22,phi,psi,s,t,g,h,t1,t2,t3,t4,solutionx1,solutiony1,solutionx2,solutiony2,solutionx3,solutiony3,solutionx4,solutiony4,gamma,epsilon,count,v11,v12,v21,v22,n
+  dd=b^2-4*a*c
+  temp=sqtest(dd)
+  if(temp>=0){
+    print "discriminant is a square\n"
+    return(-1)
+  }
+  if(d==0 && e==0){
+    n=-f
+    t=binaryviasfs(a,b,c,n,1)
+    return(t)
+  }
+  alpha=-b*e+2*c*d
+  beta=-b*d+2*a*e
+  print "alpha=",alpha,", beta=",beta,"\n"
+  print dd,"x=X+(",alpha,")," 
+  print dd,"y=Y+(",beta,")\n" 
+  print "\n"
+  k=-dd*(a*e^2-b*e*d+c*d^2+f*dd)
+# print "solving (",a,")X^2+(",b,")XY+(",c,")Y^2=",k,"\n"
+  s=fund4(dd,0)
+  phi=globalx
+  psi=globaly
+  print "(phi,psi)=(",phi,",",psi,")\n"
+  u11=(phi-b*psi)/2
+  u12=-c*psi
+  u21=a*psi
+  u22=(phi+b*psi)/2
+  print "U=(",u11,",",u12,",",u21,",",u22,")\n"
+
+  count=0
+  g=binaryviasfs(a,b,c,k,printflag)
+  if(g==0){
+     print "There are no solutions\n"
+     return(count)
+  }
+  for(h=0;h<g;h++){
+    gamma=globalbinaryviastoltx[h]
+    epsilon=globalbinaryviastolty[h]
+    t1=test(gamma,epsilon,alpha,beta,dd)
+    if(t1==1){
+      solutionx1=globalhyperbolasolutionx
+      solutiony1=globalhyperbolasolutiony
+    }
+    x=-gamma;y=-epsilon
+    t2=test(x,y,alpha,beta,dd)
+    if(t2==1){
+      solutionx2=globalhyperbolasolutionx
+      solutiony2=globalhyperbolasolutiony
+    }
+    x=u11*gamma+u12*epsilon;y=u21*gamma+u22*epsilon
+    t3=test(x,y,alpha,beta,dd)
+    if(t3==1){
+      solutionx3=globalhyperbolasolutionx
+      solutiony3=globalhyperbolasolutiony
+    }
+    x=-x;y=-y
+    t4=test(x,y,alpha,beta,dd)
+    if(t4==1){
+      solutionx4=globalhyperbolasolutionx
+      solutiony4=globalhyperbolasolutiony
+    }
+    if(t1==0 && t2==0 && t3==0 && t4==0){
+       continue
+    }
+    print "h=",h,": (t1,t2,t3,t4)=(",t1,",",t2,",",t3,",",t4,")\n"
+    if(t1==1 && t2==1 && t3==0 && t4==0){
+       print "case 1\n"
+       print "(gamma[",h,"],epsilon[",h,"])=(",gamma,",",epsilon,")\n"
+       print "solution (",solutionx1,",",solutiony1,")\n"
+       print "(x,y)^t=(U^{2n}(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n\n"
+       arrayvalue[count]=2
+       count=count+1
+       print "solution (",solutionx2,",",solutiony2,")\n"
+       print "(x,y)^t=(-U^{2n}(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n\n"
+       arrayvalue[count]=2
+       count=count+1
+    }
+    if(t1==1 && t2==0 && t3==1 && t4==0){
+       print "case 2\n"
+       print "(gamma[",h,"],epsilon[",h,"])=(",gamma,",",epsilon,")\n"
+       print "solution (",solutionx1,",",solutiony1,")\n"
+       print "(x,y)^t=(U^n(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n\n"
+       arrayvalue[count]=1
+       count=count+1
+    }
+    if(t1==1 && t2==0 && t3==0 && t4==1){
+       print "case 3\n"
+       print "(gamma[",h,"],epsilon[",h,"])=(",gamma,",",epsilon,")\n"
+       print "solution (",solutionx1,",",solutiony1,")\n"
+       arrayvalue[count]=-1
+       count=count+1
+       print "(x,y)^t=((-1)^mU^m(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n"
+      #print "(x,y)^t=(U^{2n}(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n"
+      #print "solution (",solutionx4,",",solutiony4,")\n"
+      #print "(x,y)^t=(-U^{2n+1}(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n"
+    }
+    if(t1==0 && t2==1 && t3==1 && t4==0){
+       print "case 4\n"
+       print "(gamma[",h,"],epsilon[",h,"])=(",gamma,",",epsilon,")\n"
+       print "solution (",solutionx2,",",solutiony2,")\n"
+       arrayvalue[count]=-1
+       count=count+1
+       print "(x,y)^t=((-1)^{m+1}U^m(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n"
+      #print "solution (",solutionx3,",",solutiony3,")\n"
+      #print "(x,y)^t=(U^{2n+1}(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n"
+    }
+    if(t1==0 && t2==0 && t3==1 && t4==1){
+       print "case 5\n"
+       print "(gamma[",h,"],epsilon[",h,"])=(",gamma,",",epsilon,")\n"
+       print "solution (",solutionx3,",",solutiony3,")\n"
+       arrayvalue[count]=2
+       count=count+1
+       print "(x,y)^t=(U^{2n+1}(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n\n"
+       print "solution (",solutionx4,",",solutiony4,")\n"
+       arrayvalue[count]=2
+       count=count+1
+       print "(x,y)^t=(-U^{2n+1}(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n\n"
+    }
+    if(t1==0 && t2==1 && t3==0 && t4==1){
+       print "case 6\n"
+       print "(gamma[",h,"],epsilon[",h,"])=(",gamma,",",epsilon,")\n"
+       print "solution (",solutionx2,",",solutiony2,")\n"
+       arrayvalue[count]=1
+       count=count+1
+       print "(x,y)^t=(-U^n(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n\n"
+    }
+
+    if(t1==1 && t2==0 && t3==0 && t4==0){
+       print "case 7\n"
+       print "(gamma[",h,"],epsilon[",h,"])=(",gamma,",",epsilon,")\n"
+       print "solution (",solutionx1,",",solutiony1,")\n"
+       print "(x,y)^t=(U^{2n}(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n\n"
+       arrayvalue[count]=2
+       count=count+1
+    }
+    if(t1==0 && t2==1 && t3==0 && t4==0){
+       print "case 8\n"
+       print "(gamma[",h,"],epsilon[",h,"])=(",gamma,",",epsilon,")\n"
+       print "solution (",solutionx2,",",solutiony2,")\n"
+       print "(x,y)^t=(-U^{2n}(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n\n"
+       arrayvalue[count]=2
+       count=count+1
+    }
+    if(t1==0 && t2==0 && t3==1 && t4==0){
+       print "case 9\n"
+       print "(gamma[",h,"],epsilon[",h,"])=(",gamma,",",epsilon,")\n"
+       print "solution (",solutionx3,",",solutiony3,")\n"
+       print "(x,y)^t=(U^{2n+1}(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n\n"
+       arrayvalue[count]=2
+       count=count+1
+    }
+    if(t1==0 && t2==0 && t3==0 && t4==1){
+       print "case 10\n"
+       print "(gamma[",h,"],epsilon[",h,"])=(",gamma,",",epsilon,")\n"
+       print "solution (",solutionx4,",",solutiony4,")\n"
+       print "(x,y)^t=(-U^{2n+1}(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n\n"
+       arrayvalue[count]=2
+       count=count+1
+    }
+
+   #if(t1==1 && t2==1 && t3==1 && t4==0){
+   #   print "case 11\n"
+   #   print "(gamma[",h,"],epsilon[",h,"])=(",gamma,",",epsilon,")\n"
+   #   print "solution (",solutionx1,",",solutiony1,")\n"
+   #   print "(x,y)^t=(U^n(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n"
+   #   print "solution (",solutionx2,",",solutiony2,")\n"
+   #   count++
+   #   print "(x,y)^t=(-U^{2n}(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n"
+   #}
+   #if(t1==1 && t2==1 && t3==0 && t4==1){
+   #   print "case 12\n"
+   #   print "(gamma[",h,"],epsilon[",h,"])=(",gamma,",",epsilon,")\n"
+   #   print "solution (",solutionx1,",",solutiony1,")\n"
+   #   print "(x,y)^t=(U^{2n}(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n"
+   #   print "solution (",solutionx2,",",solutiony2,")\n"
+   #   count=count+2
+   #   print "(x,y)^t=(-U^n(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n"
+   #}
+   #if(t1==1 && t2==0 && t3==1 && t4==1){
+   #   print "case 13\n"
+   #   print "(gamma[",h,"],epsilon[",h,"])=(",gamma,",",epsilon,")\n"
+   #   print "solution (",solutionx1,",",solutiony1,")\n"
+   #   print "(x,y)^t=(U^n(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n"
+   #   print "solution (",solutionx3,",",solutiony2,")\n"
+   #   count=count+2
+   #   print "(x,y)^t=(-U^{2n+1}(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n"
+   #}
+   #if(t1==0 && t2==1 && t3==1 && t4==1){
+   #   print "case 14\n"
+   #   print "(gamma[",h,"],epsilon[",h,"])=(",gamma,",",epsilon,")\n"
+   #   print "solution (",solutionx2,",",solutiony2,")\n"
+   #   print "(x,y)^t=(-U^n(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n"
+   #   print "solution (",solutionx3,",",solutiony3,")\n"
+   #   count=count+2
+   #   print "(x,y)^t=(U^{2n+1}(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n"
+   #}
+    if(t1==1 && t2==1 && t3==1 && t4==1){
+       print "case 15\n"
+       print "(gamma[",h,"],epsilon[",h,"])=(",gamma,",",epsilon,")\n"
+       print "solution (",solutionx1,",",solutiony1,")\n"
+       print "(x,y)^t=(U^n(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n"
+       arrayvalue[count]=1
+       count=count+1
+       print "solution (",solutionx2,",",solutiony2,")\n"
+       print "(x,y)^t=(-U^n(",gamma,",",epsilon,")^t + (",alpha,",",beta,")^t)/",dd,"\n"
+       arrayvalue[count]=1
+       count=count+1
+    }
+  }
+  v11=u11^2+u12*u21
+  v12=u11*u12+u12*u22
+  v21=u21*u11+u22*u21
+  v22=u21*u12+u22^2
+ #print "U^2=(",v11,",",v12,",",v21,",",v22,")\n"
+ #print "U^(-2)=(",v22,",",-v12,",",-v21,",",v11,")\n"
+ t=testarrayvalue(arrayvalue[],count,1)
+ if(t){
+    print "x[n+1]=",u11,"x[n]+",u12,"y[n]+",(-(u11*alpha+u12*beta)+alpha)/dd,"\n"
+    print "y[n+1]=",u21,"x[n]+",u22,"y[n]+",(-(u21*alpha+u22*beta)+beta)/dd,"\n"
+    print "x[n]=",u22,"x[n1]+",-u12,"y[n+1]+",(-(u22*alpha-u12*beta)+alpha)/dd,"\n"
+    print "y[n]=",-u21,"x[n+1]+",u11,"y[n+1]+",(-(-u21*alpha+u11*beta)+beta)/dd,"\n"
+ }
+ t=testarrayvalue(arrayvalue[],count,-1)
+ if(t){
+    print "x[n+1]=",-u11,"x[n]+",-u12,"y[n]+",(u11*alpha+u12*beta+alpha)/dd,"\n"
+    print "y[n+1]=",-u21,"x[n]+",-u22,"y[n]+",(u21*alpha+u22*beta+beta)/dd,"\n"
+    print "x[n]=",-u22,"x[n1]+",u12,"y[n+1]+",(u22*alpha-u12*beta+alpha)/dd,"\n"
+    print "y[n]=",-u21,"x[n+1]+",-u11,"y[n+1]+",(-u21*alpha+u11*beta+beta)/dd,"\n"
+ }
+ t=testarrayvalue(arrayvalue[],count,2)
+ if(t){
+    print "x[n+1]=",v11,"x[n]+",v12,"y[n]+",(-(v11*alpha+v12*beta)+alpha)/dd,"\n"
+    print "y[n+1]=",v21,"x[n]+",v22,"y[n]+",(-(v21*alpha+v22*beta)+beta)/dd,"\n"
+    print "x[n]=",v22,"x[n1]+",-v12,"y[n+1]+",(-(v22*alpha-v12*beta)+alpha)/dd,"\n"
+    print "y[n]=",-v21,"x[n+1]+",v11,"y[n+1]+",(-(-v21*alpha+v11*beta)+beta)/dd,"\n"
+ }
+  if(count==0){
+     print "There are no solutions\n"
+  }
+  if(count==1){
+     print "There is ",count," family of solutions\n"
+  }
+  if(count>1){
+     print "There are ",count," families of solutions\n"
+  }
+  return(count)
+}
+
+define test(x,y,alpha,beta,dd){
+auto xx,yy
+  xx=x+alpha
+  yy=y+beta
+  if(xx%dd==0 && yy%dd==0){
+   #print "(",xx/dd,",",yy/dd,") is a solution\n"
+    globalhyperbolasolutionx=xx/dd
+    globalhyperbolasolutiony=yy/dd
+    return(1)
+  }else{
+    return(0)
+  }
+}
+
+define sqtest(n){
+auto g
+g=sqrt(n)
+if(g*g==n){
+   return(g)
+}else{
+   return(-1)
+}
+}
+
+define testarrayvalue(arrayvalue[],count,value){
+  flag=1
+  for(h=0;h<count;h++){
+     if(arrayvalue[h]!=value){
+       flag=0
+       break
+     }
+  }
+  return(flag)
+}
+

@@ -1,0 +1,96 @@
+/* cloitrem */
+define t(x,m){
+auto f
+
+   f=int((m+1)*x,m)
+   g=f%2
+   if(g==0){
+     return(f/2)
+   }else{
+     return((3*f+1)/2)
+   }
+}
+
+/* This determines the matrix Q(d) for the d-branched mapping F_m.
+   Here d=2m or ma, according as m is even or odd.
+ */
+define matrixq(m){
+auto i,j,mm[],d,g,r
+ if(m%2==0){
+   d=2*m
+ }else{
+   d=m
+ }
+ for(i=0;i<m;i++){
+   if(i%2==0){
+     mm[i]=m+1
+   }else{
+     mm[i]=3*(m+1)
+   }
+ }
+ for(i=m;i<d;i++){
+   if(i%2==0){
+     mm[i]=3*(m+1)
+   }else{
+     mm[i]=m+1
+   }
+ }
+    print "\n"
+ for(i=0;i<d;i++){
+    for (j=0;j<d;j++){
+       r=t(i,m)
+       g=gcd(mm[i],d)
+       if((r-j)%g==0){
+         if(d==g){
+            print "1 "
+         }else{
+            print 1,"/",d/g," "
+         }
+       }else{
+         print "0 "
+       }
+    }
+    print "\n"
+ }
+}
+
+/*  This function prints the F_m function as a 2m or m-branched mapping
+ * in two ways, the second being in the form F_m(x)=int(m[i]x/d)+x[i] if x (mod d) = i.
+ */
+define function(m){
+auto i,a,b,s,x,y,r,d
+
+   if(m%2==0){
+      s=2*m
+   }else{
+      s=m
+   }
+   for(i=0;i<s;i++){
+     x=t(i,m)
+     y=t(i+s,m)
+     a=y-x
+     b=(s+i)*x-i*y
+     d=a*i
+     r=int(d,s)
+     c=(d+b)/s-r
+     if(b==0){
+        print "T(x)=",a,"x/",s,"=int(",a,"x/",s,")+",c,"\n"
+     }
+     if(b>0){
+        print "T(x)=(",a,"x+",b,")/",s,"=int(",a,"x/",s,")+",c,"\n"
+     }
+     if(b<0){
+        print "T(x)=(",a,"x",b,")/",s,"=int(",a,"x/",s,")+",c,"\n"
+     }
+   }
+}
+
+/* traj(x,m,n) prints the first n iterates of x under t(x,m) */
+define traj(x,m,n){
+   auto i
+   for(i=0;i<n;i++){
+     print x,"\n"
+     x=t(x,m)
+   }
+   return
+}

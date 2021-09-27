@@ -1,0 +1,237 @@
+<html>
+<head>
+<title>
+UPDATES TO MY BC NUMBER THEORY PROGRAMS
+</title>
+<STYLE TYPE="text/css">
+<!--
+body { font-family: Helvetia, sans-serif}
+A:visited { text-decoration: none }
+A:link {text-decoration: none}
+A:hover {text-decoration: underline}
+H3 {text-align: center}
+-->
+</STYLE>
+</head>
+<body bgcolor="FFFFFF">
+<!--<font face=arial,helvetica size=-1>-->
+<h2>Updates to my BC number theory programs</h2>
+<small>
+<hr>
+<ul>
+<li>11th March 2021. <strong>squareroot</strong> now contains <tt>q(a,b,c,n,printflag)</tt>.
+<li>19th April 2020. Corrected a programming error in <strong>stoltvialmm</strong>.
+<li>9th March 2020. Dealt with the case d=e=0 separately in bigu.
+<li>27th January 2020. The hyperbola case of <tt>sswgeneral</tt> has been altered so that it correctly implements a 2015 lemma of John Robertson. Also <tt>binaryviasfs(a,b,c,n,printflag)</tt> and <tt>stoltvialmm(d,n,printflag)</tt> were added with <strong>stoltvialmm</strong>.
+<li>15th January 2020. Updated <tt>sswgeneral</tt>.
+<li>15th January 2020. Added <strong>pell4</strong>.
+<li>31st December 2019. Added <strong>pell1</strong>.
+<li>10th December 2019. Added <strong>ddzero-extra</strong> and <strong>arithpartition.bc</strong> to the list of programs that must be linked to run <tt>sswgeneral</tt>. These coded an improvement due to Chi Chon Lei of imperial College, London. Alan Offer coded <tt>apr</tt> in <strong>arithpartition.bc</strong>.
+<li>1st December 2019. Updated <strong>patz</strong> by adding <tt>squareroot0(d,n)</tt>.
+<li>7th May 2019.  Added <strong>partition.bc</strong>, courtesy of Thorsten Ehlers.
+<li>18th April 2019. Pointed out in item 68 of <a href="./bc_programs.html">bc_programs.html</a>,  that in order to run <tt>carmichael(n,e)</tt>, one needs files <strong>phi, lucas, jacobi</strong>.
+<li>Added <strong>root3</strong>. This contains <tt>cycle(x,y,n)</tt>.
+<li>Improved code  and output for <tt>surd(d,t,u,v,e)</tt> in <strong>patz</strong>.
+<li> Removed a print statement in <strong>exceptionals</strong> which was causing a problem.
+<li>18th July 2016. Fixed some errors in <tt>patz</tt> in function <tt>sswgeneral(a,b,c,d,e,f)</tt>.
+<li>1st July 2016. (i) I had forgotten to include <tt>lineareqn(a,b,c,d,e,f)</tt> and <tt>lineareqnn(a,b,c,d,r,s,n</tt> to file <strong>patz</strong>. (ii) In <tt>lineareqn(a,b,c,d,e,f)</tt> I had written <tt>delta=ad-bc</tt> instead of <tt>delta=a*d-b*c</tt>.
+<li>24th May 2016.  Added <tt>conwaysequence1(a,b,n)</tt> to <strong>phi</strong>.
+<li>23rd May 2016.  Added <tt>conwaycycles(a,b)</tt> to <strong>phi</strong>.
+<li>10th September 2015. Added <tt>stolt0(d,n,flag)</tt> to <strong>stolt</strong>.
+<li>8th September 2015. Programs <tt>aa1(a,b,c)</tt> and <tt>aa2(a,b,c,n)</tt> under construction.
+<li>26th August 2015. Updated <a href="./patz"><strong>patz</strong></a> so as to include <tt>aa1(a,b,c)</tt> and <tt>aa2(a,b,c,n)</tt>.
+<li>25th May 2015. Added <a href="./b2plus3bcplusc2"><tt>rep(p)</tt></a>.
+<li>21st May 2015. Added <a href="./inverse"><tt>inverse(m,n)</tt></a>.
+<li>13th May 2015. I realized that I had two different functions called <tt>hyperbola</tt>  - one in <strong>patz</strong>, the other in <strong>powerdd</strong>. So I've renamed the first one <tt>hyperboladd</tt>.
+<li>7th May 2015. Updated <strong>patz</strong> which now contains <tt>sswgeneral</tt>, <tt>hyperbola(a,b,c,d,e,f,dd,gg)</tt>, <tt>hyperbolagg(a,b,c,d,e,f,dd,gg)</tt> and <tt>ellipse(a,b,c,k,alpha,beta)</tt>. It also involved updating <strong>gcd</strong>, <strong>powerdd</strong>, <strong>genfacs</strong>, <strong>posformrep</strong>, <strong>reduceneg</strong> and constructing the files <strong>powertest3</strong> and <strong>congruence</strong>.
+<li>7th April 2015. Replaced <tt>c</tt> by <tt>globalsqc</tt> and <tt>count</tt> by 
+<tt>globalsqcount</tt> in <strong>squareroot</strong> and <strong>squareroot2</strong>.
+<li>5th April 2015.  Added  <tt>ssw4</tt> to <a href="./patz"><strong>patz</strong></a>.
+<li>24th March 2015.  Added to <a href="./patz"><strong>patz</strong></a>.
+<li>17th March 2015. In<tt> binary0(a,b,c,n,e,f)</tt>, the case a=n=1 was dealt with at the start without using continued fractions.
+<li>16th March 2015.  Added functions <tt>binarygen(a,b,c,n)</tt> and <tt>binarygenlist(a,b,c,n)</tt> to <a href="./patz"><strong>patz</strong></a>.
+<li>11th March 2015.  Added functions <tt>posrepgen(a,b,c,n), posrepgenlist(a,b,c,n), ssw1(a,b,c,d,e,f)</tt> to <a href="./posformrep"><strong>posformrep</strong></a>.
+<li>10th March 2015. Noticed a subtle bug in function <tt>quadratic(a,b,c,flag) when there was no soltion</tt>.
+<li>9th March 2015. Added functions <tt>patzgen(d,n)</tt> and <tt>patzgentest(d,n)</tt> to <a href="./patz"><strong>patz</strong></a>.  Also added <tt>ssw0(a,b,c,d,e,f)</tt> to <a href="./nagell_test"><strong>nagell_test</strong></a>.
+<li>7th March 2015. Corrected the signs of the fundamental solutions.
+<li>5th March 2015. I noticed that <strong>nagell_test</strong> somehow became corrupted. This has now been fixed.
+<li>21st February 2015.  Added <a href="./wildberger1"><strong>wildberger1</strong></a>.
+<li>2nd February 2015.  Added <tt>lprimrootneg(p), lprimrootposmn(m,n), lprimrootnegmn(m,n),</tt> to <strong>phi</strong>.  Added <tt>lucasnonverbose(n)</tt> to <strong>lucas</strong>.
+<li>15th January 2015. Corrected error introduced in previous change in <tt>fund()</tt> in <strong>stolt</strong>.
+<li>14th January 2015. Treated the case d=x<sup>2</sup> + 1 separately at the start of <tt>fund()</tt> in <strong>stolt</strong>.
+<li>14th January 2015. Fixed an error in <tt>fund></tt> which appeared when d=41.
+<li>13th January 2015. Fixed a double counting error in <strong>stolt</strong> when v=0.
+<li>17th December 2014.  Improved code in <a href="./stolt"><strong>stolt</strong></a>.
+<li>22nd November 2014. Fixed faulty code in <a href="./stolt"><strong>stolt</strong></a>.
+<li>20th November 2014.  Added <a href="./dujella_minus"><strong>dujella_minus</strong></a>.
+<li>22nd October 2014. Added <a href="./stolt"><strong>stolt</strong></a>.
+<li>20th August 2014.  Added <a href="./euclid0"><strong>euclid0</strong></a>.
+<li>14th July 2014. Added <a href="./posformrep"><strong>posformrep</strong></a>.
+<li>14th May 2014. Increased the number of primes used in Miller's test to 17 in <strong>factors</strong> and <strong>phi</strong>.
+<li>28th March 2014.  Made some improvements to <strong>primepatterns</strong>.
+<li>26th March 2014.  Added <strong>primepatterns</strong>.
+<li>16th December 2013. Added <strong>patzpos</strong>.
+<li>13th November 2013. Added <strong>markoff_triples</strong>.
+<li>19th July 2013. Fixed a  logical error in stolt(d,n) in the determination of ambiguous solution.
+<li>18th July 2013. Added stolt(d,n) to <strong>nagell_test</strong>.
+<li>14th July 2013. Now print two digits in the Nagell and Frattini bounds.
+<li>11th July 2013.  Fixed an error in <tt>frattini(d,n)</tt> in <strong>nagell_test</strong>.
+<li>15th December 2012.  Added <strong>nagell_test</strong>.
+<li>18th September 2012.  Added <strong>squareroot2</strong>.
+<li>8th May 2012.  Added <strong>pellab</strong>.
+<li>9th January 2012.  Added <strong>genfacs</strong>.
+<li>27th October 2011.  Deleted the OCF program due to a missing case.
+<li>5th August 2011.  Added <strong>cloitrem</strong>.
+<li>20th July 2011.  Added <strong>cloitre</strong>.
+<li>15th July 2011.  Added <tt>ordercomposite</tt> to <strong>reduceneg</strong>.
+<li>15th July 2011. In <strong>classnoneg</strong>, table(m,n) now calculates h(-d) for 3 &le; m &le; d &le; n , d &equiv; 0 or 3 (mod 4).
+<li>14th July 2011. Added <tt>compose</tt>, <tt>compose1</tt>, <tt>power_compose</tt> and <tt>power_compose1</tt> to <strong>reduceneg</strong>.
+<li>14th July 2011. Added <tt>bezout</tt> and <tt>bezout1</tt> to <strong>gcd</strong>.
+<li>13th July 2011. Fixed an error in <strong>reduceneg</strong>.
+<li>24th June 2011. Reinstated <strong>powerdd</strong> and tidied up things.
+<li>23rd June 2011.  Added <strong>partition</strong>.
+<li>15th June 2011.  Added <strong>kronecker</strong> and altered <strong>jacobi</strong> so that now <tt>jacobi(m,1)=1</tt>.
+<li>9th June 2011.  Added <strong>bernoulli</strong>.
+<li>8th June 2011.  Added <strong>tangent</strong>.
+<li>17th March 2011. Updated <strong>padic</strong>.  This now contains simplified versions of <tt>padic</tt> and <tt>twoadic</tt>.
+<li>15th March 2011.  Replaced <tt>p-adic</tt> by <tt>padic</tt>. Currently it does not contain the 2-adic squareroot algorithm,
+ but this will soon be reinstated.
+<li>26th November 2010. Forgot to add <tt>gcd()</tt> and <tt>gcd3()</tt> to the new version of <strong>nscf_pell</strong>.
+<li>25th November 2010. Replaced <strong>nscf_pell</strong>. The new version uses a test for NSCF reduced which is better than the actual definition, which was used in the original program.
+<li>25th November 2010.  <a href="http://www.gladman.me.uk/">Brian Gladman</a> has pointed out that in <strong>nscf_pell</strong>, inside the function nscf_pqa(), the line  d=d*(t*t) should be outside the braces.  This error was also present in <strong>nipell</strong>.
+<li>2nd November 2010.  In <strong>ocf</strong>, fixed a bug in <tt>ocf_pqd1</tt>, where I should have tested if(pk==3 && qk==3 && d==5) instead of if(pk==3 && qk==3).  Also updated the ocf file by adding the function <tt>ocf_pqd2</tt>, which replaces <tt>ocf_pqd1</tt>.
+<li>4th September 2010. Improved the logic in <strong>carmichael</strong>.
+<li>27th August 2010.  Altered the printing in <strong>carmichael</strong>.  It now tests Carmichael's conjecture.
+<li>26th August 2010.  Added <strong>carmichael</strong>. This necessicated updating <strong>nprime</strong> (to get a non-verbose
+ version) and <strong>lucas</strong> (to deal with the possibility that n could be even).
+<li>4th January 2010.  Added <strong>fibonacci</strong>.
+<li>20th November 2009.  Added <strong>ocf</strong>.
+<li>29th March 2009. Added <strong>equivalent</strong>.
+<li>3rd October 2008. Added <strong>spiral</strong>.
+<li>21st August 2008.  Noticed that variable <tt>a</tt> in <b>nipell</b> should have been declared to be auto.
+<li>10th January 2008. Added  <tt>nicf_pqa0(d,t,p,q,e)</tt> to <b>nipell</b>.  Bugs fixed subsequently.
+<li>8th January 2008. I now convert the input surd (u +t&radic;d)/v to <em>standard form</em> in files <b>nipell</b> and <b>nscf_pell</b>. ie.  (U +&radic;D)/V, where gcd(U, V, (D - U<sup>2</sup>)/V) = 1.  <br>
+<!--Also added <tt>nicf_pqa0(d,t,p,q,e) to nipell.  This gives the nearest integer cfrac of Perron's book.-->
+<li>1st December 2007. Removed auto variables t1 and t2 in nscf_pell(d,e). Apparently 26 is the maximum number of auto variables allowed in a BC function!  Also tightened the logic in the definition of the partial numerators a[i].
+<li>15th November 2007. Added gcd3(a,b,c).
+<li>Altered the code for the nearest square algorithm so as to agree with lines 5-6, page 25, of the A.A.K. Ayyangar paper, when |Q'| = |Q"|.
+<li>2nd November 2007. Added <tt>nscf_pqa(d,t,p,q,e)</tt> to <b>nscf_pell</b>.
+<li>1st November 2007.Made some small improvements and corrections (regarding the period length) to <b>nscf_pell</b> and <b>nipell</b>.
+<li>31st October 2007. Added <b>nscf_pell</b>.
+<li>22nd October 2007. Added <tt>nicf_pqa(d,t,u,v,e)</tt> to <b>nipell</b>.
+<li>18th October 2007. Added <tt>nicf(m,n)</tt> to <b>lra</b>.
+<li>12th October 2007. Corrected output about period in <b>nipell</b>.
+<li>11th October 2007. Added <b>nipell</b>.
+<li>12th February 2007. Added <b>sqrtd_period</b>.
+<li>9th February 2007. Added <b>decimal2rational</b>.
+<li>8th February 2007. Removed the restriction gcd(b,n)=1 from the <b>decimal</b> program.
+<li>15th November 2006. Small improvement to <b>reducepos</b>.
+<li>13th June 2006. Fixed a serious error in <b>nprimeap</b>.
+<li>8th August 2004. Added <tt>binary</tt> to <strong>patz</strong>.
+<li>4th August 2004. Added <tt>quadratic</tt> to <strong>squareroot</strong>.
+<li>16th July 2004. Added <strong>patz</strong>.
+<li>14th July 2004. <strong>squareroot</strong> continues to haunt me. 
+<ul>
+<li>I fixed a bug in relation to solving x<sup>2</sup> <img src="../gifs/equiv.gif"> 0 (mod 2). 
+<li>Also had an incorrect construction for extending the solutions to original modulus n, so as to list them in the form &plusmn;P (mod n), with 0 &le; P &le; n/2.
+<li>Replaced <tt>if(qglobal[i]==2 &amp;&amp; number==1)</tt> by <tt>if(number==1)</tt>. This error was giving the wrong answer in x<sup>2</sup> <img src="../gifs/equiv.gif"> 0 (mod 6).                                       
+</ul>
+<li>14th May 2004. Added <strong>forster_log</strong>.
+<li>13th May 2004. Noticed that I'd omitted a restriction that in <strong>discrete_log</strong>, we must have  p &lt; 2<sup>32</sup>-2<sup>16</sup> in order to satisy BC array upper bound length of 2<sup>16</sup>-1.
+<li>27th April 2004. Fixed a small global variable problem arising when calculating Ramanujan's tau function tau_composite(n). Having factored n and obtained global variables representing the prime factors q[i] and their exponents k[i], I inadvertently changed these on subsequent factorisations involved in calculating tau(q[i]).
+<li>21st April 2004. Added <tt>sigmak(k,n)</tt> and <tt>tau</tt> to <strong>phi</strong>.
+<li>15th April 2004. Added <strong>squareroot</strong>, which is a cleaner version of <strong>sqroot</strong>. The new program contains <tt>cornacchia(a,b,m)</tt>.
+<li>7th April 2004. Improved <strong>factor</strong> and <strong>phi</strong> by incorporating <tt>pollard</tt>.
+<li>24th March 2004. Changed name of <strong>cfrace</strong> to <strong>davison</strong>.
+<li>23rd March 2004. Added <strong>cfrace</strong>.
+<li>22nd March 2004. Added <strong>raney</strong>.
+<li>19th March 2004. Inserted a sign term in function <tt>padic</tt>.
+<li>17th March 2004. Changed name of <strong>2adic</strong> to <strong>p-adic</strong>. Also added <tt>padic(a,p,n)</tt>.
+<li>10th March 2004. Added <strong>2adic</strong>.
+<li>27th February 2004. Added <strong>factorial</strong>.
+<li>26th February 2004. Added <strong>binomial</strong>.
+<li>22nd May 2003. Added <strong>unimodular</strong>.
+<li>15th May 2003. Added the solution of equations x<sup>2</sup>-d*y<sup>2</sup>=&plusmn;3 and &plusmn;4 to <strong>pell</strong>.
+<li>14th May 2003. Added <tt>table(m,n)</tt> to <strong>classnopos</strong>.
+<li>14th May 2003. Added <tt>table(m,n)</tt> to <strong>classnoneg</strong>.
+<li>12th May 2003. Fixed a small error in the function <tt>period</tt>. It was supposed to be returning the cycle-length, not <tt>global_count</tt>!
+<li>12th May 2003. Added <tt>class_number0(d)</tt> to <strong>classnopos</strong>.
+<li>7th May 2003. Fixed an error on lines 58-60 of <strong>classnoneg</strong>.
+<li>5th May 2003. Added <strong>classnopos</strong>.
+<li>1st May 2003. Added <strong>reduceneg</strong>.
+<li>29th April 2003. Added <strong>classnoneg</strong>.
+<li>28th April 2003. Changed the output of <strong>surd</strong> to allow choice of printing complete quotients.
+<li>27th April 2003. Added <strong>reducepos</strong>.
+<li>20th April 2003. Fixed a trivial printing error at the end of <b>unit</b>.
+<li>19th February 2003. Added program <strong>john</strong>.
+<li>23rd September 2002. Fixed errors on lines 104 and 112 of <b>lagrange</b>, where I had 2 instead of n.
+<li>18th September 2002. <b>lagrange</b> now needs <b>sturm</b>. <tt>gcdpi</tt> and <tt>sturm</tt> now have an extra parameter e, where e=0 suppresses printing. <tt>lagrange</tt> has also been tightened up. We now check that the input polynomial satisfies the appropriate restrictions. Also the program now handles the case when the root above 1 is in fact rational.
+<li>16th September 2002. Improved <tt>printp</tt> in <strong>sturm</strong>.
+<li>15th September 2002. Added <strong>sturm</strong>.
+<li>11th September 2002. Interchanged lines 43 and 44 in <strong>decimal</strong> to fix a printing error.
+<li>9th September 2002. Added <strong>nprime</strong> and <strong>nprimeap</strong>.
+<li>3rd September 2002. <strong>primes</strong> now generates more primes.
+<li>3rd September 2002. Made a small improvement to <strong>primes</strong> when m=2.
+<li>2nd September 2002. Added missing <tt>else b=0</tt> at line 214 of <strong>proth</strong>.
+<li>27th August 2002. Rewrote <tt>leastqnr</tt> so that it ony needs <tt>mpower</tt> as in <strong>gcd</strong>.
+<li>25th August 2002. Improved the output of <strong>surd</strong>.
+<li>22nd August 2002. Improved the output of <strong>pell</strong>.
+<li>9th August 2002. Added <strong>base</strong> and <strong>perfect_power</strong>.
+<li>31st July 2002. Replaced "&lt;=" by "&lt;" on line 11 of <tt>mthrootr()</tt> in <strong>gcd</strong>.
+<li>25th June 2002. Replaced all log programs by <strong>log</strong>.
+<li>14th June 2002. Added another log program - <strong>log2</strong>.
+<li>8th March 2002. I removed the line <tt>j=2</tt> from <tt>gcd1</tt> in <strong>gcd</strong> and <strong>sqroot</strong>. (Kindly pointed out by Kjell Wooding.)
+<li>10th August 2001. I reinstated <strong>log1</strong>.
+<li>24th July 2001. I replaced the above <strong>log</strong> program by the one that is currently in my manuscript <a href="../../pdfs/log.pdf">log.pdf</a>. 
+<li>14th June 2001. Today I noticed problems with degenerate cases arising from small r in my <tt>log</tt> algorithm.
+<li>23rd February 2001. Added <strong>tomas2</strong>.
+<li>13th February 2001. Added <strong>tomas1</strong>.
+<li>20th October 2000. Altered <tt>unit</tt> so that when d=5 it returned the correct answer.
+<li>7th August 2000. Altered <tt>log(a,b,r,e)</tt> to <tt>log(a,b,d,r,e)</tt> 
+<li>29th July 2000. Improved the printing in <strong>log</strong>.
+<li>6th May 2000. Fixed a bug in <strong>surd</strong>.
+<li>1st May 2000. Corrected printing of output in <strong>thue</strong>: changed s to t at appropriate places.
+<li>26th April 2000. <strong>surd</strong> now prints P<sub>n</sub> and Q<sub>n</sub>, where the nth complete quotient is (P<sub>n</sub>+sqrt(d))/Q<sub>n</sub>.
+<li>11th April 2000. Realised <strong>sqroot</strong> still had some bugs.  Hopefully these are now fixed.
+<li>7th April 2000. Replaced <strong>sqroot</strong> by an improved version which solves the general congruence x<sup>2</sup><img src="../gifs/equiv.gif">d (mod n). Any bug reports are gratefully received.
+<li>6th April 2000. Realised <strong>sqroot</strong> has some bugs. 
+<li>5th April 2000. Changed <tt>thue(d,p)</tt> to  <tt>thue(d,u,p)</tt>.
+<li>4th April 2000.  Added <strong>sqroot</strong>. This finds all solutions of x<sup>2</sup><img src="../gifs/equiv.gif">d (mod n) where gcd(d,n)=1. 
+<li>3rd April 2000. Changed name of <tt>chineseab()</tt> to <tt>chineseb()</tt>. Rewrote <tt>chinesea()</tt> and <tt>chineseb()</tt>.
+<li>2nd April 2000. Added printing of partial quotients and truncated decimal expansion to <strong>log</strong>. Removed printing of A[i].
+Also added <strong>thue</strong>. Here d>1, is not a square, p an odd prime not dividing d-1. Then <tt>thue(d,p)</tt> finds x,y such that x<sup>2</sup>-dy<sup>2</sup>=kp, with small k. 
+<li>1st April 2000. <strong>jacobi</strong> now does not need <strong>gcd</strong> and is a stand-alone program.<br>
+<li>28th March 2000. Discovered that the old version of <strong>log</strong> did not always give the correct partial quotients. The current version seems to be more reliable. Type <tt>log(3,2,2,10,0)</tt> to output roughly 20 partial quotients of log<sub>2</sub>(3), whereas typing <tt>log(3,2,2,10,1)</tt> prints the A[i] of algorithm 1 of manuscript <a href="../../pdfs/log.pdf">log.pdf</a>. The number of partial quotients is returned in both cases.
+<li>13th March 2000. Made some improvements to the output of <strong>log</strong>.
+<li>4th March 2000. Added <strong>rootd_modn</strong>. This is a crude program for solving x<sup>2</sup><img src="../gifs/equiv.gif">d (mod n) with 0 &le; x &le; n/2 for small n.
+<li>Added <strong>log</strong>. This is a discrete variant of Shank's algorithm for computing the simple continued fraction for log<sub>b</sub>n, (Math. Tables and Aids to Computation. 8, 1954, 60-64), originally written by Alan Offer and recently improved by vacation scholar Sean Seefried and myself. It should currently be treated with caution. For while we believe that <tt>log(n,b,z,e)</tt> computes approximately 2z partial quotients of log<sub>b</sub>n, we cannot guarantee the correctness of output!.
+<li> <strong>lagrange</strong> was improved by Sean Seefried, using the binary search method in page 261 of <em>Number Theory with Computer Applications</em>, by R. Kumanduri and C. Romero, 17th December 1999.
+<li> Improved the <strong>euclid</strong> program. It now prints the s[k] and t[k] associated with Euclid's algorithm.
+<li> Forgot to test possibility n<sub>p</sub>=2 in <tt>leastqnr(p)</tt>. Fixed 28th September 1999. 
+<li> Cosmetic alterations to the <strong>tonelli</strong> program, 24th August 1999.
+<li> Added <strong>leastqnr</strong>, 13th August 1999.
+Also removed dependence of <strong>proth</strong> on <strong>phi</strong> and <strong>gcd</strong>.<br>
+<li> Removed dependence of <strong>lucas</strong> on <strong>phi</strong>.<br>
+<li> Tightened up the <strong>discrete_log</strong> program, 11th August 1999.
+<li> Added the <strong>discrete_log</strong> program, 12th July 1999.
+<li> Added the <strong>tonelli</strong> program, 29th June 1999.
+<li> Fixed bug in <strong>gcd</strong> in lcma(m[ ],n) (should have returned b[n-1], not b[n]) 11th November 1998.
+<li> Added some functions to <strong>phi</strong> that are normally in <strong>gcd</strong>, 9th October 1998.
+<li> Added <strong>recursion</strong>, 3rd May 1998.
+<li> Added the <strong>lupei</strong> program. 24th March 1998.
+<li> Added  to <strong>lra</strong>. 21st December 1997.
+<li> Added the <strong>lagrange</strong> program. 17th December 1997.
+<li> Added the <strong>convergents</strong> program. 15th December 1997.
+<li> Added the <strong>lra</strong> program. 24th January 1997.
+<li> Added the <strong>venturini1</strong> program. 1st April 1996.
+<li> Added a missing case at line 27 in <tt>unit(n)</tt>. 5th November 1995.
+<li> Added the <strong>mordell</strong> program. 26th September 1995.
+<li> Added the <strong>challenge</strong> program. 27th August 1995.
+<li> Added the <strong>3branch</strong> program. 26th August 1995.  Fixed a bug there on 27th August 1995 
+<li> 15th June 95. Deleted the for loop in function <tt> b(n)</tt> on line 253 of <strong>factors</strong>.
+</ul>
+<p>
+<i><a href="mailto:webmaster@numbertheory.org">Email</a></i>
+<br><i><a href="http://www.numbertheory.org/keith.html">http://www.numbertheory.org/keith.html</a></i><p>
+</body>
+</html>

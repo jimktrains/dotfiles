@@ -1,0 +1,299 @@
+/* gnubc program : binary */
+/* Needs squareroot */
+
+/* Typing pn(a[],n) returns p[n], where
+ * p[0]=a[0],p[1]=a[0]*a[1]+1,p[i+1]=a[i+1]*p[i]+p[i-1] if i >= 1.
+ * Typing qn(a[],n) returns q[n], where
+ * q[0]=1,q[1]=a[1],q[i+1]=a[i+1]*q[i]+q[i-1] if i >= 1.
+ * Hence pn/qn is the value of the simple continued fraction
+ * [a[0];a[1],...,a[n]].
+ */
+define pn(a[],n){
+	auto x,y,z,i
+        if (n == 0)return(a[0])
+        if(n==1)return(a[0]*a[1]+1)
+        x=a[0];y=a[0]*a[1]+1
+        for(i=2;i<=n;i++){
+          z=a[i]*y+x
+	  x=y
+	  y=z
+        }
+        return(z)
+}
+
+define qn(a[],n){
+        auto x,y,z,i
+        if(n==0)return(1)
+        if(n==1)return(a[1])
+        x=1;y=a[1]
+        for(i=2;i<=n;i++){
+	    z=a[i]*y+x
+	    x=y
+	    y=z
+        }
+        return(z)
+}
+
+/*
+ * This program finds the continued fraction expansion of a
+ * quadratic irrational (u+tsqrt(d))/v, where d is not a square,
+ * t,u,v integers, v nonzero.
+ * After converting to (U+sqrt(D))/V, where V divides D-U^2,
+ */
+/* sign of an integer a */
+/* sign(a)=1,-1,0, according as a>0,a<0,a=0 */
+
+define sign(a){
+	if(a>0) return(1)
+	if(a<0) return(-1)
+	return(0)
+}
+
+/* absolute value of an integer n */
+
+define abs(n){
+	if(n>=0) return(n)
+	return(-n)
+}
+
+/*  mod(a,b)=the least non-negative remainder when an integer a is divided by a
+ positive integer b */
+
+define mod(a,b){
+	auto c
+	c=a%b
+	if(a>=0) return(c)
+	if(c==0) return(0)
+        return(c+b)	
+}
+
+/* int(a,b)=integer part of a/b, a, b integers, b != 0 */
+
+define int(a,b){
+	auto c
+	c=sign(b)
+	a=a*c
+	b=b*c
+	return((a-mod(a,b))/b)
+}
+
+/*
+ * This is a function for finding the period of the continued fraction
+ * expansion of reduced quadratic irrational a=(u+sqrt(d))/v.
+ * Here d is non-square, 1<(u+sqrt(d))/v, -1<(u-sqrt(d))/v<0.
+ * The algorithm also assumes that v divides d-u*u and is based on K. Rosen,
+ * Elementary Number theory and its applications, p.379-381 and Knuth's The art
+ * of computer programming, Vol. 2, p. 359.  0 is returned if a is not reduced.
+ */
+define period(d,u,v,i){
+	auto r,s,t,f,j,k,temp
+	f=sqrt(d)
+	if(u<=0){"a is not reduced: u<=0:";return(0)}
+	if(v<=0){"a is not reduced: v<=0:";return(0)}
+	if(u+f<v){"a is not reduced: a<1:";return(0)}
+	if(u+v<= f){"a is not reduced: a'<=-1:";return(0)}
+	if(f<u){"a is not reduced: a'>0:";return(0)}
+	k=d-u*u
+	if(k%v!=0){"v does not divide d - u*u:";return(0)}
+	s=v
+	r=u
+	a_surd_length=i
+/* i is created by surd(d,t,u,v) below and indexes the ith 
+   convergent of (u+t*sqrt(d))/v */
+	for(j=i;1;j++){
+	   a=(f+u)/v
+           /*  print "a[",j,"]=",a,"\n" */
+	   a_surd[j]=a
+	   u=a*v-u
+	   temp=v
+	   v=(d-u*u)/v
+           u_surd[j+1]=u
+           v_surd[j+1]=v
+           if(u==r && v==s){
+             t=j+1-i
+	     a_surd_length=a_surd_length+t
+             return(t)
+           /* the continued fraction has period length j+1-i */
+           }
+	}
+}
+
+/*
+ * This function uses the continued fraction algorithm expansion in K. Rosen,
+ * Elementary Number theory and its applications,p.379-381 and Knuth's
+ * The art of computer programming, Vol. 2, p. 359. It locates the first reduced
+ * complete quotient and then uses the function period(d,u,v,i,flag)
+ * to locate the period of the continued fraction expansion.
+ */
+
+define surd(d,t,u,v,print_flag){
+	auto a,c,e,g,f,i,j,k,w,z,con_length
+	c=d;g=u;e=v
+	if(v==0){
+           print "v="
+           return(0)
+        }
+	f=sqrt(d)
+	if(f*f==d){
+           print "d is the square of "
+           return(f)
+        }
+	if(t==0){
+           print "t = "
+           return(0)
+        }
+	z=sign(t)
+	u=u*z
+	v=v*z
+	d=d*t*t
+	w=abs(v)
+	if((d-u*u)%w!=0){
+           d=d*v*v
+	   u=u*w
+	   v=v*w
+	}
+	f=sqrt(d)
+	for(j=0;1;j++){
+	    u_surd[j]=u
+	    v_surd[j]=v
+            if(v>0){
+	       if(u>0){
+                  if(u<= f){
+                     if(f<u+v){
+                        if(v-u <=f){
+                       	 /* (u+sqrt(d))/v is reduced */
+                           i=j
+                           pre_period_length=i
+                           l=period(d,u,v,i)
+                           print "period:\n"
+                           if(l%2){
+                              l=period(d,u,v,j+l)
+                              print "second period:\n"
+                           }
+                           con_length=a_surd_length-1
+                           for(k=0;k<=con_length;k++){
+                               p_surd[k]=pn(a_surd[],k)
+                               q_surd[k]=qn(a_surd[],k)
+                           }
+                           if(print_flag){
+                              print "partial quotients:\n"
+                              for(k=0;k<=con_length;k++){
+                                  if(k==pre_period_length || l%2 && k==pre_period_length+l){
+                                     print "period:\n"
+                                  }
+                                  print "a[",k,"]=",a_surd[k],"\n"
+                              }
+                              print "complete quotients:\n"
+                              for(k=0;k<=a_surd_length;k++){
+                                  print "(P[",k,"]+sqrt(",d,"))/Q[",k,"]=(",u_surd[k],"+sqrt(",d,"))/",v_surd[k],"\n"
+                              }
+                              print "convergents:\n"
+                              for(k=0;k<=con_length;k++){
+                                  print "A[",k,"]/B[",k,"]=",p_surd[k],"/",q_surd[k],"\n"
+                              }
+                              print "cfrac has period length ",l,"\n"
+                           }
+                           return(l)
+                        }
+		     }
+                  }
+	       }
+            }
+            if(v>0){
+               a=int(f+u,v)
+            }
+            if(v<0){
+               a=int(f+u+1,v)
+            }
+            /*print "a[",j,"]=",a,"\n" */
+            a_surd[j]=a
+            u=a*v-u
+            v=int(d-u*u,v)
+        }
+}
+
+/* This finds fundamental solutions for the diophantine equation
+ * ax^2+bxy+cy^2=n, d=b^2-4ac > 0, d not a perfect square. 
+ * See K. Matthews, Journal de Theorie des Nomnbres de Bordeaux 14 
+ * (2002) 257-270.
+ */
+define binary(a,b,c,n,print_flag){
+	auto a,b,k,q0,s,t,period_length,temp,flag,g1_surd,g2_surd,f1,f2
+
+	q0=abs(n)
+        s=sqroot(d,q0,0)
+        /* s=0 means no solutions of x^2=d (mod |n|) */
+        /* If s>0, we get all solutions x, 0<=x<=|n|/2 in the form
+         * solution[0],...,solution[numbr-1]
+         */
+	if(s==0){
+	   print "x^2=",d," mod(",n,") has no solution\n"
+           return
+	}
+	/* Now to test the cfrac of each of w[j]=(-solution[j]+\sqrt{D})/q0
+           to see if v_surd[j]=(-1)^j*sign(n) holds for some j in
+           1<=j<=t+l, where l is the period of 
+           w[j]=[a_surd[0],...,a_surd[t];a_surd[t+1],...,a_surd[t+l]]
+           and t=pre_period_length.
+         */
+	for(k=0;k<numbr;k++){
+            print "processing omega[",k,"]="
+            print "(",-solution[k],"+sqrt(",d,")/",q0,"\n"
+            period_length=surd(d,1,-solution[k],q0,print_flag)
+            temp=pre_period_length+period_length
+            if(period_length%2){
+               temp=temp+period_length
+            }
+            for(a=1;a<=temp;a++){
+                temp1=(-1)^a*sign(n)
+                if(v_surd[a]==temp1){
+                   f1=q_surd[a-1]
+                   g1_surd=q0*p_surd[a-1]+solution[k]*q_surd[a-1]
+                   print "solution: class P=",solution[k],"\n"
+                   print " (x,y)=(",g1_surd,",",q_surd[a-1],")\n"
+                   break
+                }
+            }
+            if(a==temp+1){
+               print "P=",solution[k]," yields no solution\n"
+               continue /* process solution[k+1] */
+	    }
+            if(solution[k]==0){
+               print "Fundamental solution: ambiguous class P=0,\n"
+               print "(x,y)=(",g1_surd,",",q_surd[a-1],")\n"
+            }
+            if(solution[k]!=0){
+               print "processing omega*[",k,"]=(",-solution[k],"-sqrt(",d,")/",q0,"\n"
+               period_length=surd(d,-1,-solution[k],q0,print_flag)
+               temp=pre_period_length+period_length
+               if(period_length%2){
+                  temp=temp+period_length
+               }
+	       for(a=1;a<=temp;a++){
+                   temp1=(-1)^(a+1)*sign(n)
+		   if(v_surd[a]==temp1){
+                      flag=1
+                      f2=q_surd[a-1]
+                      g2_surd=q0*p_surd[a-1]+solution[k]*q_surd[a-1]
+                      print "solution: class P=",solution[k]
+                      print ", (x,y)=(",g2_surd,",",q_surd[a-1],")\n"
+                      break
+                   }
+               }
+	       print "Fundamental solution: "
+               if(2*solution[k]==q0){
+                  print "ambiguous class "
+               }else{
+                  print "class "
+               }
+               print "P=",solution[k],", (x,y)=("
+               if(f1<=f2){
+                  print g1_surd,",",f1
+               }else{
+                  print g2_surd,",",f2
+               }
+               print ")\n"
+            }
+	}/* end of for k loop */
+        return
+}

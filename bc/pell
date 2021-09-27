@@ -1,0 +1,154 @@
+/* gnubc program: pell */
+"
+This is a program for finding least solution of Pell's
+equations x^2-d*y^2=+-1,2,3 and 4.  
+The algorithm is based on K. Rosen,
+'Elementary number theory and its applications', p382, 
+B.A. Venkov, 'Elementary Number theory', p.62 and D. Knuth,
+'Art of computer programming', Vol.2, p359.
+Also see L. Holzer, 'Zahlentheorie', Satz 9, Seite 171,
+where if d>2, it is proved that no two of 
+x^2-d*y^2=-1, x^2-d*y^2=-2, x^2-d*y^2=2 
+can be simultaneously soluble.
+We expand [sqrt(d)]+sqrt(d) as a purely periodic continued fraction.
+The least solutions of x^2-d*y^2=+-4 are determined.
+To run the program for (say) d=33: type pell(33,e) (return)
+We print the complete quotients (P+sqrt(d))/Q and 
+the partial quotients a[i] in the period if e=1, otherwise
+printing is suppressed if e=0.
+"
+define pell(d,e){
+/*auto b,c,i,k,l,m,n,r,s,t,u,v,x,y,ii,flag,tt,ttt,iii,iiii,rr,rrr,ss,sss,tt3,ttt3,iii3,iiii3,rr3,rrr3,ss3,sss3,flag3*/
+	t=0
+	tt=0
+	ttt=0
+	tt3=0
+	ttt3=0
+	flag=0
+	flag3=0
+	b=x=sqrt(d)
+	if(x*x==d){d;"is a perfect square ";return(0)}
+	c=1
+	l=0;k=1;m=1;n=0
+	if(e){
+		print "(P,Q)=(",b,",",c,")\n"
+	}
+	for(i=0;1;i++){
+		y=(x+b)/c
+		if(e){
+			print "a[",i,"] = ";y
+		}
+		b=y*c-b
+		c=(d-(b*b))/c
+		if(e){
+			print "(P,Q)=(",b,",",c,")\n"
+		}
+		if(i==0)y=x
+		u=k*y+l;v=n*y+m
+/* u/v is the i-th convergent to sqrt(d) */
+		l=k;m=n
+		k=u;n=v
+		if(c==2){t=1;r=u;s=v;ii=i}
+		if(c==4 && !flag){tt=1;rr=u;ss=v;iii=i;flag=1}
+		if(c==4 && flag){ttt=1;rrr=u;sss=v;iiii=i}
+		if(c==3 && !flag3){tt3=1;rr3=u;ss3=v;iii3=i;flag3=1}
+		if(c==3 && flag3){ttt3=1;rrr3=u;sss3=v;iiii3=i}
+		if(c==1){
+	        if(t==1 && d>2){/* covered by Holzer */
+	            z=(-1)^((ii+1)%2);
+		    print "the least solution of u^2-",d,"*v^2 =",2*z," is "
+		    print "(u,v)=(",r,",",s,")\n"
+		    print "no solution of u^2-",d,"*v^2=",-2*z,"\n" 
+		}else{
+			if(d>3){/* t!=1 and d>3 covered by Lagrange */
+		            print "no solution of u^2-",d,"*v^2=2 or -2\n" 
+			}
+			if(d==2){/* by patz(2,2) */
+			 print "least solution of u^2-2*v^2=-2 is (u,v)=(0,1)\n"
+			 print "least solution of u^2-2*v^2=2 is (u,v)=(2,1)\n"
+			}
+			if(d==3){/* by patz(3,2) */
+			 print "least solution of u^2-3*v^2=-2 is (u,v)=(1,1)\n"
+			 print "no solution of u^2-3*v^2=2\n"
+			}
+		}
+		if(tt==1 && d>15){/* covered by Lagrange */
+			z=(-1)^((iii+1)%2);
+		        print "the least primitive solution of u^2-",d,"*v^2=",4*z," is "
+		        print "(u,v)=(",rr,",",ss,")\n"
+			if(i%2){
+				print "no primitive solution of u^2-",d,"*v^2=",-4*z,"\n"
+			}else{
+				if(ttt==1){
+					z=(-1)^((iiii+1)%2);
+					print "the least primitive solution of u^2-",d,"*v^2=",4*z," is "
+					print "(u,v)=(",rrr,",",sss,")\n"
+				}
+			}
+		}else{/* no primitive solutions by patz (d,4), if d=15,14,11,10,7,6,3,2 */
+			if(d !=13 && d != 12 && d != 8 && d != 5){/* tt!=1 and d>15 covered by Lagrange */
+		            print "no primitive solution of u^2-",d,"*v^2=4 or -4\n" 
+			}
+			if(d==13){/* by patz(13,4) */
+			 print "least primitive solution of u^2-13*v^2=-4 is (u,v)=(3,1)\n"
+			 print "least primitive solution of u^2-13*v^2=4 is (u,v)=(11,3)\n"
+			}
+			if(d==12){/* by patz(12,4) */
+			 print "least primitive solution of u^2-12*v^2=4 is (u,v)=(4,1)\n"
+			 print "no primitive solution of u^2-12*v^2=-4\n"
+			}
+			if(d==8){/* by patz(8,4) */
+			 print "least primitive solution of u^2-8*v^2=-4 is (u,v)=(2,1)\n"
+			 print "no primitive solution of u^2-8*v^2=4\n"
+			}
+			if(d==5){/* by patz(5,4) */
+			 print "least primitive solution of u^2-5*v^2=-4 is (u,v)=(1,1)\n"
+			 print "least primitive solution of u^2-5*v^2=4 is (u,v)=(3,1)\n"
+			}
+		}
+		if(tt3==1 && d>=10){/* covered by Lagrange */
+			z=(-1)^((iii3+1)%2);
+		        print "the least solution of u^2-",d,"*v^2=",3*z," is "
+		        print "(u,v)=(",rr3,",",ss3,")\n"
+			if(i%2){
+				print "no solution of u^2-",d,"*v^2=",-3*z,"\n"
+			}else{
+				if(ttt3==1){
+					z=(-1)^((iiii3+1)%2);
+					print "the least solution of u^2-",d,"*v^2=",3*z," is "
+					print "(u,v)=(",rrr3,",",sss3,")\n"
+				}
+			}
+		}else{/* no solutions by patz(d,3) if d=8,5,2 */
+			if(d !=3 && d != 6 && d != 7){/* tt3!=1 and d>=10 covered by Lagrange */
+		            print "no solution of u^2-",d,"*v^2=3 or -3\n" 
+			}
+			if(d==3){/* by patz(3,3) */
+			 print "least solution of u^2-3*v^2=-3 is (u,v)=(0,1)\n"
+			 print "no solution of u^2-3*v^2=3\n"
+			}
+			if(d==6){/* by patz(6,3) */
+			 print "least solution of u^2-6*v^2=3 is (u,v)=(3,1)\n"
+			 print "no solution of u^2-6*v^2=-3\n"
+			}
+			if(d==7){/* by patz(7,3) */
+			 print "least solution of u^2-7*v^2=-3 is (u,v)=(2,1)\n"
+			 print "no solution of u^2-7*v^2=3\n"
+			}
+		}
+	        z=(-1)^((i+1)%2);
+	        print "the least solution of u^2-",d,"*v^2=",z," is "
+	        print "(u,v)=(",u,",",v,")\n"
+	        if(z== -1){
+	            x=u*u+d*v*v
+		    y=2*u*v
+	            print "the least solution of u^2-",d,"*v^2=1 is "
+	            print "(u,v)=(",x,",",y,")\n"
+		}
+	        if(z==1){
+		    print "no solution of u^2-",d,"*v^2=-1\n" 
+	        }
+	        return(0)
+	  }
+    }
+}

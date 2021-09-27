@@ -1,0 +1,135 @@
+/* bc program log */
+/* See http://www.numbertheory.org/pdfs/log.pdf */
+print "quotients of log(3)/log(2)\n"
+print "typing log(3,2,1,20) prints the A[i] and AA[i]\n"
+print "typing log1(3,2,r) prints the m[i] on one line\n"
+print "typing test(3,2,m,n) runs log1(3,2,r) for r=m,..,n\n"
+
+/* mod(a,b)=the least non-negative remainder when an integer
+   a is divided by a  positive integer b */
+
+define mod(a,b){
+	auto c
+	c=a%b
+	if(a>=0) return(c)
+	if(c==0) return(0)
+        return(c+b)	
+}
+
+/* int(a,b)=integer part of a/b, a, b integers, b != 0 */
+
+define int(a,b){
+	if(b<0){
+	a= -a
+	b= -b
+	}
+	return((a-mod(a,b))/b)
+}
+
+/*
+ * ceiling function
+ */
+define ceiling(a,b){
+auto x
+x=int(a,b)
+if(b*x==a){return(x)}\
+else{return(x+1)}
+}
+
+/* e!=0 prints the A[i} and A[ii] */
+
+define log(a,b,r,e){
+auto aa,bb,i,ii,s,t,c,aaa,bbb,flag
+flag=1
+c=b^r
+c=c+sqrt(c)
+aa=a*c;bb=b*c;s=0
+aaa=aa;bbb=bb
+if(e){
+print "  A[0]=",aa,";"
+print "AA[0]=",aaa,"\n"
+print "  A[1]=",bb,";"
+print "AA[1]=",bbb,"\n"
+}
+while(bb>c && bbb>c){
+	i=0
+	while(aa>=bb){
+		aa=aa*c/bb
+		i=i+1
+	}
+	t=bb
+        bb=aa
+        aa=t
+	ii=0
+	while(aaa>=bbb){
+		aaa=ceiling(aaa*c,bbb)
+		ii=ii+1
+	}
+	print "\n"
+	if(e){
+		print "  A[",s+2,"]=",bb,"; "
+		print "AA[",s+2,"]=",aaa,"\n"
+	}
+	t=bbb
+        bbb=aaa
+        aaa=t
+	if(bb!=bbb)
+		flag=0
+	if(i==ii){
+		print "m[",s,"]=",ii,"; "
+	}\
+	else{
+	        print "m[",s,"]=",i,"!=",ii,"=mm[",s,"];"
+		flag=0
+		break
+        }
+	s=s+1
+}
+	print "\n"
+	if(flag && bb==c && bbb==c){
+		print "log(",a,")/log(",b,") is likely to be rational;\n"
+                print "repeat with r = ",r," replaced by r = ",r+1,"\n"
+	}
+	print "number of m[i] with a=",a,", b=",b,", d=",d,", r=",r, ", is "
+	return (s)
+}
+
+define log1(a,b,r){
+auto aa,bb,i,ii,s,t,c,aaa,bbb
+c=b^r
+aa=a*c;bb=b*c;s=0
+aaa=aa;bbb=bb
+while(bb>c && bbb>c){
+	i=0
+	while(aa>=bb){
+		aa=aa*c/bb
+		i=i+1
+	}
+	t=bb
+        bb=aa
+        aa=t
+	ii=0
+	while(aaa>=bbb){
+		aaa=ceiling(aaa*c,bbb)
+		ii=ii+1
+	}
+	t=bbb
+        bbb=aaa
+        aaa=t
+	if(i==ii){
+		print i,","
+	}\
+	else
+		break
+	s=s+1
+}
+	print "[",r,"]:"
+	return (s)
+}
+
+define test(a,b,m,n){
+auto r
+for(r=m;r<=n;r++){
+	log1(a,b,r)
+}
+}

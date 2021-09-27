@@ -1,0 +1,244 @@
+# dd is even. This is used in hyperbolagg(a,b,c,d,e,f,dd,gg).
+define teste(gamma,epsilon,delta,zeta,phi,psi,alpha,beta,gg,dd,s,parity){
+auto x0,y0,x1,y1,x2,y2,x,y,f,g,n,ddgg,alpha1,beta1,phi2,psi2,d,null,i,flag,iminus1,temp
+# global z1,z2
+
+    i=0
+    flag=0
+    ddgg=dd*gg
+    d=dd/4
+    if(parity==0){
+       null=powerdd(phi,psi,d,0)
+    }else{
+       null=powerdd(phi,psi,d,1)
+    }
+    f=s*z1;g=s*z2
+    x0=mod(gamma*f+delta*g+alpha,ddgg)
+    y0=mod(epsilon*f+zeta*g+beta,ddgg)
+    n=0
+    if(x0==0 && y0==0){
+       flag=1
+       ap[i]=n
+       i=i+1
+    }
+   x=x0; y=y0
+   if(parity==0){
+      null=powerdd(phi,psi,d,2)
+   }else{
+      null=powerdd(phi,psi,d,3)
+   }
+   f=s*z1;g=s*z2
+   x1=mod(gamma*f+delta*g+alpha,ddgg)
+   y1=mod(epsilon*f+zeta*g+beta,ddgg)
+   n=1
+   if(x1==0 && y1==0){
+      flag=1
+      ap[i]=n
+      i=i+1
+   }
+
+   if(x1==x0 && y1==y0){# period 1
+      if(flag){
+         if(parity){
+            f=s*phi;g=s*psi
+         }else{
+            f=s;g=0
+         }
+         r=(gamma*f+delta*g+alpha)/ddgg
+         s=(epsilon*f+zeta*g+beta)/ddgg
+         print "solution (",r,",",s,")\n"
+         return(1)
+      }else{
+         print "no solutions in this family\n"
+         return(0)
+      }
+   }
+   null=powerdd(phi,psi,d,2)
+   phi2=z1
+   psi2=z2
+   alpha1=-2*phi2*alpha+2*alpha
+   beta1=-2*phi2*beta+2*beta
+   for(n=2;1;n++){
+     x2=mod(2*phi2*x1-x0+alpha1,ddgg)
+     y2=mod(2*phi2*y1-y0+beta1,ddgg)
+     if(x2==0 && y2==0){
+       flag=1
+       ap[i]=n
+       i=i+1
+     }
+     if(x2==x && y2==y){# period length=n
+      if(flag){
+         iminus1=i-1
+         if(ap[iminus1]==n){
+            i=iminus1
+         }
+         for(j=0;j<i;j++){
+            temp=2*ap[j]
+            if(parity==0){
+               print "2m=",2*n,"t+",temp,"\n"
+            }else{
+               temp=temp+1
+               print "2m+1=",2*n,"t+",temp,"\n"
+            }
+            null=powerdd(phi,psi,d,temp)
+            f=s*z1;g=s*z2
+            r=(gamma*f+delta*g+alpha)/ddgg
+            s=(epsilon*f+zeta*g+beta)/ddgg
+            print "solution (",r,",",s,")\n"
+         }
+      }else{
+         print "no solutions in this family\n"
+      }
+      return(i)
+     }
+     x0=x1;y0=y1
+     x1=x2;y1=y2
+   }
+}
+
+# dd is odd. This is used in hyperbolagg(a,b,c,d,e,f,dd,gg).
+ define testo(gamma,epsilon,delta,zeta,phi,psi,alpha,beta,gg,dd,s,parity){
+ auto x0,y0,x1,y1,x2,y2,x,y,f,g,n,ddgg,alpha1,beta1,phi2,psi2,d,null,i,flag,iminus1,temp,u
+ 
+     i=0
+     flag=0
+     ddgg=dd*gg
+     d=dd
+     if(parity==0){
+        null=powerdd(phi,psi,d,0)
+     }else{
+        null=powerdd(phi,psi,d,1)
+     }
+     f=s*z1;g=s*z2
+     temp=gamma*f+delta*g
+     if(parity){
+        temp=temp/2
+     }
+     temp=temp+alpha
+     x0=mod(temp,ddgg)
+     temp=epsilon*f+zeta*g
+     if(parity){
+        temp=temp/2
+     }
+     temp=temp+beta
+     y0=mod(temp,ddgg)
+     n=0
+     if(x0==0 && y0==0){
+        flag=1
+        ap[i]=n
+        i=i+1
+     }
+    x=x0; y=y0
+    null=powerdd(phi,psi,d,2)
+    phi2=z1/2
+    psi2=z2/2
+    alpha1=2*alpha-phi2*alpha
+    beta1=2*beta-phi2*beta
+    if(parity==0){
+       null=powerdd(phi,psi,d,2)
+    }else{
+       null=powerdd(phi,psi,d,3)
+    }
+    f=s*z1;g=s*z2
+    temp=gamma*f+delta*g
+    if(parity){
+       temp=temp/8
+    }else{
+       temp=temp/4
+    }
+    temp=temp+alpha
+    x1=mod(temp,ddgg)
+    temp=epsilon*f+zeta*g
+    if(parity){
+       temp=temp/8
+    }else{
+       temp=temp/4
+    }
+    temp=temp+beta
+    y1=mod(temp,ddgg)
+    n=1
+    if(x1==0 && y1==0){
+       flag=1
+       ap[i]=n
+       i=i+1
+    }
+ 
+    if(x1==x0 && y1==y0){# period 1
+       if(flag){
+          if(parity==0){
+             r=(alpha+gamma*s)/ddgg
+             s=(beta+epsilon*s)/ddgg
+             print "solution(",r,",",s,")\n"
+             return(1)
+          }else{
+             r=((gamma*phi+delta*psi)/2+alpha)/ddgg
+             s=((epsilon*phi+zet*psi)/2+beta)/ddgg
+             return(1)
+          }
+       }else{
+          print "no solutions in this family\n"
+          return(0)
+       }
+    }
+    for(n=2;1;n++){
+      x2=mod(phi2*x1-x0+alpha1,ddgg)
+      y2=mod(phi2*y1-y0+beta1,ddgg)
+      if(x2==0 && y2==0){
+        flag=1
+        ap[i]=n
+        i=i+1
+      }
+      if(x2==x && y2==y){# period length=n
+       if(flag){
+          iminus1=i-1
+          if(ap[iminus1]==n){
+             i=iminus1
+          }
+          for(j=0;j<i;j++){
+             temp=2*ap[j]
+             if(parity==0){
+                print "2m=",2*n,"t+",temp,"\n"
+             }else{
+                temp=temp+1
+                print "2m+1=",2*n,"t+",temp,"\n"
+             }
+             null=powerdd(phi,psi,d,temp)
+             u=2^temp
+             f=s*z1;g=s*z2
+             r=((gamma*f+delta*g)/u+alpha)/ddgg
+             s=((epsilon*f+zeta*g)/u+beta)/ddgg
+             print "solution (",r,",",s,")\n"
+          }
+       }else{
+          print "no solutions in this family\n"
+       }
+       return(i)
+      }
+      x0=x1;y0=y1
+      x1=x2;y1=y2
+    }
+ }
+ 
+# this is used in sswgeneral(a,b,c,d,e,f) and treats the ellipse case after translation
+# to centre (alpha,beta)
+define ellipse(a,b,c,k,dd,alpha,beta){
+auto g,tempcount,minusdd,temp1,temp2,h
+#global globalposrepx,globalposrepy
+
+      g=posrepgen(a,b,c,k)
+      tempcount=0
+      minusdd=-dd
+      print "solutions (x,y):\n"
+      for(h=0;h<g;h++){
+            posrepxplusalpha=globalposrepx[h]+alpha
+            posrepyplusbeta=globalposrepy[h]+beta
+            temp1=posrepxplusalpha%minusdd
+            temp2=posrepyplusbeta%minusdd
+            if(temp1==0 && temp2==0){
+               print "(",posrepxplusalpha/dd,",",posrepyplusbeta/dd,")\n"
+               tempcount=tempcount+1
+            }
+       }
+       print "number of solutions is ",tempcount,"\n"
+       return(tempcount)
+}

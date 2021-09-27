@@ -1,0 +1,66 @@
+define euclid(m,n){
+auto a,b,r,q,i
+        a=m
+        b=n
+        r=m%n
+        q=(a-r)/b
+	i=1
+        while(r>0){
+           i=i+1
+           a=b
+           b=r
+           r=a%b
+           q=(a-r)/b
+        }
+        return(i)
+}   
+define powerdd(a,b,d,n){
+/* (a+b*sqrt(d))^n=z1+z2*sqrt(d) */
+auto x1,x2,temp,temp1,temp2,temp3,temp4,temp5,y
+
+x1=a
+x2=b
+y=n
+z1=1
+z2=0
+while(y){
+   while(y%2==0){
+      y=y/2
+      temp=x1
+      temp1=x2*x2
+      temp2=x1*x1
+      temp3=d*temp1
+      x1=temp2+temp3
+      temp4=temp*x2
+      x2=2*temp4
+   }
+   y=y-1
+   temp=z1
+   temp1=z2*x2
+   temp2=z1*x1
+   temp3=d*temp1
+   z1=temp2+temp3
+   temp4=temp*x2
+   temp5=z2*x1
+   z2=temp4+temp5
+}
+}
+
+define schur(n){
+auto z
+z=2^n
+powerdd(1,1,2,z)
+schur1=z1
+schur2=z2/z
+/*print "epsilon(",n,")=(",schur1,",",schur2,")\n"*/
+}
+
+define l(n){
+schur(n)
+l=euclid(schur1,schur2)
+if(l%2){
+l=l+1
+}
+print "the  continued fraction expansion of sqrt(2^",2*n+1,") has period-length "
+return(l)
+}

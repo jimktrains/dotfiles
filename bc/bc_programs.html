@@ -1,0 +1,322 @@
+<html>
+<head>
+<link rel="shortcut icon" href="http://www.numbertheory.org/gnubc/favicon_gbc.ico" type="image/x-icon"> 
+<title>
+BC NUMBER THEORY PROGRAMS
+</title>
+<STYLE TYPE="text/css">
+<!--
+body { font-family: Helvetia, sans-serif}
+A:visited { text-decoration: none }
+A:link {text-decoration: none}
+A:hover {text-decoration: underline}
+H3 {text-align: center}
+-->
+</STYLE>
+</head>
+<body bgcolor="FFFFFF">
+<font face=arial,helvetica size=-1>
+<a name="programs">
+<h3><b>BC PROGRAMS WRITTEN BY <a href="../keith.html">KEITH MATTHEWS</a></b></h3>
+These are downloadable as a <a href="http://www.numbertheory.org/gnubc/bc_programs.tar.gz">gzipped tar file</a>.<br>
+They may contain bugs, both on the algorithmic and programming side.<br>
+<p>
+<ol>
+<li><a href="./gcd"><strong>gcd:</strong></a>
+<ul>
+<li> <tt>sign(n)</tt>.
+<li> <tt>abs(n)</tt>.
+<li> <tt>mod(a,b)</tt>, (b &gt; 0): returns a(mod b).
+<li> <tt>int(a,b)</tt>:  returns the integer part of a/b, b nonzero.
+<li> <tt>gcd(m,n)</tt>.
+<li> <tt>gcd1(m,n)</tt>: gcd(m,n)=gcd1(m,n)&middot;m+gcd2(m,n)&middot;n.
+<li> <tt>gcd2(m,n)</tt>.
+<li> <tt>lcm(m,n)</tt>.
+<li> <tt>inv(a,n)</tt>: returns the inverse of a mod m.
+<li> <tt>cong(a,b,m)</tt>: solves ax &equiv; b (mod m).
+<li> <tt>chinese(a,b,m,n)</tt>: solves x &equiv; a(mod m) and x &equiv; b(mod n).
+<li> <tt>gcda(m[],n)</tt>: finds gcd(m[0],...,m[n-1]) and expresses it
+     as a linear combination of m[0],...,m[n-1].
+<li> <tt>lcma(m[],n)</tt>: finds lcm(m[0],...,m[n-1]).
+<li> <tt>chinesea(a[],m[ ],n)</tt>: solves x &equiv; a[i](mod m[i]), i=1,...,n-1.
+<li> <tt>chineseb(a[],b[],m[],n)</tt>: solves a[i]x &equiv; b[i](mod m[i]),
+     i=1,...,n-1.
+<li> <tt>mpower(a,b,c)</tt>: returns a<sup>b</sup> (mod c).
+<li> <tt>exp(a,b)</tt>: returns a<sup>b</sup>.
+<li> <tt>mthroot(a,b,m)</tt>: returns the integer part of the mth-root of a/b. 
+     Here a,b and m are positive integers, m &gt; 1.  (See K.R. Matthews, <a href="../keith/mthroot.html"><em>Computing mth roots</em></a>, College Mathematics Journal 19 (1988) 174-176.)
+<li> <tt>mthrootr(a,b,m,r)</tt>: this gives the mth-root of a/b 
+truncated to r places.
+<li><tt>binomial(n,m)</tt>: returns the binomial coefficient.
+<li><tt>gcd3(a,b,c)</tt>: returns gcd(a,b,c).
+<li><tt>ceiling(a,b)</tt>: returns least integer x>= a/b.
+<li><tt>bezout(a,b)</tt>, when a and b are non-negative, returns d = gcd(a,b) = globalu&ast;a + globalv&ast;b, where globalu and globalv are global variables.  <tt>bezout1(a,b)</tt> deals with arbitrary integers a and b.
+</ul>
+<li><a href="./euclid0"><strong>euclid0</strong></a>: <tt>euclid0(m,n)</tt> performs Euclid's algorithm and finds the partial quotients and convergents for the continued fraction of m/n, n&gt; 0.
+<li><a href="./euclid"><strong>euclid</strong></a>: <tt>euclid(m,n)</tt> performs Euclid's algorithm.
+<li><a href="./euclid1"><strong>euclid1</strong></a>: <tt>euclid(m,n)</tt> returns the length of Euclid's algorithm.
+<li><a href="./jacobi"><strong>jacobi</strong></a>:
+<ul>
+<li><tt>jacobi(m,n)</tt> calculates the Jacobi symbol
+<li><tt>peralta(a,p)</tt> finds a square root of a quadratic 
+residue a mod p, using an algorithm of Rene Peralta.
+</ul>
+<li><a href="./serret"><strong>serret</strong></a>: <tt>serret(p)</tt> expresses a prime of the form 
+4n+1 as the sum of two squares using Serret's algorithm.
+<li><a href="./3x+1"><strong>3x+1</strong></a>: <tt>collatz(n)</tt> tests the 3x+1 conjecture.
+<li><a href="./3x+371"><strong>3x+371</strong></a>: <tt>s(n)</tt> tests the 3x+371 conjecture.
+<li><a href="./phi"><strong>phi</strong></a>: (slow-uses Brent-Pollard only)
+<ul>
+<li> <tt>omega(n)</tt> returns the number of distinct prime factors of n.
+<li> <tt>phi(n)</tt> returns the value of Euler's function.
+<li> <tt>tau(n)</tt> returns the number of divisors of n.
+<li> <tt>sigma(n)</tt> returns the sum of the divisors of n.
+<li> <tt>mu(n)</tt> returns the value of the Mobius Function.
+<li> <tt>lprimroot(p)</tt> returns the least primitive root mod p.
+<li> <tt>orderm(a,m)</tt> returns the order of a mod m.
+</ul>
+<li><a href="./factors"><strong>factors</strong></a>: <tt>factor(n)</tt> attempts to factor n using 
+         Brent-Pollard (slow).
+<li><a href="./lucas"><strong>lucas</strong></a>: <tt>lucas(n)</tt> performs the strong base 2 
+         pseudoprime test and Lucas pseudoprime test on n. <tt>lucasnonverbose(n)</tt> is the non-verbose version of <tt>lucas</tt>.<br>
+         (Needs <tt>jacobi</tt>).
+<li><a href="./decimal"><strong>decimal</strong></a>: <tt>period(m,n,b)</tt> outputs the period 
+         digits of the base b expansion of m/n, where m,n,b (b &gt; 1) are 
+	 positive integers, 1&le;m &lt; n. 
+<li><a href="./pell"><strong>pell</strong></a>: <tt>pell(d,e)</tt> finds the least solution of Pell's
+         equations x<sup>2</sup>-d*y<sup>2</sup>=&#177;1,&plusmn;2,&plusmn;3 and least primitive solution of x<sup>2</sup>-d*y<sup>2</sup>=&plusmn;4. If e=1, the complete and partial quotients are printed; if e=0, this detail is suppressed.
+<li><a href="./surd"><strong>surd</strong></a>: <tt>surd(d,t,u,v)</tt> finds the continued fraction
+         expansion of a quadratic irrational (u+t&radic;d)/v, where d &gt; 1 is not a square, t,u,v integers, v nonzero.
+<li><a href="./unit"><strong>unit</strong></a>: <tt>unit(d)</tt> finds the fundamental unit of 
+         Q(&radic;d).
+<li><a href="./fibonacci"><strong>fibonacci</strong></a>: <tt>f(m,n)</tt> prints the Fibonacci numbers
+         F(m),...,F(n). l(m,n) prints the Lucas numbers L(m),...,L(n).
+<li><a href="./rootd"><strong>rootd</strong></a>: <tt>root(d)</tt> finds the continued fraction
+         expansion of &radic;d.
+<li><a href="./cfrac"><strong>cfrac</strong></a>: <tt>cfrac(m,n)</tt> finds the continued fraction
+         expansion of m/n.
+<li><a href="./proth"><strong>proth</strong></a>: <tt>proth(h,m)</tt> investigates the primality of
+         h*2<sup>m</sup>+1, h &lt; 2<sup>m</sup>, using Proth's test.<br>
+         (Needs <tt>jacobi</tt>,<tt>lucas</tt>).
+<li><a href="./pollard"><strong>pollard</strong></a>: <tt>pollard(n)</tt> attempts to find a factor 
+         of n using the Pollard p-1 method.
+<li><a href="./challenge"><strong>challenge</strong></a>: <tt>s(n)</tt> tests another 3-branched 
+         generalized 3x+1 conjecture.
+<li><a href="./mordell"><strong>mordell</strong></a>: <tt>f(a,k)</tt> finds the integer solutions of 
+         y<sup>2</sup>=x<sup>3</sup>+a with x &le; k. (Needs <tt>gcd</tt>.)
+<li><a href="./4_branch"><strong>4_branch</strong></a>: <tt>s(n)</tt> tests a 4-branched generalized 3x+1 function.
+<li><a href="./venturini1"><strong>venturini1</strong></a>: <tt>s(n)</tt> tests a 6-branched generalized
+         3x+1 function of G. Venturini.
+<li><a href="./lra"><strong>lra</strong></a>: (needs <tt>gcd</tt>)
+<ul>
+<li> <tt>lnearint(m,n)</tt> returns the (left) nearest integer to m/n.
+<li> <tt>rnearint(m,n)</tt> returns the (right) nearest integer to m/n.
+<li> <tt>lmodd(m,n)</tt> returns the (left) least remainder of sign(n)m mod |n|.
+<li> <tt>rmodd(m,n)</tt> returns the right) least remainder of sign(n)m mod |n|.
+<li> <tt>lra(m,n)</tt> performs the least remainder algorithm on m, n.
+<!--<li> <tt>lbrisse(a,b,n)</tt> calculates a[0]=a,a[1]=b,...,a[n], where a[n+1]=lnearint(a[n]a[n]/a[n-1]), a,b positive integers. Also prints a[n]/a[n-1].
+<li> <tt>rbrisse(a,b,n)</tt> calculates a[0]=a,a[1]=b,...,a[n], where a[n+1]=rnearint(a[n]a[n]/a[n-1]), a,b positive integers. Also prints a[n]/a[n-1].-->
+<li><tt>nicf(m,n)</tt> prints the nearest integer continued fraction of m/n:
+m/n = [a<sub>0</sub> - 1/a<sub>1</sub> - &middot;&middot;&middot; - 1/a<sub>n</sub>].
+<br> We write this as (a<sub>0</sub>,a<sub>1</sub>,...,a<sub>n</sub>).
+
+</ul>
+<li><a href="./convergents"><strong>convergents</strong></a>: <tt>pn(a[],n)</tt> and <tt>qn(a[],n)</tt> compute the numerator and denominator of the continued fraction [a[0];a[1],...,a[n]].
+<li><a href="./lagrange"><strong>lagrange</strong></a>: <tt>lagrange(a[],n,m)</tt> 
+uses the method of Lagrange (1797) to find the first m+1 partial
+quotients of t, where f(x)=a[n]x<sup>n</sup>+&#183;&#183;&#183;+a[0], a[n] &gt; 0, is a polynomial with integer coefficients, having no rational roots
+ and having exactly one real positive root t, this being &gt; 1.
+<li><a href="./lupei"><strong>lupei</strong></a>: <tt>s(n)</tt> tests Lu Pei's 3-branched generalized 3x+1 mapping.
+<li><a href="./recursion"><strong>recursion</strong></a> (Recursive bc programs)
+<ul>
+<li><tt>fib(n)</tt>: returns the nth Fibonacci number, n &ge; 0.
+<li><tt>luc(n)</tt>: returns the nth Lucas number, n &ge; 0.
+<li><tt>fac(n)</tt>: returns factorial(n) if n &ge; 1.
+</ul>
+<li><a href="./tonelli"><strong>tonelli</strong></a>: <tt>x=tonelli(a,p)</tt> returns a square root of a (mod p), deterministically.
+<li><a href="./discrete_log"><strong>discrete_log</strong></a>: <tt>r=shanks(n,g,p)</tt>. 
+Here g is a primitive root (mod p) and g<sup>r</sup> &equiv; n (mod p), 0 &le; r &lt; p-1. <br>
+Note: p &lt; 2<sup>32</sup>-2<sup>16</sup>=4294901760, in order to satisy BC array upper bound length of 2<sup>16</sup>-1.<br>
+If r does not exist, we return -1.<br>
+We use Shanks' giant steps-baby steps approach as described in <a href="http://www.mathematik.uni-muenchen.de/~forster/books/algzth.html"><em>Algorithmische Zahlentheorie</em></a> by Otto Forster, pp 65-66.
+<li><a href="./forster_log"><strong>forster_log</strong></a>: <tt>r=shanks(n,g,p)</tt>. 
+Similar to <a href="./discrete_log"><strong>discrete_log</strong></a>, except that p is no longer necessarily a prime. Now needs <strong>phi</strong> to provide <tt>orderm(a,m)</tt>.
+<li><a href="./leastqnr"><strong>leastqnr</strong></a>: <tt>leastqnr(p)</tt> returns n<sub>p</sub>, the least quadratic nonresidue mod p. (Needs <tt>gcd</tt>).
+<!--<li><strong>log</strong>: <tt>log(a,b,d,u,v)</tt>, a &gt; b &gt; 1, d &gt; 1, u &gt; v &ge; 1 outputs a sequence of integers that are likely to be the initial partial quotients of log(a)/log(b) if u,v are large.  See manuscript <a href="../../pdfs/log.pdf">log.pdf</a>.
+<li><a href="./log1"><strong>log1</strong></a>: <tt>log1(a,b,d,r,e)</tt> performs a discrete variant  of Shank's log<sub>b</sub>a algorithm.  Here 1&lt; r is an integer. Also d &gt; 1.  We do not guarantee the correctness of the output. Bigger d give more partial quotients. Roughly r partial quotients seem to be outputted when d=10.<br>
+ If e=1, the convergents, the integers A[i] and decimal expansion of log<sub>b</sub>a are printed, the latter truncated correct to as many decimal places as possible: the r-1th convergent is compared with the rth convergent and the decimal expansions are truncated from where they differ.  e=0 prints only the partial quotients.-->
+<li><a href="./rootd_modn"><strong>rootd_modn</strong></a>: <tt>rootd_modn(d,n)</tt> finds all solutions of the congruence x<sup>2</sup> &equiv; d (mod n) with 0 &le; x &le; n/2 for small n.
+<li><a href="./thue"><strong>thue</strong></a>:  Here d>1, is not a square, n &gt; 1 an odd integer not dividing d-1. u<sup>2</sup> &equiv; d (mod n), 1 &lt; u &lt; n. Then <tt>thue(d,u,p)</tt> finds x,y such that x<sup>2</sup>-dy<sup>2</sup>=kn, with small k.
+<li><a href="./sqroot"><strong>sqroot</strong></a>: <tt>sqroot(d,n)</tt>, n &gt; 1, finds all solutions of x<sup>2</sup> &equiv; d (mod n). It returns -1 if there is no solution, otherwise returns the number of solutions (mod n).
+<li><a href="./tomas1"><strong>tomas1</strong></a> and <a href="./tomas2"><strong>tomas2</strong></a>: These are generalised 3x+1 examples studied by Tom&aacute;s Oliveira e Silva, where all trajectories are eventually periodic.
+<li><a href="./log"><strong>log</strong></a>: <tt>log(a,b,d,r,e)</tt> performs a discrete variant  of Shank's log<sub>b</sub>a algorithm.  Here 1 &lt; r is an integer. Also d &gt; 1.  We do not guarantee the correctness of the output. Bigger (d,r) give more partial quotients. e=1 prints the A[i] and AA[i], while e=0 prints only the m[i] and mm[i]. See <a href="../pdfs/log.pdf">paper</a>.<br>
+I suggest the user runs <tt>test(a,b,d,m,n)</tt>, over a range (m,n), where m &le; n, to get an idea of the correct partial quotients. This
+runs <tt>log1(a,b,d,r)</tt> for r=m,...,n. 
+To get an idea of the correct answer when m=n=r, we recommend taking m=r-t, n=r+t, with 1 &le; t &le; (say) 2.
+<li><a href="./base"><strong>base</strong></a>: <tt>f(b,n)</tt>, n &gt; 0, b &gt; 1, gives the base b expansion of n.
+<li><a href="./perfect_power"><strong>perfect_power</strong></a>: <tt>perfect_power(n)</tt> produces 0 if n is not a perfect power; otherwise returns x and p, where n=x<sup>p</sup> and p is the least prime with this property.
+<li><a href="./powerdd"><strong>powerdd</strong></a>: <tt>powerdd(a,b,d,n)</tt> computes (a+b&radic;d)<sup>n</sup>=z1+z2&radic;d, with global variables z1 and z2. It also contains <tt>fund4(d,e)</tt> which finds the fundamental solution of x<sup>2</sup> &ndash; dy<sup>2</sup> = 4.
+<li><a href="./primes"><strong>primes</strong></a>: <tt>primes(m,n)</tt> prints the primes in the interval [m,n], if m and n lie between 1 and 10<sup>10</sup>.
+<li><a href="./nprime"><strong>nprime</strong></a>: <tt>nprime(m)</tt> finds the least Lucas-base2 strong pseudoprime p satisfying p &ge; m.
+<li><a href="./nprimeap"><strong>nprimeap</strong></a>: <tt>nprimeap(m,a,b)</tt> finds the least Lucas-base2 strong pseudoprime p of the form p=ak+b and satisfying p &ge; m. Here 0 &lt; b &lt; a and gcd(a,b)=1.
+<li><a href="./sturm"><strong>sturm</strong></a>: <tt>sturm(a[],n,b,e)</tt> prints a sturm polynomial sequence for the (squarefree) polynomial a[n]x<sup>n</sup>+&middot;&middot;&middot;+a[0], evaluates the sequence at x=b and calculates its sign variation. e=0 suppresses printing.
+<li><a href="./john"><strong>john</strong></a>: <tt>johna(b[],n)</tt> takes an array of positive integers b[0],...,b[n-1] and replaces them by an array of positive integers a[0],...,a[n-1], where<br>
+<ol>
+    <li> a[i] divides b[i] for 0 &le; i &lt; n;
+   <li> gcd(a[i],a[j])=1 for 0 &le; i &lt; j&lt; n;
+   <li> lcm(b[0],...,b[n-1])=a[0]&middot;a[1]&middot;&middot;&middot;a[n-1].
+</ol>
+<tt>john(a,b)</tt> does the case n=2.<br>
+The program is due to John Campbell. Needs the program <strong>gcd</strong>.
+<li><a href="./reducepos"><strong>reducepos</strong></a>: <tt>reduce(a,b,c)</tt> takes as input an indefinite binary quadratic form ax<sup>2</sup>+bxy+cy<sup>2</sup> and uses the PQa algorithm to find a cycle of reduced forms. (See <a href="../php/reduce.html">explanation</a>.)
+<li><a href="./classnoneg"><strong>classnoneg</strong></a>: <tt>class_number(d,flag,table_flag)</tt> lists the reduced binary quadratic forms of negative discriminant d and returns their number h(d) if <tt>flag</tt>=0. If <tt>flag</tt>=1, only the primitive forms are counted. Only the class number is printed if table_flag=0.<br>
+If d is the discriminant of an imaginary quadratic field K, then the primitive forms class-number h(d) is also the class number of K. <br>
+Algorithm 5.3.5 of Henri Cohen's <em>A course in computational algebraic number theory</em> is used.<br>
+<tt>table(m,n)</tt> prints h(-d) for all -d &equiv; 0 or 1 (mod 4) in the range 3 &le; m &le; d &le; n,
+where n&lt;10<sup>6</sup>.
+<li><a href="./reduceneg"><strong>reduceneg</strong></a>: 
+<ul>
+<li><tt>reduce(a,b,c)</tt> takes as input a positive definite binary quadratic form ax<sup>2</sup>+bxy+cy<sup>2</sup> and uses an algorithm of Gauss to find the equivalent reduced form and unimodular transforming matrix.
+<li><tt>compose(a1,b1,c1,a2,b2,c2)</tt> composes two positive definite binary quadratic forms, with output reduced.  Needs <tt>bezout</tt> from  <strong>gcd</strong>.
+<li><tt>compose1(a1,b1,c1,a2,b2,c2)</tt> nonverbose version of <tt>compose()</tt>. Needs <tt>bezout1</tt> from <strong>gcd</strong>.
+<li><tt>power_compose(a,b,c,n)</tt> outputs (a,b,c)<sup>n</sup>, where (a,b,c) represents a positive definite form. The output is reduced.
+<li><tt>power_compose1(a,b,c,n)</tt> nonverbose version of tt>power_compose(a,b,c,n)</tt>.
+<li><tt>ordercomposite(a,b,c,flag)</tt> computes the order under composition, of the positive definite form (a,b,c).  flag =1 is verbose, flag=0 nonvebose.  We need phi to supply omega(h(d)) and gcd to supply bezout(a,b).
+</ul>
+<li><a href="./classnopos"><strong>classnopos</strong></a>: <tt>class_number(d)</tt> (1 &lt; d &lt; 10<sup>6</sup> and squarefree) finds the class number of the real quadratic field Q(&radic;d) and the sign of the fundamental unit. A list of reduced binary quadratic forms corresponding to the ideal classes is also given.<br>
+<tt>table(m,n)</tt> prints h(d) for all squarefree d in the range m &le; d &lt; n,where n &lt; 10<sup>6</sup>.<br>
+<tt>class_number0(d)</tt> (d &gt; 0, not a perfect square and 0 or 1 (mod 4))
+ returns the class-number of binary quadratic forms of discriminant d.  Also the solubility of x<sup>2</sup>-d*y<sup>2</sup>=-4 is determined.<br>
+This is basically the same program as <tt>class_number(d)</tt>, except that in
+the case of non-solubility of x<sup>2</sup>-d*y<sup>2</sup>=-4, we count the form (-a,b,c) as well as (a,b,c), a &gt; 0 and this means we return twice the value that <tt>class_number(d)</tt> would otherwise have returned.  Regarding this point, see G.B. Mathews, <em>Theory of Numbers</em>, pp. 80-81.
+<li><a href="./unimodular"><strong>unimodular</strong></a>: <tt>unimodular(p,q,r,s)</tt> expresses a unimodular matrix A &ne; I<sub>2</sub> or U=[0,1,1,0] with non-negative coefficients, as a product of one of the following forms:<br>
+P, UP, PU, or UPU, where P is a product of matrices of the form U<sub>a</sub>=[a,1,1,0], a>0.<br>
+The representation is unique. See Kjell Kolden, <em>Continued fractions and linear substitutions</em>, Arch. Math. Naturvid. 50 (1949), 141-196.<br>
+The number n of matrices in the product U<sub>0</sub> <img align="middle" src="../gifs/cdots.gif"> U<sub>n-1</sub> is returned. 
+<li><a href="./binomial"><strong>binomial</strong></a>: <tt>binomial_p(n,k,p)</tt> finds the power of a prime p dividing the binomial coefficient <img align="top" src="../gifs/binomial.gif">.<br>
+<tt>binomial(n,k)</tt> prints the prime power factorization of the binomial coefficient <img align="top" src="../gifs/binomial.gif">.<br>
+<li><a href="./factorial"><strong>factorial</strong></a>: <tt>factorial_p(n,p)</tt> finds the power of a prime p dividing n!<br> 
+<tt>factorial(n)</tt> finds n!<br>
+<li><a href="./padic"><strong>p-adic</strong></a>: 
+<tt>2adic(a,n)</tt> returns the first n binary digits of a 2-adic sqroot x of a positive integer a=8k+1. Here x=1 or 5 (mod 8).<br> 
+<tt>padic(a,p,n)</tt> returns the first n p-adic digits of a p-adic sqroot x of a positive integer a which is a quadratic residue (mod p). Here x=b (mod p), where b<sup>2</sup>=a (mod p) and 0 &lt; b &lt; p.<br> 
+<li><a href="./raney"><strong>raney</strong></a>: <tt>raney(p,q,r,s)</tt> expresses a nonsingular matrix A=[p,q;r,s] (&ne; I_2 or U=[0,1;1,0]) as a product of positive powers of R=[1,1;0,1] and L=[1,0;1,1], followed by a row-balanced matrix D=[a,b;c,d]. ie. a &lt; c &amp; b &gt; d or a &gt; c &amp; b &lt; d. The number of terms L and R is returned.<br>
+With U<sub>a</sub>=[a,1;1,0], note that 
+U<sub>a<sub>0</sub></sub>...U<sub>a<sub>2n</sub></sub>=R<sup>a<sub>0</sub></sup>L<sup>a<sub>1</sub></sup>...R<sup>a<sub>2n</sub></sup>U<sub>0</sub> and that U<sub>a<sub>0</sub></sub>...U<sub>a<sub>2n+1</sub></sub>=R<sup>a<sub>0</sub></sup>L<sup>a<sub>1</sub></sup>...L<sup>a<sub>2n+1</sub></sup>I<sub>2</sub>.
+<li><a href="./davison"><strong>davison</strong></a>: <tt>davison(l,m,n)</tt> performs the algorithm of J.L. Davison's paper <em>An algorithm for the continued fraction of e<sup>l/m</sup></em>, Proceedings of the Eighth Manitoba Conference on Numerical Mathematics and Computing (Univ. Manitoba, Winnipeg, 1978), 169--179, Congress. Numer., XXII, Utilitas Math. <br>
+ With n &ge; 0, we first find the n* of Davison's Proposition 4.1 and apply Raney's factorisation to A<sub>0</sub>...A<sub>k</sub>, for n* &le; k &le; n*+n.<br>
+The number (count) of partial quotients of e<sup>l/m</sup> found is returned. count becomes positive for all large n.
+<li><a href="./squareroot"><strong>squareroot</strong></a>: This is an improved version of <strong>sqroot</strong> and contains <tt>cornacchia(a,b,m)</tt>. This finds all positive primitive solutions of ax<sup>2</sup>+by<sup>2</sup>=m, where a &gt; 0, b &gt; 0, a+b &gt; m &gt; 0, gcd(a,b)=1=gcd(a,m). If a=b=1, we get solutions with y &le; x.<br>
+r=sqroot(d,n,e) returns the solutions of x<sup>2</sup>=d (mod n).
+ r is the number of solutions (mod n).
+ If e=1, we print the solutions (mod reduced_modulus) as
+  reduced_solution[0],...,reduced_solution[count-1].
+  If e=0, solutions are not printed. Used eg. in cornacchia().
+  If omega(n) &gt; 1, we use the Chinese remainder theorem after solving mod
+ qglobal[i]<sup>kglobal[i]</sup>, i=0,...,omega(n)-1.
+ The array solution[0],...,solution[numbr-1] consists of the solutions
+ (mod n) in the range 0 &le; x &le; n/2 and is used in cornacchia().<br>
+See A. Nitaj, <em>L'algorithme de Cornacchia</em>, Expositiones Mathematicae 13 (1995), 358-365.
+<li><a href="./phi"><strong>phi</strong></a> now contains <tt>sigmak(k,n)</tt> and <tt>tau(n)</tt>,  where r=sigmak(k,n), k &gt; 0,n &gt; 0, returns the sum of the k-th powers of the divisors of n and u=tau(n) returns Ramanujan's tau function. <br>
+We use the simplest formula for tau(n) given on page 140 of T.M. Apostol, <em>Modular functions and Dirichlet series in number theory</em>, 20-22.
+<li><a href="./patz"><strong>patz</strong></a>: <tt>patz(d,n,e)</tt> finds fundamental solutions for the diophantine equation x<sup>2</sup>-dy<sup>2</sup>=n, d &gt; 0, d not a perfect square, n &ne; 0 and n &ne; 1. <br>
+e=1 is verbose and prints the partial quotients, complete quotients and convergents up to the period (resp. double period) according as the period-length of omega[j] and omega*[j] is even or odd. e=0 prints only the fundamental solutions.<br>
+Needs <strong>squareroot</strong>.
+<li><a href="./squareroot"><strong>squareroot</strong></a> now contains <tt>quadratic(a,b,c,n,flag)</tt>. This returns the number k of solutions of the congruence ax<sup>2</sup>+bx+c &equiv; 0 (mod n), where gcd(a,n)=1. The solutions in the range 0 &le; x &lt; n are returned as global variables quadratic_solution[0],...,quadratic_solution[k-1]. flag=1 prints the solutions.
+<li><a href="./patz"><strong>patz</strong></a> now contains <tt>binary(a,b,c,n)</tt>. This solves ax<sup>2</sup>+bxy+cy<sup>2</sup>=n, where n is non-zero and b<sup>2</sup>-4ac is positive and not a perfect square. The method is from the paper <em>The Diophantine equation ax<sup>2</sup>+bxy+cy<sup>2</sup>=N, D=b<sup>2</sup>-4ac &gt; 0</em>, Journal de Th&eacute;orie des Nombres de Bordeaux, <b>14</b> (2002) 257-270 by K.R. Matthews.
+<li><a href="./decimal2rational"><strong>decimal2rational</strong></a>. 
+Typing <tt>d2r(pre[],per[],k,r,b)</tt> will output the rational number with base b preperiod given by pre[k-1],...,pre[0]  (if present) and period per[r-1],...,per[0] consisting of integers in the range [0,b-1].<br>
+If there is no preperiod, we let pre[0]=0 and k=0.<br>
+Example: Take pre[0]=0, per[0]=2, per[1]=1, k=0, r=2, b=10.<br>
+Then typing <tt>d2r(pre[],per[],k,r,b)</tt> outputs .1212&middot;&middot;&middot;=4/33.
+<li><a href="./sqrtd_period"><strong>sqrtd_period</strong></a>.  Typing <tt>z=period(d)</tt> outputs the period-length z of the continued fraction of &radic;d. We use the Pohst-Zassenhaus half-period trick. See <a href="http://www.numbertheory.org/pdfs/pell.pdf">paper</a>.
+<li><a href="./nipell"><strong>nipell</strong></a>. (a) Typing <tt>nipell(61,0)</tt> finds the smallest solution of Pell equation x<sup>2</sup>-61y<sup>2</sup>=1 or -1, using the nearest integer continued fraction of &radic;61.  The period (or semi-period in the case that the negative Pell equation is soluble) is also printed.<br>
+Typing <tt>nipell(61,1)</tt>  prints partial quotients, complete convergents and convergents.<br>
+(b) Typing <tt>nicf_pqa(d,t,u,v,e)</tt>, e=0 or 1, finds the nearest integer continued fraction of (u + t&radic;d)/v of Hurwitz.<br>
+Typing <tt>nicf_pqa0(d,t,u,v,e)</tt>, e=0 or 1, finds the nearest integer continued fraction of (u + t&radic;d)/v in Perron's book.  When e=1, the period partial numerators and denominators are in capitals.<br>
+<li><a href="./nscf_pell"><strong>nscf_pell</strong></a>. This program solves the Pell equations x<sup>2</sup> - dy<sup>2</sup> = &plusmn;1, using the NSCF algorithm - nearest square continued fraction algorithm.  We follow the algorithm of <a href="http://www.ms.uky.edu/~sohum/AAK/PRELUDE.htm">A.A. Krisnaswami Ayyangar</a>.<br>
+(a) Typing <tt>nscf_pell(d,1)</tt> prints the partial quotients, convergents, complete convergents of the period of the nearest square continued fraction of &radic;d, as well as the Pell equation solutions, whereas <tt>nscf_pell(d,0)</tt> prints only the  continued fraction and solutions of the Pell equation.<br>
+(b) Typing <tt>nscf_pqa(d,t,u,v,e)</tt>, e=0 or 1, finds the nearest square continued fraction of (u + t&radic;d)/v.
+P
+<li><a href="./spiral"><strong>spiral</strong></a>. This calculates the spiral of <a href="http://www-cs-faculty.stanford.edu/~uno/gkp.html"><em>Concrete Mathematics</em></a>, Graham, Knuth, Patashnik,  Exercise 40, page 99. Needs <strong>gcd</strong>.  Type <tt>spiral(n)</tt> and then x(n) and y(n) to get the coordinates of the n-th point of the spiral.  Typing <tt>n=inverse_spiral(x,y)</tt> gives the inverse function.
+<li><a href="./equivalent"><strong>equivalent</strong></a>. This produces a quadratic surd &eta;=(A+&radic;d)/C=(p&xi;+q)/(r&xi;+s), where &xi;=(a+&radic;d)/c
+and &Delta;=ps-qr=&plusmn;1. Here A=&Delta;(prt+a(qr+ps)+qsc), C=&Delta;(r<sup>2</sup>t+2rsa+s^c) and t=(a<sup>2</sup>-d)/c. If &xi; is in standard form, so is &eta;. Type <tt>equiv(a,c,d,p,q,r,s)</tt>.
+<li><a href="./carmichael"><strong>carmichael</strong></a>. <tt>carmichael(n,e)</tt> solves &phi;(x)=n. e=0 prints all solutions, if any, while e=1 tests Carmichael's conjecture. Needs files <strong>phi, lucas, jacobi</strong>.
+<!--<li><a href="./ocf"><strong>ocf</strong></a>. Typing <tt>ocf_pqd2(d,t,p,q)</tt> produces the optimal continued fraction expansion of the quadratic surd (p+t&radic;d)/q as far as the end of the first period.-->
+<li><a href="./tangent"><strong>tangent</strong></a>. Typing <tt>tangent(n)</tt> produces  the n-th tangent number T<sub>n</sub>. (8th June 2011)
+<li><a href="./bernoulli"><strong>bernoulli</strong></a>.  Typing <tt>bernoulli(n)</tt> produces the n-th Bernoulli number. (9th June 2011)
+<li><a href="./kronecker"><strong>kronecker</strong></a>.  Typing <tt>kronecker(d,n)</tt> returns the Kronecker symbol (d,n), n &ge; 1.
+<li><a href="./partition"><strong>partition</strong></a>.  Typing <tt>partition(m,1)</tt> prints the first m values of the partition function p(m)
+Typing <tt>partition(m,0)</tt> returns only p(m). (23rd June 2011)
+<li><a href="./cloitre"><strong>cloitre</strong></a>.  Typing <tt>cloitre(x)</tt> prints the trajectory of a mapping devised by Benoit Cloitre, who conjectured that all trajectories starting with a positive integer will eventually reach 0.  Experimentally it also seems that all trajectories starting with a negative integer will eventually reach one of the cycles
+<ul>
+<li>-1,-2,-1;
+<li>-4,-17,-6,-4;
+<li>-19,-92,-31,-152,-51,-34,-167,-56,-19.
+</ul>
+<li><a href="./cloitrem"><strong>cloitrem</strong></a>.  Typing <tt>cloitrem(m)</tt> if m is even or m=4n+1, produces the Markov matrix Q(2m) for the mapping F<sub>m</sub> devised by Benoit Cloitre. The mapping is given by typing <tt>t(x,m)</tt>.  Finally, typing <tt>function(m)</tt> produces a listing of the d=2m branches of the mapping in two ways.
+<li><a href="./reducepos_zagier"><strong>reducepos_zagier</strong></a>.  Typing <tt>reduce(a,b,c)</tt> uses an algorithm from
+Don Zagier's book <em>Zetafunktionen und quadratische K&ouml;rper, Eine Einf&uuml;hrung in die h&ouml;here Zahlentheorie</em>, to find a reduced form equivalent to (a,b,c) and also prints the cycle this generates.
+<li><a href="./zagier"><strong>zagier</strong></a>. <tt>zagier(d)</tt> gives the backward continued fraction of &radic;d.  <tt>zagier0(d,t,u,v)</tt> gives the least integer continued fraction of (u + t&radic;d)/v.
+<li><a href="./genfacs"><strong>genfacs</strong></a>. Given the canonical factorization p[0]<sup>a[0]</sup>&middot;&middot;&middot;p[t-1]<sup>a[t-1]</sup>of n, typing <tt>exps(a[],t)</tt> lists the exponent vectors of the divisors of n, whereas typing <tt>divisors(p[],a[],t)</tt> lists the divisors of n.
+<li><a href="./pellab"><strong>pellab</strong></a>. Typing <tt>pellab(a,b,e)</tt> solves the diophantine equation ax<sup>2</sup>-by<sup>2</sup>=&plusmn;1 and finds the least positive solution. We assume 1 &lt; a &lt; b, gcd(a,b)=1 and ab is not a perfect square.
+<li><a href="./squareroot2"><strong>squareroot2</strong></a>. Typing <tt>squares(n,flag)</tt> finds all representations of n as r<sup>2</sup>+s<sup>2</sup>, r&lt;s, gcd(r,s)=1. Here flag=1 is verbose and prints all parts of Euclid's algorithm as in <a href="../pdfs/hermite_serret.pdf">the note</a>. Typing <tt>squares1(n)</tt> only does that part of Euclid's algorithm as far as r<sub>c-1</sub> &gt; &radic;n &ge; r<sub>c</sub>.
+<li><a href="./nagell_test"><strong>nagell_test</strong></a>. Typing <tt>nagell(d,n)</tt> finds the fundamental solutions, if any, of the diophantine equation x<sup>2</sup> - dy<sup>2</sup> = n, using the bounds given by T. Nagell in his book <em> Introduction to Number Theory</em>, 205-207. 
+<!--<strong>frattini(d,n)</strong> finds a list of basic non-negative solutions  that generate all non-negative solutions, using an algorithm of G. Frattini.
+ <tt>stolt(d,n)</tt> solves the equation when n is divisiible by 4 and produces the fundamental solutions as defined by Bengt Stolt in his paper <em>On the Diophantine equation u<sup>2</sup> - Dv<sup>2</sup> = &plusmn;4N</em>, Arkiv f&ouml;r Matematik (1952) 2, nr 1, 1-23.-->
+<li><a href="./markoff_triples"><strong>markoff_triples</strong></a>.  Typing <tt>test(n)</tt> prints all Markoff triples (x,y,z) with x &lt; y &lt; z and 5 &le; z &le; n.  The recursion is due to Alan Offer.
+<li><a href="./patzpos"><strong>patzpos</strong></a>. Typing <tt>patzpos(d,n,e)</tt>, where e=0 or 1 finds the positive fundamental solutions of a generalised Pell equation x<sup>2</sup> - dy<sup>2</sup> = n, with e = 1 being prolix. The program needs <strong>squareroot</strong>2.
+<li><a href="./primepatterns"><strong>primepatterns</strong></a>.  Typing <tt>primepatterns(a[],b[],s,u,v)</tt> will determine if a[0]m+b[0]</sub>,...,a[s-1]m+b[s-1] form an admissible sequence and if so, will test the absolute values of these numbers for m in the range u &le; m &le; v for simultaneous primality. The program needs gcd, lucas, jacobi and a file containing the a[i] and b[i]. Here s &le; 20.
+<li><a href="./posformrep"><strong>posformrep</strong></a>. This solves the diophantine equation bt<sup>2</sup>+ctu+du<sup>2</sup>=n, where c<sup>2</sup>-4bd &lt; 0, gcd(b,c,d)=1 and b &gt; 0.  Type <tt>bc posformrep squareroot reduceneg</tt> and then <tt>posrep(b,c,d,a,e)</tt>, where e = 1 is verbose, e = 0 nonverbose. We use a transformation of variables due to Lagrange (1770) and then reduction to reduced form. See <a href="http://www.numbertheory.org/pdfs/posrep.pdf">note</a>.
+<li><a href="./posformrep2"><strong>posformrep2</strong></a>. This solves the diophantine equation bt<sup>2</sup>+ctu+du<sup>2</sup>=n, where c<sup>2</sup>-4bd &lt; 0, gcd(b,c,d)=1 and b &gt; 0.  Type <tt>bc posformrep2 squareroot</tt> and then <tt>posrep(b,c,d,a,e)</tt>, where e = 1 is verbose, e = 0 nonverbose. We use a transformation of variables due to Lagrange (1770) to get an equation Pu<sup>2</sup>+Quy+Ry<sup>2</sup>=1 and then perform Euclid's algorithm on -Q/2P. See <a href="https://cs.uwaterloo.ca/journals/JIS/VOL17/Matthews/matt10.html">paper</a>.
+<li><a href="./stolt"><strong>stolt</strong></a>. This finds the fundamental solutions of the diophantine equation ax<sup>2</sup>+bxy+cy<sup>2</sup>=n, where d=b<sup>2</sup>-4ac &gt; 0 is not a perfect square, gcd(a,b,c)=1 and a &gt; 0. Type <tt>stolt(a,b,c,n)</tt>.  This is only useful for small d and an. Also typing <tt>fund(d,e)</tt>, e = 0 or 1, finds the least positive solution of Pell's equation x<sup>2</sup> - dy<sup>2</sup>=4,
+with e=1 being verbose.
+<li><a href="./dujella_minus"><strong>dujella_minus</strong></a>.  The function <tt>negdujella1(k)</tt> finds all solutions of X<sup>2</sup>-(k<sup>2</sup>+1)Y,sup>2</sup>= -k<sup>2</sup> that lie in the range 1 &lt; Y &lt; k.  The Dujella unicity conjecture is equivalent to there being at most one solution. If 2 &le; m &le; n, the function <tt>test(m,n)</tt> performs <tt>negdujella1(k)</tt>  over the range k = m,...,n. We print the solutions (X,Y) and the corresponding solutions (x,y) under the mapping x = (k<sup>2</sup>+1)Y - kX, y = kY - X.  To run the program one needs <strong>gcd</strong> and <strong>squareroot2</strong>.  
+<li><a href="./phi"><strong>phi</strong></a> now contains <tt>lprimrootneg(p)</tt>, which finds the least negative primitive root mod p, <tt>lprimrootposmn(m,n)</tt>, which lists the least primitive roots mod p for m &le; p &le; n, <tt>lprimrootnegmn(m,n)</tt>, which lists the least negative primitive roots mod p for m &le; p &le; n. This need <strong>lucas</strong> and <strong>jacobi</strong>..
+<li><a href="./wildberger1"><strong>wildberger1</strong></a>. This solves Pell's equation x<sup>2</sup> - dy<sup>2</sup> = &plusmn;1 using an algorithm of Norman Wildberger. Type <tt>wild(d,e)</tt>. e = 1 is verbose, e = 0 is nonverbose.
+<li><a href="./patz"><strong>patz</strong></a> now contains <tt>patzgentest(d,n)</tt>, which lists all fundamental solutions of x<sup>2</sup> - dy<sup>2</sup> = n and returns the their number. Type <tt>bc patz squareroot2 genfacs</tt>.  Also <tt>patzgen</tt> creates a global array of these solutions. <a href="./phi"><strong>nagell_test</strong></a> contains <tt>ssw0(a,b,c,d,e,f)</tt>, which solves the diophantine equation ax<sup>2</sup> + bxy + cy<sup>2</sup> + dx + ey +f = 0, where a &ne; 0, b<sup>2</sup> - 4ac &gt; 0  is not a perfect square. These functions are accessed by typing <tt>bc patz squareroot2 genfacs nagell_test</tt>.
+<li><a href="./posformrep"><strong>posformrep</strong></a> now contains <tt>posrepgen(a,b,c,n)(d,n)</tt>, which finds all solutions (primitive and imprimitive) of ax<sup>2</sup>+bxy+cy<sup>2</sup>=n as a global array. These are listed by calling <tt>posrepgenlist(a,b,c,n)</tt>. <tt>posrepgen(a,b,c,n)</tt> is used in <tt>ssw1(a,b,c,d,e,f)</tt> to solve the diophantine equation ax<sup>2</sup> + bxy + cy<sup>2</sup> + dx + ey +f = 0, where a &ne; 0, b<sup>2</sup> - 4ac &lt; 0. These functions are accessed by typing <tt>bc posformrep squareroot2 genfacs reduceneg</tt>.
+<li><a href="./patz"><strong>patz:</strong></a>. Type <tt>bc patz squareroot2 genfacs gcd</tt>.  This now contains
+<ul>
+<li><tt>generalizedpell(a,b,c,e)</tt>. This solves the diophantine equation ax^2+bxy+cy^2=1, where a is nonzero, d=b^2-4ac>0 and is nonsquare. It produces the global solution class (generalizedpellfundx,generalizedpellfundy).
+<li><tt>binary0(a,b,c,e)</tt>. This finds the primitive solution classes of the diophantine equation ax<sup>2</sup> + bxy + cy<sup>2</sup> = n, where d = b<sup>2</sup> &ndash; 4ac &gt; 0  is not a perfect square, gcd(a,b,c) = 1, gcd(a,n)=1 and n is nonzero. It produces the global solution classes (fund_x[i],fund_y[i]).
+<li><tt>binary1(a,b,c,e)</tt>. This finds the primitive solution classes of the diophantine equation ax<sup>2</sup> + bxy + cy<sup>2</sup> = n, where d = b<sup>2</sup> &ndash; 4ac &gt; 0  is not a perfect square, gcd(a,b,c) = 1, a and n are nonzero. It produces the global solution classes (fund_x[i],fund_y[i]). <tt>binary(a,b,c,e)</tt> prints these solutions.<br>
+<tt>binarygen(a,b,c,n,e)</tt> This finds all solutions (primitive and imprimitive) of ax^2+bxy+cy^2=n as a global array (globalbinarygenx[i],globalbinarygeny[i]). Here b<sup>2</sup> &ndash; 4ac &gt; 0, s nonsquare, a and n are nonzero, gcd(a,b,c)=1.
+<tt>binarygenlist(a,b,c,n,e)</tt> prints these classes.
+<li><tt>sswgeneral(a,b,c,d,e,f)</tt> .  This function lives in <strong>patz</strong> and solves the diophantine equation ax<sup>2</sup> + bxy + cy<sup>2</sup> + dx + ey + f = 0, where (a,b,c) &ne; (0,0,0), using a method inspired by a lemma of <a href="http://www.jpr2718.org/">John Robertson</a>. One needs programs<br>
+<strong>patz squareroot2 powertest3 genfacs gcd posformrep reduceneg congruence powerdd ddzero-extra arithpartition.bc rob1</strong><br>
+This is one of the longest algorithms I have coded in BC and involved updating <strong>gcd</strong>, <strong>powerdd</strong>, <strong>genfacs</strong>, <strong>posformrep</strong>, <strong>reduceneg</strong> and constructing the files <strong>powertest3</strong> and <strong>congruence</strong>. Files <strong>ddzero-extra</strong> and <strong>arithpartition.bc</strong> were added on December 10, 2019 and incorporate an improvement to the output when D = 0, due to Chi Chon Lei of Imperial College, London. 
+</ul>
+<li><a href="./inverse"><strong>inversion</strong></a>.  This contains <tt>inverse(m,n)</tt>, which finds the inverse of m modulo n if it exists.  The algorithm is from <a href="https://sites.google.com/site/barryrsmith/barryriedsmith/pubsandpreprints"><em>New algorithms for modular inversion and representation by binary quadratic forms arising from structure in the Euclidean algorithm</em></a>, Christina Doran, Shen Lu and Barry R. Smith.
+<li><a href="./b2plus3bcplusc2"><strong>b2plus3bcplusc2</strong></a>. This contains <tt>rep(p)</tt>, which expresses a prime of the form 5n+1 or 5n-1 as x<sup>2</sup> + xy - y<sup>2</sup> and x<sup>2</sup> + 3xy + y<sup>2</sup>.  The algorithm is from <a href="https://sites.google.com/site/barryrsmith/barryriedsmith/pubsandpreprints"><em>New algorithms for modular inversion and representation by binary quadratic forms arising from structure in the Euclidean algorithm</em></a>, Christina Doran, Shen Lu and Barry R. Smith.  Type <tt>bc lucas gcd b2plus3bcplusc2 jacobi squareroot2</tt> then <tt>rep(p)</tt>.
+<li><strong>patz</strong> now contains <tt>aa1(a,b,c)</tt> and <tt>aa2(a,b,c,n)</tt>.  The former solves the diophantine equation ax<sup>2</sup>-by<sup>2</sup>=c, using the LMM  method, while the latter solves the diophantine equation ax<sup>2</sup>+bxy+cy<sup>2</sup>=n, where b<sup>2</sup>-4ac &gt; 0 and is not a perfect square.
+<li><strong>stolt</strong> now contains <tt>stolt0(d,n,flag)</tt>, which solves the diophantine equation x<sup>2</sup>-dy<sup>2</sup>=n, n &ne; 0 and a multiple of 4, d &gt; 0 and nonsquare, using inequalities from a paper of Bengt Stolt.
+<li><strong>phi</strong> now contains <tt>conwaycycles(a,b)</tt> and  <tt>conwaysequence1(a,b,n)</tt>.  See <a href="../php/conway.html">BC program</a>.
+<li><a href="./root3"><strong>root3</strong></a> contains <tt>cycle(x,y,n)</tt>, which exhibits the trajectory (x,y), T(x,y), T<sup>2</sup>(x,y), T<sup>n</sup>(x,y), where T is the function defined in Example 10.2., page 101 of 
+<a href="http://www.numbertheory.org/3x+1/">The Ultimate Challenge: The 3x+1 Problem</a>, Ed. Jeffrey C. Lagarias, AMS January 2010. It seems likely that there are 103 cycles and that (x,y) = (-1,7) gives a divergent trajectory. The file <tt>gcd</tt> is needed.
+<li><a href="./partition.bc"><strong>partition.bc</strong></a>.  
+Typing <tt>partition(m,1)</tt> prints the first m values of the partition function p(m).<br>
+Typing <tt>partition(m,0)</tt> returns only p(m). <br>
+Typing <tt>strict_partition(m,1)</tt> prints the first m values of the <a href="http://mathworld.wolfram.com/PartitionFunctionQ.html">strict partition function</a> q(m).<br>
+Typing <tt>strict_partition(m,0)</tt> returns only q(m).   Communicated by Thorsten Ehlers, May 3, 2019.<br>
+See <a href="https://web.archive.org/web/20131109101330/http://web.mit.edu/egeorg/Public/Partitions/PartitionsQ.pdf">Computing partition numbers Q(N)</a>, an early version of a paper by Evangelos Georgiadis.
+<li><strong>pell1</strong> contains <tt>fund1(d,printflag)</tt>, which finds the fundamental solution (globalr, globals)  of Pell's equation x<sup>2</sup>-dy<sup>2</sup> = 1, using the midperiod approach and the continued fraction of &radic;d.
+<li><strong>pell4</strong> contains <tt>fund4(d,printflag)</tt>, which finds the fundamental solution (globalx, globaly)  of Pell's equation x<sup>2</sup>-dy<sup>2</sup> = 4, using the midperiod approach and the continued fraction of &radic;d.
+<li><a name="sswgeneral"></a><tt>sswgeneral(a,b,c,d,e,f)</tt> updated 27th January 2020.  This function lives in <strong>patz</strong> and solves the diophantine equation ax<sup>2</sup> + bxy + cy<sup>2</sup> + dx + ey + f = 0, where (a,b,c) &ne; (0,0,0), using a method inspired by a lemma of <a href="http://www.jpr2718.org/">John Robertson</a>. One needs programs<br>
+<strong>patz squareroot2 powertest3 genfacs gcd posformrep reduceneg congruence powerdd ddzero-extra arithpartition.bc rob1 bigu stoltvialmm stoltarrange.bc</strong><br>. 
+<li><tt>stoltvialmm(d,n,printflag)</tt> lives in <strong>stoltvialmm</strong> and finds the Stolt fundamental solutions of x<sup>2</sup> &ndash; dy<sup>2</sup> = n, where n is divisible by 4.<br>
+Needs <strong>stoltvialmm stoltarrange.bc squareroot patz genfacs</strong><br>
+<tt>binaryviasfs(a,b,c,n,printflag</tt> also lives in <strong>stoltvialmm</strong> and finds the stolt fundamental solutions of ax<sup>2</sup> +bxy + cy<sup>2</sup> = n. This has a wider applicability than the earlier version <tt>stolt(a,b,c,n)</tt>.
+<li><strong>bigu</strong> contains <tt>bigu(a,b,c,d,e,f,printflag)</tt>, which solves the hyperbola case of the diophantine equation ax<sup>2</sup> + bxy + cy<sup>2</sup> + dx + ey + f = 0.<br>
+Type <tt>bigu(a,b,c,d,e,f,printflag)</tt>.<br>
+Needs <strong>bc squareroot bigu stoltvialmm stoltarrange.bc patz genfacs</strong></a>.
+<li><strong>squareroot</strong> now contains <tt>q(a,b,c,n,printflag)</tt>.
+This returns the number k of solutions of the congruence ax<sup>2</sup>+bx+c &equiv; 0 (mod n), where a,n are positive . The solutions in the range 0 &le; x &lt; n are returned as global variables 
+qglobalsol[0],&hellip;,qglobalsol[k-1]. printflag=1 prints the solutions. See <a href="../pdfs/quadratic_congruence.pdf">note</a>.
+</ol>
+<p>
+<em><a href="mailto:webmaster@numbertheory.org">Email</a></em>
+<br><i><a href="http://www.numbertheory.org/keith.html">http://www.numbertheory.org/keith.html</a></i><p>
+<br>
+</body>
+</html>

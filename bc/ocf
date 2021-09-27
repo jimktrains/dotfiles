@@ -1,0 +1,659 @@
+/* BC program ocf */
+/* sign of an integer a */
+/* s(a)=1,-1,0, according as a>0,a<0,a=0 */
+
+define sign(a){
+	if(a>0) return(1)
+	if(a<0) return(-1)
+	return(0)
+}
+
+/* absolute value of an integer n */
+
+define abs(n){
+	if(n>=0) return(n)
+	return(-n)
+}
+
+/*NOTE: in bc we have */
+/* a%b=m(a,b) if a>=0 or a<0 and b divides a */
+/* a%b=m(a,b)-b if a<0, b>0, a not divisible by b */
+/* a/b=[a/b] if a>=0 or a<0 and b divides a */
+/* a/b=[a/b]+1 if a<0, b>0, a not divisible by b */
+/* a=b(a/b)+a%b */
+
+/* mod(a,b)=the least non-negative remainder when an integer
+   a is divided by a  positive integer b */
+
+define mod(a,b){
+	auto c
+	c=a%b
+	if(a>=0) return(c)
+	if(c==0) return(0)
+        return(c+b)	
+}
+
+/* int(a,b)=integer part of a/b, a, b integers, b != 0 */
+
+define int(a,b){
+	if(b<0){
+	a= -a
+	b= -b
+	}
+	return((a-mod(a,b))/b)
+}
+
+
+/* nint(p,q,d,f) finds the nearest integer to (p+sqrt(D)/q.
+ * Here d=int(sqrt(D)) and f = 1 if D-d > 1/2, 0 if D-d < 1/2.
+ * See http://www.numbertheory.org/notes.html.
+ * For use in nipell(d,v) below.
+ */
+define nint(p,q,d,f){
+auto r,s,t,q0,u
+
+q0=q
+r=sign(q)
+if(q<0){
+   q=-q
+}
+if(r>0){
+   t=p+d+(q+f)/2
+   u=int(t,q0)
+}else{
+   s=f+q+1
+   if(s%2){
+      t=1+p+d+s/2
+   }else{
+      t=p+d+s/2
+   }
+   u=int(t,q0)+1
+ }
+ return(u)
+}
+
+define int_pqd(p,q,x){
+if(q>0){
+  return(int(p+x,q))
+}else{
+  return(int(p+x+1,q))
+}
+}
+
+define ocf_pqd(d,t,p,q,n){
+auto x,k,temp,tt,r0,p0,q0,p1,q1,rkmin1,skmin1,eps,bkplus1,vkplus1,ukplus1,rk,sk,xx
+
+h[0]=h=0
+temp=sign(t)
+if(temp==-1){
+   p=p*temp
+   q=q*temp
+   d=d*(t*t)
+}
+temp=abs(q)
+if((d-p*p)%temp){
+   d=d*(q*q)
+   p=p*temp
+   q=q*temp
+}
+k=gcd3(p,q,(d-p*p)/q)
+if(k>1){/* converts to standard form */
+   p=p/k
+   q=q/k
+   d=d/(k*k)
+}
+x=sqrt(d)
+if(x*x==d){
+   print "\n"
+   return(0)
+}
+p1=p
+q1=q
+k=0
+rkmin1=0;rk=1
+skmin1=1;sk=0
+eps=1
+print "p1[0]=",p1,",q1[0]=",q1,","
+print "eps[0]=",eps,","
+print "h[0]=0,"
+print "n[-1]=-1,"
+while(k<n){
+  bkplus1=int_pqd(p1,q1,x)
+  print "b[",k,"]=",bkplus1,","
+  vkplus1=bkplus1*sk+eps*skmin1
+  print "v[",k,"]=",vkplus1,","
+  ukplus1=bkplus1*rk+eps*rkmin1
+  tt=2*vkplus1+sk
+  dd=d*tt*tt
+  xx=sqrt(dd)
+  akplus1=int_pqd(p1*tt+q1*vkplus1,q1*tt,xx)
+  print "a[",k,"]=",akplus1,","
+  rkplus1=akplus1*rk+eps*rkmin1
+  skplus1=akplus1*sk+eps*skmin1
+  print "rk[",k,"]/sk[",k,"]=",rkplus1,"/",skplus1,","
+  print "uk[",k,"]/vk[",k,"]=",ukplus1,"/",vkplus1,"\n"
+  k=k+1
+  eps=sign_pqd(p1-akplus1*q1,q1,d)
+  if(eps==1){
+    h=h+1
+  }else{
+    h=h+2
+  }
+  h[k]=h
+  p1=q1*akplus1-p1
+if(x){
+  print "t[",k-1,"]=","(",-p1,"+sqrt(",d,")/",q1,"\n"
+}
+  q1=eps*(d-p1*p1)/q1
+  print "p1[",k,"]=",p1,",q1[",k,"]=",q1,","
+  print "eps[",k,"]=",eps,","
+  print "h[",k,"]=",h[k],","
+  print "n[",k-1,"]=",h[k]-1,","
+  rkmin1=rk;rk=rkplus1
+  skmin1=sk;sk=skplus1
+}
+}
+
+/*  gcd(m,n) for any integers m and n */
+
+define gcd(m,n){
+	auto a,b,c
+	a=abs(m)         /* a=r[0] */ 
+	if(n==0) return(a)
+        b=abs(n)         /* b=r[1] */ 
+        c=a%b            /* c=r[2]=r[0] mod(r[1]) */ 
+        while(c>0){
+		a=b
+                b=c
+                c=a%b    /* c=r[j]=r[j-2] mod(r[j-1]) */
+        }
+	return(b)
+}   
+
+define gcd3(a,b,c){
+auto t
+t=gcd(a,b)
+t=gcd(t,c)
+return(t)
+}
+
+define sign_pqd(p,q,d){
+auto x
+if(p>=0 && q>0){
+   return(1)
+}
+if(p>=0 && q<0){
+   return(-1)
+}
+if(p<0){
+  x=p*p
+  if(x>d && q>0){
+    return(-1)
+  }
+  if(x>d && q<0){
+    return(1)
+  }
+  if(x<d && q>0){
+    return(1)
+  }
+  if(x<d && q<0){
+    return(-1)
+  }
+}
+}
+
+define ocf_pqd1(d,t,p,q){
+auto s,x,k,temp,tt,r0,p0,q0,rkmin1,skmin1,bkplus1,vkplus1,ukplus1,rk,sk,xx,absq0,root4d,px,qx
+flag=0
+
+temp=sign(t)
+if(temp==-1){
+   p=p*temp
+   q=q*temp
+   d=d*(t*t)
+}
+temp=abs(q)
+if((d-p*p)%temp){
+   d=d*(q*q)
+   p=p*temp
+   q=q*temp
+}
+k=gcd3(p,q,(d-p*p)/q)
+if(k>1){/* converts to standard form */
+   p=p/k
+   q=q/k
+   d=d/(k*k)
+}
+prod=sign(q)
+absq0=abs(q)
+root4d=sqrt(4*d)
+x=sqrt(d)
+p1=p
+q1=q
+k=0
+rkmin1=0;rk=1
+skmin1=1;sk=0
+eps=1
+/*print "p1[0]=",p1,",q1[0]=",q1,","
+print "eps[0]=",eps,","*/
+while(1){
+  bkplus1=int_pqd(p1,q1,x)
+  vkplus1=bkplus1*sk+eps*skmin1
+  ukplus1=bkplus1*rk+eps*rkmin1
+  tt=2*vkplus1+sk
+  dd=d*tt*tt
+  xx=sqrt(dd)
+  akplus1=int_pqd(p1*tt+q1*vkplus1,q1*tt,xx)
+  rkplus1=akplus1*rk+eps*rkmin1
+  skplus1=akplus1*sk+eps*skmin1
+  print "p1[",k,"]=",p1,",q1[",k,"]=",q1,", eps[",k,"]=",eps,", a[",k,"]=",akplus1,","
+  print "rk[",k,"]/sk[",k,"]=",rkplus1,"/",skplus1,"\n"
+  if(p1==3 && q1==2 && d==5){
+    p1reduced=p1
+    q1reduced=q1
+    kreduced=k
+    print "32\n"
+    break
+  }
+  if(skplus1>absq0 && q1>0 && q1<=root4d){/* we can switch from OCF to NSCF if Q'\neq Q" as Q'>0 and Q">0 */
+        temp=special_test(p1,q1,d) 
+        temp1=test1(p1,q1,d)
+        if(temp && !temp1){
+           print "(",p1,",",q1,") is special, but  has Q'=Q''\n"
+        }
+        if(temp && temp1){
+           print "found a special complete quotient p1[",k,"]=",p1,",q1[",k,"]=",q1," with Q'[",k+1,"]!=Q''[",k+1,"]\n"
+           s=p1-akplus1*q1
+           eps=sign_pqd(s,q1,d)
+           prod=prod*eps
+           p1=-s /* calculated by OCF, but is the same if done by NSCF */
+           q1=eps*(d-p1*p1)/q1
+           rkmin1=rk;rk=rkplus1
+           skmin1=sk;sk=skplus1
+           k=k+1
+           temp1=test1(p1,q1,d)
+           if(temp1){
+              print " followed by another special one p1[",k,"]=",p1,",q1[",k,"]=",q1," with Q'[",k+1,"]!=Q''[",k+1,"]\n";
+              print "p1[",k,"]=",p1,",q1[",k,"]=",q1,", eps[",k,"]=",eps,"\n"
+              oldeps=eps
+              t=nscf(p1,q1,d,x)
+              prod=prod*eps
+              rkplus1=akplus1*rk+oldeps*rkmin1
+              skplus1=akplus1*sk+oldeps*skmin1
+              rkmin1=rk;rk=rkplus1
+              skmin1=sk;sk=skplus1
+              k=k+1
+              print "now we have an NSCF reduced and periodic OCF complete quotients:\n"
+              print "p1[",k,"]=",p1,",q1[",k,"]=",q1,", eps[",k,"]=",eps,", a[",k-1,"]=",akplus1,","
+              print "r[",k-1,"]/s[",k-1,"]=",rkplus1,"/",skplus1,"\n"
+           }else{
+              print "p1[",k,"]=",p1,",q1[",k,"]=",q1,", eps[",k,"]=",eps," (Q'[",k+1,"]=Q''[",k+1,"])\n"
+           }/* end if(temp 1) */
+           p1reduced=p1
+           q1reduced=q1
+           kreduced=k
+           break
+        }/* end if(temp && temp1) */
+  } /* end if(skplusq>absqo&q1>0&q1<=root4d && etc) */
+  s=p1-akplus1*q1
+  eps=sign_pqd(s,q1,d)
+  prod=prod*eps
+  p1=-s /* calculated by OCF, but is the same if done by NSCF */
+  q1=eps*(d-p1*p1)/q1
+  rkmin1=rk;rk=rkplus1
+  skmin1=sk;sk=skplus1
+  k=k+1
+}/* end while(1) */
+
+/* starting NSCF */
+count=0
+flag=0
+while(1){
+temp=test1(p1,q1,d)
+oldeps=eps
+if(temp==0){/* xi_k=((2a+1)qq-pp+sqrt(pp^2+qq^2))/2qq */
+   count=count+1
+print "k=",k,"\n"
+   qq=q1/2
+   pp=sqrt(d-qq*qq)
+   a=((pp+p1)/qq-1)/2
+   sign=parity(k)*prod
+   k=k+1
+   print "sign=",sign,",prod=",prod,"\n"
+   q1=pp
+   if(sign==-1){
+     p1=pp-qq
+     eps=1
+     akplus1=a
+   }else{
+     p1=pp+qq
+     eps=-1
+     akplus1=a+1
+   }
+print "pp=",pp,", qq=",qq,"\n"
+   print "p1[",k,"]=",p1,",q1[",k,"]=",q1,", eps[",k,"]=",eps,", a[",k-1,"]=",akplus1,","
+   prod=prod*eps
+}else{
+px=p1
+qx=q1
+   t=nscf(px,qx,d,x)
+   prod=prod*eps
+   k=k+1
+   print "p1[",k,"]=",p1,",q1[",k,"]=",q1,",eps[",k,"]=",eps,",a[",k-1,"]=",akplus1,","
+}
+  rkplus1=akplus1*rk+oldeps*rkmin1
+  skplus1=akplus1*sk+oldeps*skmin1
+  print "r[",k-1,"]/s[",k-1,"]=",rkplus1,"/",skplus1,"\n"
+  /*print "rk/sk=",rk,"/",sk,","
+  print "rkmin1/skmin1=",rkmin1,"/",skmin1,"\n"*/
+  rkmin1=rk;
+  rk=rkplus1
+  skmin1=sk;
+  sk=skplus1
+  if(p1==p1reduced && q1==q1reduced){
+      kk=k-kreduced
+      if(count==1 && kk%2==0 && flag==0){
+         flag=1
+      }else{
+         print "p1[",k,"]=p1[",kreduced,"],q1[",k,"]=q1[",kreduced,"],"
+         print "period-length="
+         return(kk)
+      }
+  }
+}/* end of while (1) loop */
+}
+
+
+/* With p=P_v and q=Q_v, special_test(p,q,d) returns 1 if Q_{v+1}^2+Q_v^2/4<=d and 
+ * Q_v^2+Q_{v+1}^2/4<=d , 0 otherwise. This means (p+sqrt(d))/q is special
+ * in the NSCF AAKA sense. Here q>0, q11>0 and q22>0.
+ */
+define special_test(p,q,d){
+auto a,c,x,p11,q11,p22,q22,op,oq,s1,s2,t
+
+   x=sqrt(d)
+   op=p
+   oq=q
+   c=int(p+x,q)
+   p11=c*q-p
+   q11=d-p11*p11
+   p22=p11+q
+   q22=-d+p22*p22
+   if(q11<q22){
+      a=1
+      p=p11
+      q=q11/q
+      b=c
+   }else{
+      a=-1
+      p=p22
+      q=q22/q
+      b=c+1
+   } 
+   s1=4*q^2+oq^2
+   s2=4*oq^2+q^2
+   t=4*d
+   if(s1<=t && s2<=t){
+      return(1)
+   }else{
+      return(0)
+   }
+     
+}
+
+/* With p=P_v and q=Q_v, test1(p,q,d) returns 
+-1 if Q'_{v+1} < Q"_{v+1},
+0 if Q'_{v+1} = Q"_{v+1},
+1 if Q'_{v+1} > Q"_{v+1},
+ * 0 otherwise. It assumes that q>0,q1>0 and q2>0, which is the case where it is applied. */
+define test1(p,q,d){
+auto c,x,p11,q11,p22,q22
+
+   x=sqrt(d)
+   c=int(p+x,q)
+   p11=c*q-p
+   q11=d-p11*p11
+   p22=p11+q
+   q22=-d+p22*p22
+   if(q11>q22){
+     return(1)
+   }
+   if(q11==q22){
+     return(0)
+   }
+   if(q11<q22){
+     return(-1)
+   }
+}
+
+define parity(m){
+if(m%2){
+  return(-1)
+}else{
+  return(1)
+}
+}
+
+define squaretest(d){
+auto x
+x=sqrt(d)
+if(x*x==d){
+  return(x)
+}else{
+  return(0)
+}
+}
+
+/* This produces global p1,q1,akplus1,eps */
+define nscf(p,q,d,x){
+auto c,p1temp,q1temp,p2temp,q2temp
+           c=int(p+x,q) /* q1>0 by assumption */
+           p1temp=c*q-p
+           q1temp=d-p1temp*p1temp
+           p2temp=p1temp+q
+           q2temp=-d+p2temp*p2temp
+           if(q1temp<q2temp){
+              eps=1
+              p1=p1temp
+              q1=q1temp/q
+              akplus1=c
+           }else{
+              eps=-1
+              p1=p2temp
+              q1=q2temp/q
+              akplus1=c+1
+           } 
+           return
+}
+
+define ocf_pqd2(d,t,p,q){
+auto s,x,k,temp,tt,r0,p0,q0,rkmin1,skmin1,bkplus1,vkplus1,ukplus1,rk,sk,xx,absq0,root4d,px,qx
+flag=0
+
+temp=sign(t)
+if(temp==-1){
+   p=p*temp
+   q=q*temp
+   d=d*(t*t)
+}
+temp=abs(q)
+if((d-p*p)%temp){
+   d=d*(q*q)
+   p=p*temp
+   q=q*temp
+}
+k=gcd3(p,q,(d-p*p)/q)
+if(k>1){/* converts to standard form */
+   p=p/k
+   q=q/k
+   d=d/(k*k)
+}
+prod=sign(q)
+print "prod[",k,"]=",prod,"\n"
+absq0=abs(q)
+root4d=sqrt(4*d)
+x=sqrt(d)
+p1=p
+q1=q
+k=0
+rkmin1=0;rk=1
+skmin1=1;sk=0
+eps=1
+/*print "p1[0]=",p1,",q1[0]=",q1,","
+print "eps[0]=",eps,","*/
+while(1){
+  bkplus1=int_pqd(p1,q1,x)
+  vkplus1=bkplus1*sk+eps*skmin1
+  ukplus1=bkplus1*rk+eps*rkmin1
+  tt=2*vkplus1+sk
+  dd=d*tt*tt
+  xx=sqrt(dd)
+  akplus1=int_pqd(p1*tt+q1*vkplus1,q1*tt,xx)
+  rkplus1=akplus1*rk+eps*rkmin1
+  skplus1=akplus1*sk+eps*skmin1
+  print "p1[",k,"]=",p1,",q1[",k,"]=",q1,", eps[",k,"]=",eps,", a[",k,"]=",akplus1,","
+  print "rk[",k,"]/sk[",k,"]=",rkplus1,"/",skplus1,"\n"
+  if(p1==3 && q1==2 && d==5){
+    p1reduced=p1
+    q1reduced=q1
+    kreduced=k
+    print "32\n"
+    break
+  }
+  if(skplus1>absq0 && q1>0 && q1<=root4d){/* we can switch from OCF to NSCF if Q'\neq Q" as Q'>0 and Q">0 */
+        temp=special_test(p1,q1,d) 
+        temp1=test1(p1,q1,d)
+        if(temp && !temp1){
+           print "(",p1,",",q1,") is special, but  has Q'=Q''\n"
+           qq=q1/2
+           pp=sqrt(d-qq^2)
+           a=(pp-qq+p1)/(2*qq)
+           oldeps=eps
+/*         prod=prod*eps*/
+           sign=parity(k)*prod
+print "sign[",k,"]=",sign," pp=",pp," qq=",qq,"\n"
+           if(sign==1){
+              eps=-1
+              akplus1=a+1
+              p1=pp+qq
+              q1=pp
+           }else{
+              eps=1
+              akplus1=a
+              p1=pp-qq
+              q1=pp
+           }
+           prod=prod*eps
+           rkplus1=akplus1*rk+oldeps*rkmin1
+           skplus1=akplus1*sk+oldeps*skmin1
+           rkmin1=rk;rk=rkplus1
+           skmin1=sk;sk=skplus1
+           k=k+1
+           print "found start of an OCF cycle: p1[",k,"]=",p1,",q1[",k,"]=",q1," with Q'[",k,"]=Q''[",k,"]\n"
+           p1reduced=p1
+           q1reduced=q1
+           kreduced=k
+           break
+        }
+        if(temp && temp1){
+           /*print "found a special complete quotient p1[",k,"]=",p1,",q1[",k,"]=",q1," with Q'[",k+1,"]!=Q''[",k+1,"]\n"*/
+           s=p1-akplus1*q1
+           eps=sign_pqd(s,q1,d)
+           prod=prod*eps
+           p1=-s /* calculated by OCF, but is the same if done by NSCF */
+           q1=eps*(d-p1*p1)/q1
+           rkmin1=rk;rk=rkplus1
+           skmin1=sk;sk=skplus1
+           k=k+1
+           temp1=test1(p1,q1,d)
+           if(temp1){
+              /*print " followed by another special one p1[",k,"]=",p1,",q1[",k,"]=",q1," with Q'[",k+1,"]!=Q''[",k+1,"]\n";*/
+              print "p1[",k,"]=",p1,",q1[",k,"]=",q1,", eps[",k,"]=",eps,"\n"
+              oldeps=eps
+              t=nscf(p1,q1,d,x)
+              prod=prod*eps
+              rkplus1=akplus1*rk+oldeps*rkmin1
+              skplus1=akplus1*sk+oldeps*skmin1
+              rkmin1=rk;rk=rkplus1
+              skmin1=sk;sk=skplus1
+              k=k+1
+        /*    print "now we have an NSCF reduced and periodic OCF complete quotients:\n"*/
+              print "p1[",k,"]=",p1,",q1[",k,"]=",q1,", eps[",k,"]=",eps,", a[",k-1,"]=",akplus1,","
+              print "r[",k-1,"]/s[",k-1,"]=",rkplus1,"/",skplus1,"\n"
+           }else{
+              print "p1[",k,"]=",p1,",q1[",k,"]=",q1,", eps[",k,"]=",eps," (Q'[",k+1,"]=Q''[",k+1,"])\n"
+           }/* end if(temp 1) */
+           p1reduced=p1
+           q1reduced=q1
+           kreduced=k
+           break
+        }/* end if(temp && temp1) */
+  } /* end if(skplusq>absqo&q1>0&q1<=root4d && etc) */
+  s=p1-akplus1*q1
+  eps=sign_pqd(s,q1,d)
+  prod=prod*eps
+  p1=-s /* calculated by OCF, but is the same if done by NSCF */
+  q1=eps*(d-p1*p1)/q1
+  rkmin1=rk;rk=rkplus1
+  skmin1=sk;sk=skplus1
+  k=k+1
+}/* end while(1) */
+
+/* starting NSCF */
+count=0
+flag=0
+while(1){
+temp=test1(p1,q1,d)
+oldeps=eps
+if(temp==0){/* xi_k=((2a+1)qq-pp+sqrt(pp^2+qq^2))/2qq */
+   count=count+1
+print "k=",k,"\n"
+   qq=q1/2
+   pp=sqrt(d-qq*qq)
+   a=((pp+p1)/qq-1)/2
+   sign=parity(k)*prod
+   k=k+1
+   print "sign=",sign,",prod=",prod,"\n"
+   q1=pp
+   if(sign==-1){
+     p1=pp-qq
+     eps=1
+     akplus1=a
+   }else{
+     p1=pp+qq
+     eps=-1
+     akplus1=a+1
+   }
+print "pp=",pp,", qq=",qq,"\n"
+   print "p1[",k,"]=",p1,",q1[",k,"]=",q1,", eps[",k,"]=",eps,", a[",k-1,"]=",akplus1,","
+   prod=prod*eps
+}else{
+px=p1
+qx=q1
+   t=nscf(px,qx,d,x)
+   prod=prod*eps
+   k=k+1
+   print "p1[",k,"]=",p1,",q1[",k,"]=",q1,",eps[",k,"]=",eps,",a[",k-1,"]=",akplus1,","
+}
+  rkplus1=akplus1*rk+oldeps*rkmin1
+  skplus1=akplus1*sk+oldeps*skmin1
+  print "r[",k-1,"]/s[",k-1,"]=",rkplus1,"/",skplus1,"\n"
+  /*print "rk/sk=",rk,"/",sk,","
+  print "rkmin1/skmin1=",rkmin1,"/",skmin1,"\n"*/
+  rkmin1=rk;
+  rk=rkplus1
+  skmin1=sk;
+  sk=skplus1
+  if(p1==p1reduced && q1==q1reduced){
+      kk=k-kreduced
+      if(count==1 && kk%2==0 && flag==0){
+         print "half-period:p1[",k,"]=p1[",kreduced,"],q1[",k,"]=q1[",kreduced,"],\n"
+         flag=1
+      }else{
+         print "p1[",k,"]=p1[",kreduced,"],q1[",k,"]=q1[",kreduced,"],"
+         print "period-length="
+         return(kk)
+      }
+  }
+}/* end of while (1) loop */
+}

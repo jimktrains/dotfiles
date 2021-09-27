@@ -1,0 +1,58 @@
+# bc file b2plus3bcplusc2
+# The underlying algorithm was published in New algorithms for modular inversion and representation
+# by binary quadratic forms arising from structure in the Euclidean algorithm, 
+# Christina Doran, Shen Lu and Barry R. Smith.
+# Type bc lucas gcd b2plus3bcplusc2 jacobi squareroot2 
+# The representations of p in terms of b and c with b > c, are unique.
+
+define rep(p){
+auto t,vv,v,s
+ t=lucasnonverbose(p)
+ if(t==0){
+    print p," is not a prime\n"
+    return
+ }else{
+     vv=tonelli(5,p)
+     v=((vv-1)*(p+1)/2)%p
+     if(2*v>p){
+        v=p-v-1
+     }
+     s=g(p,v,p)
+  }
+}
+
+define g(m,n,p){
+        auto a,b,c,temp,i,r[]
+        i=0
+        r[0]=a=m
+        print "r[0]=",r[0],"\n"
+        r[1]=b=n
+        print "r[1]=",r[1],"\n"
+        r[2]=c=a%b
+        while(c>0){
+              print "r[",i+2,"]=",r[i+2],"\n"
+              if(5*c*c<p){
+                if(p==b*b+b*c-c*c){
+                   print p,"=b*b+b*c-c*c, where b=r[",i+1,"]=",b,",c=r[",i+2,"]=",c,"\n"
+                }
+                temp=b+c
+                if(p==temp*temp+temp*c-c*c){
+                   print p,"=b*b+b*c-c*c, where b=r[",i+1,"]+r[",i+2,"]=",temp,",c=r[",i+2,"]=",c,"\n"
+                }
+                if(p==b*b+3*b*c+c*c){
+                   print p,"=b*b+3b*c+c*c, where b=r[",i+1,"]=",b,",c=r[",i+2,"]=",c,"\n"
+                }
+                temp=b-c
+                if(p==temp*temp+3*temp*c+c*c){
+                   print p,"=b*b+3b*c+c*c, where b=r[",i+1,"]-r[",i+2,"]=",temp,",c=r[",i+2,"]=",c,"\n"
+                }
+                print "length of Euclid's algorithm is 2s + 1 = ",2*i+1,"\n"
+                return
+              }
+              a=b
+              b=c
+              c=a%b
+              r[i+3]=c
+              i=i+1
+        }
+}

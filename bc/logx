@@ -1,0 +1,90 @@
+/* bc program logx */
+print "If a>b>1 and 3<=m<=n, type test(a,b,m,n) to guess \n"
+print " the initial partial quotients of log(a)/log(b)\n"
+print "This runs log(a,b,r,0,0) for m<=r<=n.\n"
+/* mod(a,b)=the least non-negative remainder when an integer
+   a is divided by a  positive integer b */
+
+define mod(a,b){
+	auto c
+	c=a%b
+	if(a>=0) return(c)
+	if(c==0) return(0)
+        return(c+b)	
+}
+
+/* int(a,b)=integer part of a/b, a, b integers, b != 0 */million
+
+define int(a,b){
+	if(b<0){
+	a= -a
+	b= -b
+	}
+	return((a-mod(a,b))/b)
+}
+
+
+/* e=0 prints the m[i] which are hopefully partial quotients */
+/* e!=0 also prints the A[i] */
+/* f!=0 prints success or failure of int(log(G[i-1])/log(G[i]))=m[i] */
+/* Here G[i]=A[i]/c */
+/* see Theorem 2.2 of old note */
+/* we assume r>=3, as then we enter the first while loop; below
+   with bb=b*c > cc=c+b*b*sqrt(c)
+ */
+
+define log(a,b,r,e,f){
+auto aa,bb,c,cc,i,s,t,u,v,w,x
+c=b^r
+cc=c+b*sqrt(c)
+aa=a*c;bb=b*c;s=0
+if(e){
+   print "  A[0]=",aa,"\n"
+   print "  A[1]=",bb,"\n"
+}
+while(bb>c){
+	i=0
+	while(aa>=bb){
+		aa=aa*c/bb
+		i=i+1
+	}
+       /* print "m[",s,"]=,",i,"," */
+        print i,"," /* these are likely to be partial quotients */
+	t=bb
+        bb=aa
+        aa=t
+        u=bb^s
+        v=c*u
+        w=aa*c^s
+        x=u*bb
+        if(v<w || w<x){
+          i=s+2
+          if(f){
+             print "success: c*A[",i,"]^m[",i-1,"]<A[",i-1,"]*c^m[",i-1,"]<A[",i,"]^(m[",i-1,"]+1) when i=",s+2,"\n"
+          }
+        }else{
+             print "failure:\n"
+             print "either c*A[",i,"]^m[",i-1,"]>=A[",i-1,"]*c^m[",i-1,"]\n"
+             print "or A[",i-1,"]*c^m[",i-1,"]>=A[",i,"]^(m[",i-1,"]+1)\n"
+             print " when i=",s+2,"\n"
+             return(0)
+        }
+	if(e){
+		print "  A[",s+2,"]=",bb,"\n "
+	}
+	s=s+1
+        if(bb<=cc || (b==2 && r==1)){
+           break;
+     }
+}
+return(s)
+}
+
+define test(a,b,m,n,e,f){
+auto r,t
+for(r=m;r<=n;r++){
+    /*print "r=",r,":"*/
+    t=log(a,b,r,e,f)
+    print ":[",t,"]\n"
+}
+}

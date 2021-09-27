@@ -1,0 +1,61 @@
+# BC program devised by Alan Offer on 28th December 2011.
+# "Increment" the list of exponents in b[] subject to being bounded by a[]
+define next(*b[], a[], t) {
+  auto i
+  i = t - 1
+  while ( i >= 0 ) {
+    b[i] += 1
+    if ( b[i] > a[i] ) {
+      b[i] = 0
+      i -= 1
+    } else {
+      return 0
+    }
+  }
+  # Return "true" when cycle around to all b[j]=0.
+  return 1
+}
+
+# Example usage of "next".  List exponents for divisors.
+define exps(a[], t) {
+  auto i, finished, count, b[]
+  finished = 0
+  count = 0
+  while ( !finished ) {
+    for (i=0; i<t; i++) { print b[i]," " }
+    print "\n"
+    finished = next(b[], a[], t)
+    count += 1
+  }
+  return(count)
+}
+
+# Example usage of "next".  List divisors.
+define divisors(p[], a[], t) {
+   auto i, finished, count, b[]
+   finished = 0
+   count = 0
+   while ( !finished ) {
+     divisor[count] = 1
+     for (i=0; i<t; i++) { divisor[count] *= p[i]^b[i] }
+/*     print divisor[count],"\n"*/
+     finished = next(b[], a[], t)
+     count += 1
+   }
+   return(count)
+}
+
+## (2^2)(3^2)(5^1)=180
+##p[0]=2; p[1]=3; p[2]=5
+##a[0]=2; a[1]=2; a[2]=1
+
+# Examples
+# Given number is \prod p_i ^ a_i, with i=0, 1, ..., t-1.
+# Divisors are given by \prod p_i ^ b_i.
+#
+# List all t-tuples of exponents b_i for divisors of 180:
+##democount = exps(a[], 3)
+# List all divisors of 180:
+##democount = divisors(p[], a[], 3)
+##print "There are ", democount, " divisors.\n"
+##quit

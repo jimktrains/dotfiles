@@ -1,0 +1,66 @@
+/*  gcd(m,n) for non--negative integers m and n */
+/* Euclid's division algorithm is used. */
+
+define gcd(m,n){
+	auto a,b,c
+	if(n==0)return(m)
+	a=m
+        b=n
+        c=a%b
+        while(c>0){
+		a=b
+                b=c
+                c=a%b
+        }
+	return(b)
+}   
+
+print "the base b decimal .pre[k-1]...pre[0] (k termed preperiod )\n"
+print "per[r-1]...per[0] (r termed period)\n"
+print "is converted to a rational number z\n"
+print "If there is no preperiod, take pre[0]=0 and k=0.\n"
+print "example: base 10 decimal: .1212...\n"
+print "Take pre[0]=0=k,per[0]=2,per[1]=1,k=0,r=2,b=10\n"
+print "type d2r(pre[],per[],k,r,b) to output z=4/33\n"
+
+define convert(a[],k,b){
+auto i,sum,c
+sum=0
+c=1
+for(i=0;i<k;i++){
+   sum=sum+a[i]*c
+   c=c*b
+}
+return(sum)
+}
+
+/* the base b decimal .pre[k-1]...pre[0] (k termed preperiod )
+   per[r-1]...per[0] (r termed period)
+   is converted to a rational number z using the formula 
+   z = ((b^r - 1)x+ y)/b^k(b^r - 1).
+   If preperiod is absent, take pre[0]=0 and k=0.
+   Also x=pre[k-1]b^(k-1}+...+pre[0], y=per[r-1]b^(r-1}+...+per[0]
+ */
+define d2r(pre[],per[],k,r,b){
+auto i,j,t,num,denom,x,y
+   t=b^r-1
+   x=convert(pre[],k,b)
+   y=convert(per[],r,b)
+   num=x*t+y
+   denom=(b^k)*t
+   g=gcd(num,denom)
+   num=num/g
+   denom=denom/g
+      print "rational represented by base ",b," decimal ."
+      for(i=k-1;i>=0;i--){
+        print pre[i]
+      }
+      for(j=r-1;j>=0;j--){
+        print per[j]
+      }
+      for(j=r-1;j>=0;j--){
+        print per[j]
+      }
+      print "... = ",num,"/",denom,"\n"
+   return
+}

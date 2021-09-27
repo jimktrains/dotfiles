@@ -1,0 +1,50 @@
+/* this finds the fundamental solution (globalr,globals)  of Pell's equation x^2-dy^2=1
+   using the midperiod approach and the continued fraction of sqrt(d). */
+# printflag=0 suppresses printing, printflag=1 prints output.
+define fund1(d,printflag){
+	auto h,p,q,e,f,g,x,y,k,l,m,n,u,v,r,s,oldl,oldm,oldu,oldv,oldn
+	x=sqrt(d)
+	p=0;q=1
+	g=x*x
+	/*if(d==g+1){*//* period length = 1 */
+        /*return(1)
+	}*/
+        l=0;k=1;m=1;n=0
+	for(h=0;1;h++){
+		y=(x+p)/q
+                u=k*y+l;v=n*y+m
+                       /* u/v is the i-th convergent to sqrt(d) */
+ /*             if(h>=0){
+                   print "A[",h,"]/B[",h,"]=",u,"/",v,"\n"
+                }*/
+                oldl=l;oldm=m;oldn=n
+                oldu=u;oldv=v;
+                l=k;m=n
+                k=u;n=v
+                
+		f=p
+		p=y*q-p
+		e=q
+		q=(d-(p*p))/q
+		if(p==f){/* P_h=P_{h+1}, even period 2h */
+                /* print "P_",h,"=P_",h+1,"\n"*/
+                   globalr=oldn*(oldu+oldl)+(-1)^h
+                   globals=oldn*(oldv+oldm)
+                   if(e){
+                      print "globalr=",globalr,",globals=",globals,"\n"
+                   }
+                   return(2*h)
+		}
+		if(q==e){/* Q_h=Q_{h+1}, odd period 2h+1 */
+ /*                print "Q_",h,"=Q_",h+1,"\n"*/
+                   r=k*n+l*m
+                   s=n^2+m^2
+                   globalr=r*r+d*s*s
+                   globals=2*r*s
+                   if(e){
+                      print "globalr=",globalr,",globals=",globals,"\n"
+                   }
+                   return(2*h+1)
+		}
+    }
+}

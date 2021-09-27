@@ -1,0 +1,19 @@
+/* bc program equivlent */
+print "Type equiv(a,c,d,p,q,r,s)\n"
+define equiv(a,c,d,alpha,beta,gamma,delta){
+auto dd,idd,x,y,t
+
+idd=alpha*delta-beta*gamma
+if(idd!=1 && idd!=-1){
+   print "determinant !=\pm 1\n"
+   return
+}
+t=(a^2-d)/c
+x=idd*(alpha*gamma*t+a*(beta*gamma+alpha*delta)+beta*delta*c)
+y=idd*(gamma^2*t+2*gamma*delta*a+delta^2*c)
+print "\eta_0=(",x,"+sqrt(",d,")/",y,"\n"
+print "temp1=",gamma^2*t,"\n"
+print "temp2=",2*gamma*delta*a,"\n"
+print "temp3=",delta^2*c,"\n"
+return 1
+}

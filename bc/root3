@@ -1,0 +1,830 @@
+/* root3 */
+/* T(x,y) = (u(x,y), v(x,y)) is the function in Example 10.2, p. 101 of 
+ * The Ultimate Challenge: The 3x+1 Problem, Ed. J.C. Lagarias.
+ * We believe there are only 103 cycles for the sequence of iterates 
+ * (x,y), T(x,y), T^2(x,y),...  
+ * The sequence starting with (-1,7) appears to be divergent and such 
+ * sequences produce limiting frequencies approximating (.27, .32, .40)
+ * in the residue classes 0,1,2 (mod sqrt(3).
+ * Also for T^2, the limiting frequencies approximat (1/3,1/3,1/3).
+ * Function cycle(x,y,n) traces the first n+1 iterates until they either reach
+ * a cycle. If not, the frequencies of occupation of the residue classes is noted.
+ * A cycle may not be reached unless n is sufficiently large.
+ */
+define u(x,y){
+auto r
+r=mod(x,3)
+if(r==0||r==1){
+   return(y)
+}else{
+   return(4*y)
+}
+}
+
+define v(x,y){
+auto r
+r=mod(x,3)
+if(r==0){
+   return(x/3)
+}
+if(r==1){
+   return((x-1)/3)
+}else{
+   return((4*x+1)/3)
+}
+}
+
+
+define cycle(u,v,n){
+	auto a,i,x,y,tempx,sum0,sum1,sum2
+        sum0=0
+        sum1=0
+        sum2=0
+	x=u
+	y=v
+        a=mod(x,3)
+        if(a==0){
+          sum0=sum0+1
+        }
+        if(a==1){
+          sum1=sum1+1
+        }
+        if(a==2){
+          sum2=sum2+1
+        }
+		for(i=1;i>=0;i++){
+			if(x==0 && y==0){/* 1 cycle 1*/
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (0,0) is "
+				return(i)
+			}
+			if(x==-1 && y==1){/* 2 cycle 2 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-1,1) is "
+				return(i)
+			}
+			if(x==0 && y==-1){/* 2 cycle 3 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (0,-1) is "
+				return(i)
+			}
+			if(x==-1 && y==-1){/* 10 cycle 4 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-1,-1) is "
+				return(i)
+			}
+			if(x==-1 && y==-3){/* 28 cycle 5 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-1,-3) is "
+				return(i)
+			}
+			if(x==-1 && y==4){/* 10 cycle 6 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-1,4) is "
+				return(i)
+			}
+			if(x==5 && y==2){/* 10 cycle 7 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (5,2) is "
+				return(i)
+			}
+			if(x==26 && y==35){/* 106 cycle 8 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (26,35) is "
+				return(i)
+			}
+			if(x==-1 && y==6){/* 10 cycle 9 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-1,6) is "
+				return(i)
+			}
+			if(x==-7 && y==-4){/* 5 cycle 10 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-7,-4) is "
+				return(i)
+			}
+			if(x==-4 && y==8){/* 10 cycle 11 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-4,8) is "
+				return(i)
+			}
+			if(x==-7 && y==8){/* 10  cycle 12 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-7,8) is "
+				return(i)
+			}
+			if(x==8 && y==-7){/* 58  cycle 13 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-7,8) is "
+				return(i)
+			}
+			if(x==-1 && y==13){/* 10 cycle 14 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-1,13) is "
+				return(i)
+			}
+			if(x==11 && y==11){/* 106 cycle 15 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (11,11) is "
+				return(i)
+			}
+			if(x==14 && y==8){/* 5 cycle 16 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (14,8) is "
+				return(i)
+			}
+			if(x==-1 && y==-118){/* 48 cycle 17 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-1,-118) is "
+				return(i)
+			}
+			if(x==-46 && y==20){/* 106 cycle 18 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-46,20) is "
+				return(i)
+			}
+			if(x==17 && y==10){/* 5 cycle 19 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (17,10) is "
+				return(i)
+			}
+			if(x==-111 && y==-136){/* 106 cycle 20 */
+			   print "starting number = (",u,",",v,")\n"
+		                 "the number of iterations taken to reach (-111,-136) is "
+				return(i)
+			}
+			if(x==-7 && y==20){/* 58 cycle 21 */
+			  print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-7,20) is "
+				return(i)
+			}
+			if(x==60 && y==-160){/* 106 cycle 22 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (60,-160) is "
+				return(i)
+			}
+			if(x==-4 && y==35){/* 58 cycle 23 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-4,35) is "
+				return(i)
+			}
+			if(x==-111 && y==-112){/* 106 cycle 24 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-111,-112) is "
+				return(i)
+			}
+			if(x==-48 && y==-70){/* 106 cycle 25 */
+			   print "starting number = (",u,",",v,")\n"
+
+				"the number of iterations taken to reach (-48,-70) is "
+				return(i)
+			}
+			if(x==-66 && y==-127){/* 106 cycle 26 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-66,-127) is "
+				return(i)
+			}
+			if(x==35 && y==41){/* 106 cycle 27 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (35,41) is "
+				return(i)
+			}
+			if(x==-46 && y==-31){/* 106 cycle 28 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-46,-31) is "
+				return(i)
+			}
+			if(x==62 && y==-109){/* 106 cycle 29 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (62,-109) is "
+				return(i)
+			}
+			if(x==-46 && y==-49){/* 212 cycle 30 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-46,-49) is "
+				return(i)
+			}
+			if(x==44 && y==-55){/* 106 cycle 31 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (44,-55) is "
+				return(i)
+			}
+			if(x==-82 && y==-52){/* 106 cycle 32 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-82,-52) is "
+				return(i)
+			}
+			if(x==92 && y==65){/* 106 cycle 33 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (92,65) is "
+				return(i)
+			}
+			if(x==11 && y==-124){/* 106 cycle 34 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (11,-124) is "
+				return(i)
+			}
+			if(x==65 && y==177){/* 106 cycle 35 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (65,177) is "
+				return(i)
+			}
+			if(x==-1 && y==-235){/* 212 cycle 36 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-1,-235) is "
+				return(i)
+			}
+			if(x==26 && y==-79){/* 106 cycle 37 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (26,-79) is "
+				return(i)
+			}
+			if(x==-43 && y==-327){/* 106 cycle 38 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-43,-327) is "
+				return(i)
+			}
+			if(x==62 && y==-121){/* 106 cycle 39 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (62,-121) is "
+				return(i)
+			}
+			if(x==60 && y==-88){/* 106 cycle 40 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (60,-88) is "
+				return(i)
+			}
+			if(x==-70 && y==-95){/* 106 cycle 41 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-70,-95) is "
+				return(i)
+			}
+			if(x==92 && y==-178){/* 106 cycle 42 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (92,-178) is "
+				return(i)
+			}
+			if(x==-28 && y==-106){/* 106 cycle 43 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-28,-106) is "
+				return(i)
+			}
+			if(x==107 && y==-94){/* 106 cycle 44 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (107,-94) is "
+				return(i)
+			}
+			if(x==107 && y==-37){/* 106 cycle 45 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (107,-37) is "
+				return(i)
+			}
+			if(x==-220 && y==-103){/* 106 cycle 46 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-220,-103) is "
+				return(i)
+			}
+			if(x==-334 && y==-241){/* 106 cycle 47 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-334,-241) is "
+				return(i)
+			}
+			if(x==35 && y==-109){/* 106 cycle 48 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (35,-109) is "
+				return(i)
+			}
+			if(x==-160 && y==-70){/* 106 cycle 49 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-160,-70) is "
+				return(i)
+			}
+			if(x==50 && y==-118){/* 106 cycle 50 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (50,-118) is "
+				return(i)
+			}
+			if(x==-156 && y==-163){/* 106 cycle 51 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-156,-163) is "
+				return(i)
+			}
+			if(x==56 && y==-142){/* 106 cycle 52 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (56,-142) is "
+				return(i)
+			}
+			if(x==269 && y==-176){/* 106 cycle 53 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (269,-176) is "
+				return(i)
+			}
+			if(x==-109 && y==-183){/* 106 cycle 54 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-109,-183) is "
+				return(i)
+			}
+			if(x==44 && y==-166){/* 106 cycle 55 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (44,-166) is "
+				return(i)
+			}
+			if(x==62 && y==-145){/* 106 cycle 56 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (62,-145) is "
+				return(i)
+			}
+			if(x==8 && y==-147){/* 106 cycle 57 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (8,-147) is "
+				return(i)
+			}
+			if(x==-280 && y==-245){/* 106 cycle 58 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-280,-245) is "
+				return(i)
+			}
+			if(x==215 && y==-171){/* 106 cycle 59 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (215,-171) is "
+				return(i)
+			}
+			if(x==-163 && y==-120){/* 106 cycle 60 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-163,-120) is "
+				return(i)
+			}
+			if(x==-1 && y==-174){/* 106 cycle 61 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-1,-174) is "
+				return(i)
+			}
+			if(x==-4 && y==-166){/* 106 cycle 62 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-4,-166) is "
+				return(i)
+			}
+			if(x==116 && y==-166){/* 106 cycle 63 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (116,-166) is "
+				return(i)
+			}
+			if(x==161 && y==-171){/* 212 cycle 64 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (161,-171) is "
+				return(i)
+			}
+			if(x==-64 && y==-174){/* 106 cycle 65 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-64,-174) is "
+				return(i)
+			}
+			if(x==8 && y==-174){/* 106 cycle 66 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (8,-174) is "
+				return(i)
+			}
+			if(x==-151 && y==-196){/* 106 cycle 67 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-151,-196) is "
+				return(i)
+			}
+			if(x==227 && y==-248){/* 106 cycle 68 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (227,-248) is "
+				return(i)
+			}
+			if(x==179 && y==-93){/* 106 cycle 69 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (179,-93) is "
+				return(i)
+			}
+			if(x==-184 && y==-88){/* 106 cycle 70 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-184,-88) is "
+				return(i)
+			}
+			if(x==-127 && y==-217){/* 106 cycle 71 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-127,-217) is "
+				return(i)
+			}
+			if(x==-73 && y==-247){/* 106 cycle 72 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-73,-247) is "
+				return(i)
+			}
+			if(x==80 && y==-191){/* 106 cycle 73 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (80,-191) is "
+				return(i)
+			}
+			if(x==-133 && y==-193){/* 106 cycle 74 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-133,-193) is "
+				return(i)
+			}
+			if(x==80 && y==-488){/* 106 cycle 75 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (80,-488) is "
+				return(i)
+			}
+			if(x==107 && y==-356){/* 106 cycle 76 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (107,-356) is "
+				return(i)
+			}
+			if(x==26 && y==-217){/* 106 cycle 77 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (26,-217) is "
+				return(i)
+			}
+			if(x==89 && y==-218){/* 106 cycle 78 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (89,-218) is "
+				return(i)
+			}
+			if(x==173 && y==-223){/* 106 cycle 79 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (173,-223) is "
+				return(i)
+			}
+			if(x==-55 && y==-230){/* 106 cycle 80 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-55,-230) is "
+				return(i)
+			}
+			if(x==-235 && y==-100){/* 106 cycle 81 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-235,-100) is "
+				return(i)
+			}
+			if(x==-451 && y==-338){/* 106 cycle 82 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-451,-338) is "
+				return(i)
+			}
+			if(x==-235 && y==-226){/* 106 cycle 83 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-235,-226) is "
+				return(i)
+			}
+			if(x==83 && y==-241){/* 106 cycle 84 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (83,-241) is "
+				return(i)
+			}
+			if(x==-199 && y==-248){/* 106 cycle 85 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-199,-248) is "
+				return(i)
+			}
+			if(x==-43 && y==-256){/* 106 cycle 86 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-43,-256) is "
+				return(i)
+			}
+			if(x==-103 && y==-259){/* 106 cycle 87 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-103,-259) is "
+				return(i)
+			}
+			if(x==179 && y==-356){/* 106 cycle 88 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (179,-356) is "
+				return(i)
+			}
+			if(x==-82 && y==-268){/* 106 cycle 89 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-82,-268) is "
+				return(i)
+			}
+			if(x==269 && y==-171){/* 106 cycle 90 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (269,-171) is "
+				return(i)
+			}
+			if(x==269 && y==-117){/* 106 cycle 91 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (269,-117) is "
+				return(i)
+			}
+			if(x==-280 && y==-286){/* 106 cycle 92 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-280,-286) is "
+				return(i)
+			}
+			if(x==-184 && y==-311){/* 106 cycle 93 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-184,-311) is "
+				return(i)
+			}
+			if(x==-331 && y==-286){/* 106 cycle 94 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-331,-286) is "
+				return(i)
+			}
+			if(x==53 && y==-340){/* 106 cycle 95 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (53,-340) is "
+				return(i)
+			}
+			if(x==-352 && y==-260){/* 106 cycle 96 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-352,-260) is "
+				return(i)
+			}
+			if(x==-28 && y==-356){/* 106 cycle 97 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-28,-356) is "
+				return(i)
+			}
+			if(x==170 && y==-365){/* 106 cycle 98 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (170,-365) is "
+				return(i)
+			}
+			if(x==80 && y==-368){/* 106 cycle 99 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (80,-368) is "
+				return(i)
+			}
+			if(x==-226 && y==-372){/* 106 cycle 100 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-226,-372) is "
+				return(i)
+			}
+			if(x==-463 && y==-262){/* 106 cycle 101 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-463,-262) is "
+				return(i)
+			}
+			if(x==-55 && y==-536){/* 106 cycle 102 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-55,-536) is "
+				return(i)
+			}
+			if(x==-568 && y==-328){/* 53 cycle 103 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-568,-328) is "
+				return(i)
+			}
+			tempx=x
+			x=u(x,y) 
+			y=v(tempx,y) 
+				
+ 	                a=mod(x,3)
+                        if(a==0){
+                           sum0=sum0+1
+                        }
+                        if(a==1){
+                           sum1=sum1+1
+                        }
+                        if(a==2){
+                           sum2=sum2+1
+                        }
+         	        print "(",x,",",y,")\n"
+                        if(i==n){
+                           i=i+1
+			   print "starting number = (",u,",",v,")\n"
+                           print "i=",n,"\n"
+                           scale=5
+                           print "(",sum0/i,",",sum1/i,",",sum2/i,")\n"
+                           scale=0
+                           print " This trajectory may be divergent.\n"
+                           print "Increasing n from ",n," may result in a cycle being reached\n"
+                           return
+                        }    
+	}
+}
+
+define uu(x,y){
+auto r,s
+r=mod(x,3)
+s=mod(y,3)
+if(r==0 && s==0){
+   return(x/3)
+}
+if(r==1 && s==0){
+   return((x-1)/3)
+}
+if(r==2 && s==0){
+   return((4*x+1)/3)
+}
+if(r==0 && s==1){
+   return(x/3)
+}
+if(r==1 && s==1){
+   return((x-1)/3)
+}
+if(r==2 && s==1){
+   return((4*x+1)/3)
+}
+if(r==0 && s==2){
+   return(4*x/3)
+}
+if(r==1 && s==2){
+   return(4*(x-1)/3)
+}
+if(r==2 && s==2){
+   return(4*(4*x+1)/3)
+}
+}
+
+define vv(x,y){
+auto r,s
+r=mod(x,3)
+s=mod(y,3)
+if(r==0 && s==0){
+   return(y/3)
+}
+if(r==1 && s==0){
+   return(y/3)
+}
+if(r==2 && s==0){
+   return(4*y/3)
+}
+if(r==0 && s==1){
+   return((y-1)/3)
+}
+if(r==1 && s==1){
+   return((y-1)/3)
+}
+if(r==2 && s==1){
+   return((4*y-1)/3)
+}
+if(r==0 && s==2){
+   return((4*y+1)/3)
+}
+if(r==1 && s==2){
+   return((4*y+1)/3)
+}
+if(r==2 && s==2){
+   return((16*y+1)/3)
+}
+}
+define ccycle(u,v,n){
+	auto a,i,x,y,tempx,z,sum0,sum1,sum2
+	x=u
+	y=v
+        z=x
+sum0=0
+sum1=0
+sum2=0
+		for(i=1;i>=0;i++){
+			if(x==0 && y==0){/* 1 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (0,0) is "
+				return(i)
+			}
+			if(x==-1 && y==1){/* 10 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-1,1) is "
+				return(i)
+			}
+			if(x==-1 && y==0){/* 2 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-1,0) is "
+				return(i)
+			}
+			if(x==-1 && y==-1){/* 9 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-1,-1) is "
+				return(i)
+			}
+			if(x==-1 && y==-3){/* 28 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-1,-3) is "
+				return(i)
+			}
+			if(x==-1 && y==4){/* 10 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-1,4) is "
+				return(i)
+			}
+			if(x==5 && y==2){/* 10 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (5,2) is "
+				return(i)
+			}
+			if(x==26 && y==35){/* 106 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (26,35) is "
+				return(i)
+			}
+			if(x==-1 && y==6){/* 10 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-1,6) is "
+				return(i)
+			}
+			if(x==-7 && y==-4){/* 5 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-7,-4) is "
+				return(i)
+			}
+			if(x==8 && y==-7){/* 58 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (8,-7) is "
+				return(i)
+			}
+			if(x==-4 && y==8){/* 10 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-4,8) is "
+				return(i)
+			}
+			if(x==-7 && y==8){/* 10 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-7,8) is "
+				return(i)
+			}
+			if(x==-1 && y==13){/* 10 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-1,13) is "
+				return(i)
+			}
+			if(x==11 && y==11){/* 106 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (11,11) is "
+				return(i)
+			}
+			if(x==14 && y==8){/* 5 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (14,8) is "
+				return(i)
+			}
+			if(x==68 && y==-52){/* 106 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (68,-52) is "
+				return(i)
+			}
+			if(x==17 && y==10){/* 5 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (17,10) is "
+				return(i)
+			}
+			if(x==-136 && y==-37){/* 106 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-136,-37) is "
+				return(i)
+			}
+			if(x==-7 && y==20){/* 58 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-7,20) is "
+				return(i)
+			}
+			if(x==60 && y==-160){/* 106 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (60,-160) is "
+				return(i)
+			}
+			if(x==-4 && y==35){/* 58 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-4,35) is "
+				return(i)
+			}
+			if(x==-111 && y==-112){/* 106 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-111,-112) is "
+				return(i)
+			}
+			if(x==-48 && y==-70){/* 106 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-48,-70) is "
+				return(i)
+			}
+			if(x==-66 && y==-127){/* 106 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (-66,-127) is "
+				return(i)
+			}
+			if(x==35 && y==41){/* 106 */
+			   print "starting number = (",u,",",v,")\n"
+				"the number of iterations taken to reach (35,41) is "
+				return(i)
+                        }
+                        tempx=x
+             
+			x=uu(x,y) 
+			y=vv(tempx,y) 
+        a=mod(y,3)
+        if(a==0){
+          sum0=sum0+1
+        }
+        if(a==1){
+          sum1=sum1+1
+        }
+        if(a==2){
+          sum2=sum2+1
+        }
+         	        print "(",x,",",y,")\n"
+                        if(i==n){
+			   print "starting number = (",u,",",v,")\n"
+                           print "i=",n,"\n"
+                     /*    print "z=",z,"\n"*/
+scale=5
+print "(",sum0/i,",",sum1/i,",",sum2/i,")\n"
+scale=0
+                           return
+                        }    
+		}
+}
