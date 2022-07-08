@@ -52,6 +52,7 @@ export PAGER=less
 
 export PATH=$PATH:/usr/lib/firefox-3.6.15
 export PATH=~/.composer/vendor/bin:$PATH
+export PATH=~/.config/composer/vendor/bin:$PATH
 
 #I know it won't infinitely connect (good work guys!)
 #I just don't want to hear it complain
@@ -71,6 +72,7 @@ alias emacs='emacs -nw'
 #source ~/.rvm/scripts/rvm
 source ~/.cargo/env
 
+
 ssh-add -l &>/dev/null
 if [ "$?" -eq 2 ]; then
   test -r ~/.ssh-agent && \
@@ -86,4 +88,12 @@ fi
 
 PATH=${PATH}:$HOME/bin
 
+# export PATH="/home/jim/.ebcli-virtual-env/executables:$PATH"
+# export PATH=/home/jim/.pyenv/versions/3.7.2/bin:$PATH
+#
+ssh-add ~/MSQC/code/CreativityHub/config/aws/keys/msqc_app-key-pair.pem
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 

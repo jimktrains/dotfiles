@@ -1,0 +1,7 @@
+exec /usr/share/doc/ratpoison/examples/sloppy
+exec synclient TouchpadOff=1
+exec $(ssh-agent)
+exec ssh-add ~/.ssh/id_rsa
+exec ssh-add ~/MSQC/code/CreativityHub/config/aws/keys/msqc_app-key-pair.pem
+exec nitrogen --restore
+exec xmessage -default okay `fortune`

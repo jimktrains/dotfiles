@@ -77,12 +77,25 @@ Plugin 'MarcWeber/vim-addon-mw-utils'
 " Plugin 'https://github.com/Yggdroot/indentLine'
 Plugin 'posva/vim-vue'
 Plugin 'terryma/vim-multiple-cursors'
+Plugin 'rust-lang/rust.vim'
+let g:rustfmt_autosave = 1
+
+Plugin 'mattn/calendar-vim'
+
 let g:indentLine_setColors = 0
 "let g:indentLine_color_tty_light = 15 " (default: 4)
 "let g:indentLine_color_dark = 1 " (default: 2)
 let g:indentLine_char = '┆'
 
 Plugin 'https://github.com/vim-syntastic/syntastic'
+
+"Plugin 'https://github.com/cosminadrianpopescu/vim-sql-workbench'
+
+let g:sw_config_dir = '/home/jim/.sqlworkbench'
+let g:sw_exe = '/home/jim/app/sqlworkbench/sqlwbconsole.sh'
+" let g:sw_cache = 
+
+let g:snipMate = { 'snippet_version' : 1 }
 
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -94,7 +107,7 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
 let g:syntastic_php_checkers = ['php']
-autocmd BufNewFile,BufRead /home/jim/MSQC/code/**/l5/**/*.php let g:syntastic_php_checkers = ['php', 'phpcs']
+autocmd BufNewFile,BufRead /home/jim/MSQC/code/**/*.php let g:syntastic_php_checkers = ['php', 'phpcs']
 
 let g:syntastic_yaml_checkers = ['yamllint'] " -c /home/jim/.yamllint']
 let g:syntastic_yaml_yamllint_args = '-c /home/jim/.yamllint'
@@ -165,3 +178,12 @@ let g:org_indent = 1
 
 autocmd FileType vue syntax sync fromstart
 let g:vue_pre_processors = ['scss']
+
+function! FCC_Call_Lookup(callsign)
+  let callinfo = system(printf('/usr/bin/lynx --dump "http://callsign.ualr.edu/cdetail.php?call=%s"', a:callsign))
+  call append('.', split(callinfo, "\n"))
+endfunction
+nnoremap <leader>c :call FCC_Call_Lookup(expand('<cword>'))<cr>
+
+let g:syntastic_disabled_filetypes=['python']
+let g:syntastic_mode_map = { 'passive_filetypes': ['python'] }

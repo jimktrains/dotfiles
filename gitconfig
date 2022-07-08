@@ -12,6 +12,6 @@
   ff="!git merge --ff-only `git rev-parse --abbrev-ref --symbolic-full-name @{u}`"
   lb="!git reflog | grep checkout | sed 's/.*from \\([A-Za-z0-9_/-]\\+\\).*/\\1/g' | head"
 [core]
-	excludesfile = ~/.gitignore
+	excludesfile = /home/jim/.gitignore
 [commit]
   #gpgsign = true
