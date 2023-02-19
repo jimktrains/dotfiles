@@ -93,7 +93,7 @@ Plugin 'https://github.com/vim-syntastic/syntastic'
 
 let g:sw_config_dir = '/home/jim/.sqlworkbench'
 let g:sw_exe = '/home/jim/app/sqlworkbench/sqlwbconsole.sh'
-" let g:sw_cache = 
+" let g:sw_cache =
 
 let g:snipMate = { 'snippet_version' : 1 }
 

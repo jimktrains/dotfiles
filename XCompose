@@ -1,6 +1,9 @@
 # for Emacs: -*- coding: utf-8 -*-
 include "%L"
 
+<Multi_key> <less> <less> : "«" # ANGULAR QUOTATION MARKS
+<Multi_key> <greater> <greater> : "»" # ANGULAR QUOTATION MARKS
+
 # def emit(keys, codepoint, word):
 #     print ('<Multi_key> %s <period>\t: "%s"\tU%04X\t\t# CIRCLED DIGIT %s' % 
 #            (keys, unichr(codepoint), codepoint, word)).encode('utf8')
