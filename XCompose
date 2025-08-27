@@ -3,6 +3,7 @@ include "%L"
 
 <Multi_key> <less> <less> : "«" # ANGULAR QUOTATION MARKS
 <Multi_key> <greater> <greater> : "»" # ANGULAR QUOTATION MARKS
+<Multi_key> <$> <l> : "£"
 
 # def emit(keys, codepoint, word):
 #     print ('<Multi_key> %s <period>\t: "%s"\tU%04X\t\t# CIRCLED DIGIT %s' % 
@@ -15,6 +16,8 @@ include "%L"
 
 <Multi_key> <%> <0> : "‰" # PER MIL
 <Multi_key> <%> <0> <0> : "‱" # PER 10 000 / BASIS POINT
+
+<Multi_key> <g> <n> <d> : "⏚" # GROUND
 
 # Custom additions: Typography
 <Multi_key> <period> <period>		: "…"	U2026		# HORIZONTAL ELLIPSIS

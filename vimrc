@@ -44,12 +44,12 @@ Plugin 'VundleVim/Vundle.vim'
 "  - textile
 "  - markdown
 "
-" Plugin 'git://git.wincent.com/command-t.git'
- Plugin 'git://github.com/godlygeek/tabular'
-" Plugin 'git://github.com/scrooloose/nerdtree'
- Plugin 'git://github.com/ctrlpvim/ctrlp.vim'
-" " Plugin 'git://github.com/swekaj/php-foldexpr.vim'
-" "Plugin 'git://github.com/Valloric/YouCompleteMe'
+" Plugin 'https://git.wincent.com/command-t.git.git'
+ Plugin 'https://github.com/godlygeek/tabular.git'
+" Plugin 'https://github.com/scrooloose/nerdtree.git'
+ Plugin 'https://github.com/ctrlpvim/ctrlp.vim.git'
+" " Plugin 'https://github.com/swekaj/php-foldexpr.vim.git'
+" "Plugin 'https://github.com/Valloric/YouCompleteMe.git'
 " " Plugin 'joonty/vim-phpqa.git'
 " Plugin 'shawncplus/phpcomplete.vim'
 " Plugin '2072/PHP-Indenting-for-VIm'
@@ -60,7 +60,8 @@ Plugin 'VundleVim/Vundle.vim'
  Plugin 'alvan/vim-php-manual'
 " " Plugin 'joonty/vdebug'
  Plugin 'tpope/vim-speeddating'
- Plugin 'jceb/vim-orgmode'
+" Plugin 'jceb/vim-orgmode'
+Plugin 'https://github.com/shmup/vim-orgmode.git'
 " Plugin 'https://github.com/m-kat/aws-vim'
 " Plugin 'utl.vim'
 "
@@ -87,9 +88,18 @@ let g:indentLine_setColors = 0
 "let g:indentLine_color_dark = 1 " (default: 2)
 let g:indentLine_char = '┆'
 
-Plugin 'https://github.com/vim-syntastic/syntastic'
+
+"Apparently syntastic isn't being developped anymore
+"Plugin 'https://github.com/vim-syntastic/syntastic'
+Plugin 'https://github.com/dense-analysis/ale'
 
 "Plugin 'https://github.com/cosminadrianpopescu/vim-sql-workbench'
+
+Plugin 'airblade/vim-localorie'
+nnoremap <silent> <leader>lt :call localorie#translate()<CR>
+nnoremap <silent> <leader>le :echo localorie#expand_key()<CR>
+
+Plugin 'jparise/vim-graphql'
 
 let g:sw_config_dir = '/home/jim/.sqlworkbench'
 let g:sw_exe = '/home/jim/app/sqlworkbench/sqlwbconsole.sh'
@@ -112,6 +122,8 @@ autocmd BufNewFile,BufRead /home/jim/MSQC/code/**/*.php let g:syntastic_php_chec
 let g:syntastic_yaml_checkers = ['yamllint'] " -c /home/jim/.yamllint']
 let g:syntastic_yaml_yamllint_args = '-c /home/jim/.yamllint'
 
+let g:syntastic_cpp_check_header = 1
+let g:syntastic_cpp_compiler_options = ' -std=c++20 -Wall -Werror -Wextra -stdlib=libc++'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -187,3 +199,6 @@ nnoremap <leader>c :call FCC_Call_Lookup(expand('<cword>'))<cr>
 
 let g:syntastic_disabled_filetypes=['python']
 let g:syntastic_mode_map = { 'passive_filetypes': ['python'] }
+
+set mouse=
+set ttymouse=

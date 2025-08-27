@@ -12,6 +12,9 @@ fi
 #%
 function precmd {
   last_resp=$?
+  branch=''
+  stash_cnt=''
+  short=''
   if [ -d .git ]; then
     branch=`git branch 2>/dev/null|grep -e '^*' | tr -d \*\ `
     stash_cnt=`git stash list 2>/dev/null | wc -l`
@@ -21,14 +24,18 @@ function precmd {
   bat_per=`acpi -b 2>&1 | grep -v found | sed 's/.*\([0-9]\{2\}%\).*/\1/' | xargs echo`
   bat_temp=`acpi -t 2>&1 | grep -v found | sed 's/.*\([0-9][0-9]\).*/\1°C/' | xargs echo`
   bat_charge=`acpi -a 2>&1| grep -v found | sed 's/.*on-line*/+/' | sed 's/.*off-line.*/-/'`
+
+  berth=''
+  kube_context=''
+  aws_region=''
   if [ -e .crinc.yaml ]; then
-    berth=`crinc --quiet config show --key defaultBerth`
+    #berth=`crinc --quiet config show --key defaultBerth`
     kube_context=`kubectl config get-contexts | grep "*" | awk '{print $2}' | cut -d / -f 2`
-    aws_region=`aws configure get region`
+    #aws_region=`aws configure get region`
   fi
 
   [ ! -z $branch ] && branch="($branch){$short}[$stash_cnt] "
-  [ ! -z $bat_charge ] && bat="🔋$bat_charge$bat_per $bat_temp🔋 "
+  [ ! -z $bat_charge ] && bat="<$bat_charge$bat_per $bat_temp>"
   [ ! -z $berth ] && berth="⟦${berth}⟧ "
   [ ! -z $aws_region ] && aws_region="«$aws_region» "
   [ ! -z $kube_context ] && kube_context="<$kube_context> "
@@ -104,7 +111,7 @@ PATH=${PATH}:$HOME/bin
 # export PATH="/home/jim/.ebcli-virtual-env/executables:$PATH"
 # export PATH=/home/jim/.pyenv/versions/3.7.2/bin:$PATH
 #
-ssh-add ~/MSQC/code/CreativityHub/config/aws/keys/msqc_app-key-pair.pem 2> /dev/null > /dev/null
+ssh-add /home/jim/MSQC/code/CreativityHub/laravel/config/aws/keys/msqc_app-key-pair.pem >/dev/null 2>&1
 
 autoload -U bashcompinit
 bashcompinit
@@ -113,9 +120,30 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+nvm use v22.9 >/dev/null 2>&1
+
 crinc_path=`which crinc`
 [ -n "$crinc_path" ] && eval "$(register-python-argcomplete $crinc_path)"
 
 
+alias fdt="date +%Y%m%d%H%M%Z"
 alias ducks="du -k | sort -n | tail -n 200 | perl -ne 'if ( /^(\\d+)\\s+(.*$)/){\$l=log(\$1+.1);\$m=int(\$l/log(1024)); printf (\"%6.1f\\t%s\\t%25s %s\\n\",(\$1/(2**(10*\$m))),((\"K\",\"M\",\"G\",\"T\",\"P\")[\$m]),\"#\"x (1.5*\$l),\$2);}'"
 
+export PATH=$PATH:/home/jim/.platformio/penv/bin/
+
+
+PATH="/home/jim/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/home/jim/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/home/jim/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/home/jim/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/home/jim/perl5"; export PERL_MM_OPT;
+
+PATH=$PATH:/home/jim/projects/github.com/jimktrains/jskcalc/target/debug
+PATH=$PATH:/home/jim/.cabal/bin
+
+PATH=$PATH:/home/jim/go/bin
+
+alias jc=jskcalc
+
+MANPATH=$MANPATH:/home/jim/man
+function lsix() { montage -tile 7x1 -label %f -background black -fill white "$@" gif:- | convert - -colors 16 sixel:-; }
